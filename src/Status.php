@@ -7,14 +7,16 @@ namespace Yiisoft\Http;
  */
 final class Status
 {
+    // Informational responses
     public const CONTINUE = 100;
     public const SWITCHING_PROTOCOLS = 101;
     public const PROCESSING = 102;
-    public const CONNECTION_TIMEOUT = 118;
+
+    // Successful responses
     public const OK = 200;
     public const CREATED = 201;
     public const ACCEPTED = 202;
-    public const NON_AUTHORITATIVE = 203;
+    public const NON_AUTHORITATIVE_INFORMATION = 203;
     public const NO_CONTENT = 204;
     public const RESET_CONTENT = 205;
     public const PARTIAL_CONTENT = 206;
@@ -22,6 +24,8 @@ final class Status
     public const ALREADY_REPORTED = 208;
     public const CONTENT_DIFFERENT = 210;
     public const IM_USED = 226;
+
+    // Redirects
     public const MULTIPLE_CHOICES = 300;
     public const MOVED_PERMANENTLY = 301;
     public const FOUND = 302;
@@ -31,7 +35,8 @@ final class Status
     public const RESERVED = 306;
     public const TEMPORARY_REDIRECT = 307;
     public const PERMANENT_REDIRECT = 308;
-    public const TOO_MANY_REDIRECT = 310;
+
+    // Client errors
     public const BAD_REQUEST = 400;
     public const UNAUTHORIZED = 401;
     public const PAYMENT_REQUIRED = 402;
@@ -45,10 +50,10 @@ final class Status
     public const GONE = 410;
     public const LENGTH_REQUIRED = 411;
     public const PRECONDITION_FAILED = 412;
-    public const REQUEST_ENTITY_TOO_LARGE = 413;
-    public const REQUEST_URI_TOO_LONG = 414;
+    public const ENTITY_TOO_LARGE = 413;
+    public const URI_TOO_LONG = 414;
     public const UNSUPPORTED_MEDIA_TYPE = 415;
-    public const REQUEST_RANGE_UNSATISFIABLE = 416;
+    public const RANGE_UNSATISFIABLE = 416;
     public const EXPECTATION_FAILED = 417;
     public const I_AM_A_TEAPOT = 418;
     public const MISDIRECTED_REQUEST = 421;
@@ -63,6 +68,8 @@ final class Status
     public const RETRY_WITH = 449;
     public const BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS = 450;
     public const UNAVAILABLE_FOR_LEGAL_REASONS = 451;
+
+    // Server errors
     public const INTERNAL_SERVER_ERROR = 500;
     public const NOT_IMPLEMENTED = 501;
     public const BAD_GATEWAY_OR_PROXY_ERROR = 502;
@@ -78,15 +85,14 @@ final class Status
     /**
      * @var array list of HTTP status texts
      */
-    public static $statusTexts = [
+    public const STATUS_TEXTS = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
-        118 => 'Connection timed out',
         200 => 'OK',
         201 => 'Created',
         202 => 'Accepted',
-        203 => 'Non-Authoritative',
+        203 => 'Non-Authoritative Information',
         204 => 'No Content',
         205 => 'Reset Content',
         206 => 'Partial Content',
@@ -103,7 +109,6 @@ final class Status
         306 => 'Reserved',
         307 => 'Temporary Redirect',
         308 => 'Permanent Redirect',
-        310 => 'Too many Redirect',
         400 => 'Bad Request',
         401 => 'Unauthorized',
         402 => 'Payment Required',
@@ -117,8 +122,8 @@ final class Status
         410 => 'Gone',
         411 => 'Length Required',
         412 => 'Precondition Failed',
-        413 => 'Request Entity Too Large',
-        414 => 'Request-URI Too Long',
+        413 => 'Entity Too Large',
+        414 => 'URI Too Long',
         415 => 'Unsupported Media Type',
         416 => 'Requested range unsatisfiable',
         417 => 'Expectation failed',
