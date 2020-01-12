@@ -8,14 +8,54 @@ namespace Yiisoft\Http;
 final class Status
 {
     // Informational responses
+    /**
+     * This interim response indicates that everything so far is OK and that the client should continue the request,
+     * or ignore the response if the request is already finished.
+     * @link https://tools.ietf.org/html/rfc7231#section-6.2.1
+     */
     public const CONTINUE = 100;
+    /**
+     * This code is sent in response to an `Upgrade` request header from the client,
+     * and indicates the protocol the server is switching to.
+     * @link https://tools.ietf.org/html/rfc7231#section-6.2.2
+     */
     public const SWITCHING_PROTOCOLS = 101;
+    /**
+     * This code indicates that the server has received and is processing the request,
+     * but no response is available yet.
+     */
     public const PROCESSING = 102;
 
     // Successful responses
+    /**
+     * The request has succeeded. The meaning of the success depends on the HTTP method:
+     *  - GET: The resource has been fetched and is transmitted in the message body.
+     *  - HEAD: The entity headers are in the message body.
+     *  - PUT or POST: The resource describing the result of the action is transmitted in the message body.
+     *  - TRACE: The message body contains the request message as received by the server
+     * @link https://tools.ietf.org/html/rfc7231#section-6.3.1
+     */
     public const OK = 200;
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     * This is typically the response sent after POST requests, or some PUT requests.
+     * @link https://tools.ietf.org/html/rfc7231#section-6.3.2
+     */
     public const CREATED = 201;
+    /**
+     * The request has been received but not yet acted upon. It is noncommittal, since there is no way in HTTP to later
+     * send an asynchronous response indicating the outcome of the request.
+     * It is intended for cases where another process or server handles the request, or for batch processing.
+     * @link https://tools.ietf.org/html/rfc7231#section-6.3.3
+     */
     public const ACCEPTED = 202;
+    /**
+     * This response code means the returned meta-information is not exactly the same as is available
+     * from the origin server, but is collected from a local or a third-party copy.
+     * This is mostly used for mirrors or backups of another resource.
+     * Except for that specific case, the "200 OK" response is preferred to this status.
+     * @link https://tools.ietf.org/html/rfc7231#section-6.3.4
+     */
     public const NON_AUTHORITATIVE_INFORMATION = 203;
     public const NO_CONTENT = 204;
     public const RESET_CONTENT = 205;
