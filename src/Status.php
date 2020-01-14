@@ -27,6 +27,14 @@ final class Status
      */
     public const PROCESSING = 102;
 
+    /**
+     * Indicates to the client that the server is likely to send a final response with the header fields included
+     * in the informational response.
+     *
+     * @link https://tools.ietf.org/html/rfc8297#section-2
+     */
+    public const EARLY_HINTS = 103;
+
     // Successful responses
     /**
      * The request has succeeded. The meaning of the success depends on the HTTP method:
