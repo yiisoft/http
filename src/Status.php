@@ -393,7 +393,7 @@ final class Status
     /**
      * @var array list of HTTP status texts
      */
-    public const STATUS_TEXTS = [
+    public const TEXTS = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',

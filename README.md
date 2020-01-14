@@ -37,3 +37,21 @@ use Yiisoft\Http\Method;
 
 Method::ANY;
 ```
+
+## HTTP status codes
+
+Status codes could be referenced by name as:
+
+```php
+use Yiisoft\Http\Status;
+
+Status::NOT_FOUND;
+```
+
+Status text could be obtained as the following:
+
+```php
+use Yiisoft\Http\Status;
+
+Status::TEXTS[Status::NOT_FOUND];
+```
