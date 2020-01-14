@@ -23,6 +23,7 @@ final class Status
     /**
      * This code indicates that the server has received and is processing the request,
      * but no response is available yet.
+     * @link https://tools.ietf.org/html/rfc2518#section-10.1
      */
     public const PROCESSING = 102;
 
@@ -70,21 +71,25 @@ final class Status
     public const RESET_CONTENT = 205;
     /**
      * This response code is used when the Range header is sent from the client to request only part of a resource.
+     * @link https://tools.ietf.org/html/rfc7233#section-4.1
      */
     public const PARTIAL_CONTENT = 206;
     /**
      * Conveys information about multiple resources, for situations where multiple status codes might be appropriate.
+     * @link https://tools.ietf.org/html/rfc4918#section-11.1
      */
     public const MULTI_STATUS = 207;
     /**
      * Used inside a `<dav:propstat>` response element to avoid repeatedly enumerating
      * the internal members of multiple bindings to the same collection.
+     * @link https://tools.ietf.org/html/rfc5842#section-7.1     *
      */
-    public const ALREADY_REPORTED  = 208;
+    public const ALREADY_REPORTED = 208;
     public const CONTENT_DIFFERENT = 210;
     /**
      * The server has fulfilled a GET request for the resource, and the response
      * is a representation of the result of one or more instance-manipulations applied to the current instance.
+     * @link https://tools.ietf.org/html/rfc3229#section-10.4.1
      */
     public const IM_USED = 226;
 
@@ -118,6 +123,7 @@ final class Status
      * This is used for caching purposes.
      * It tells the client that the response has not been modified, so the client can continue
      * to use the same cached version of the response.
+     * @link https://tools.ietf.org/html/rfc7232#section-4.1
      */
     public const NOT_MODIFIED = 304;
     /**
@@ -146,6 +152,7 @@ final class Status
      * the Location: HTTP Response header. This has the same semantics as the 301 Moved Permanently HTTP response code,
      * with the exception that the user agent must not change
      * the HTTP method used: If a POST was used in the first request, a POST must be used in the second request.
+     * @link https://tools.ietf.org/html/rfc7238#section-3
      */
     public const PERMANENT_REDIRECT = 308;
 
@@ -158,6 +165,7 @@ final class Status
     /**
      * Although the HTTP standard specifies "unauthorized", semantically this response means "unauthenticated".
      * That is, the client must authenticate itself to get the requested response.
+     * @link https://tools.ietf.org/html/rfc7235#section-3.1
      */
     public const UNAUTHORIZED = 401;
     /**
@@ -196,6 +204,7 @@ final class Status
     public const NOT_ACCEPTABLE = 406;
     /**
      * This is similar to 401 but authentication is needed to be done by a proxy.
+     * @link https://tools.ietf.org/html/rfc7235#section-3.2
      */
     public const PROXY_AUTHENTICATION_REQUIRED = 407;
     /**
@@ -227,6 +236,7 @@ final class Status
     public const LENGTH_REQUIRED = 411;
     /**
      * The client has indicated preconditions in its headers which the server does not meet.
+     * @link https://tools.ietf.org/html/rfc7232#section-4.2
      */
     public const PRECONDITION_FAILED = 412;
     /**
@@ -248,6 +258,7 @@ final class Status
     /**
      * The range specified by the Range header field in the request can't be fulfilled; it's possible that
      * the range is outside the size of the target URI's data.
+     * @link https://tools.ietf.org/html/rfc7233#section-4.4
      */
     public const RANGE_UNSATISFIABLE = 416;
     /**
@@ -257,27 +268,33 @@ final class Status
     public const EXPECTATION_FAILED = 417;
     /**
      * The server refuses the attempt to brew coffee with a teapot.
+     * @link https://tools.ietf.org/html/rfc2324#section-2.3.2
      */
     public const I_AM_A_TEAPOT = 418;
     /**
      * The request was directed at a server that is not able to produce a response. This can be sent by a server that is
      * not configured to produce responses for the combination of scheme and authority that are included in the request URI.
+     * @link https://tools.ietf.org/html/rfc7540#section-9.1.2
      */
     public const MISDIRECTED_REQUEST = 421;
     /**
      * The request was well-formed but was unable to be followed due to semantic errors.
+     * @link https://tools.ietf.org/html/rfc4918#section-11.2
      */
     public const UNPROCESSABLE_ENTITY = 422;
     /**
      * The resource that is being accessed is locked.
+     * @link https://tools.ietf.org/html/rfc4918#section-11.3
      */
     public const LOCKED = 423;
     /**
      * The request failed due to failure of a previous request.
+     * @link https://tools.ietf.org/html/rfc4918#section-11.4
      */
     public const METHOD_FAILURE = 424;
     /**
      * Indicates that the server is unwilling to risk processing a request that might be replayed.
+     * @link https://tools.ietf.org/html/draft-ietf-httpbis-replay-04#section-5.2
      */
     public const UNORDERED_FAILURE = 425;
     /**
@@ -291,21 +308,25 @@ final class Status
      * The origin server requires the request to be conditional. This response is intended to prevent
      * the 'lost update' problem, where a client GETs a resource's state, modifies it, and PUTs it back to the server,
      * when meanwhile a third party has modified the state on the server, leading to a conflict.
+     * @link https://tools.ietf.org/html/rfc6585#section-3
      */
     public const PRECONDITION_REQUIRED = 428;
     /**
      * The user has sent too many requests in a given amount of time ("rate limiting").
+     * @link https://tools.ietf.org/html/rfc6585#section-4
      */
     public const TOO_MANY_REQUESTS = 429;
     /**
      * The server is unwilling to process the request because its header fields are too large.
      * The request may be resubmitted after reducing the size of the request header fields.
+     * @link https://tools.ietf.org/html/rfc6585#section-5
      */
-    public const REQUEST_HEADER_FIELDS_TOO_LARGE      = 431;
-    public const RETRY_WITH                           = 449;
+    public const REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
+    public const RETRY_WITH = 449;
     public const BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS = 450;
     /**
      * The user-agent requested a resource that cannot legally be provided, such as a web page censored by a government.
+     * @link https://tools.ietf.org/html/rfc7725#section-3
      */
     public const UNAVAILABLE_FOR_LEGAL_REASONS = 451;
 
@@ -324,6 +345,7 @@ final class Status
     /**
      * This error response means that the server, while working as a gateway to get a response needed to handle
      * the request, got an invalid response.
+     * @link https://tools.ietf.org/html/rfc2616#section-10.5.3
      */
     public const BAD_GATEWAY = 502;
     /**
@@ -349,19 +371,23 @@ final class Status
     /**
      * The method could not be performed on the resource because the server is unable to store the representation needed
      * to successfully complete the request.
+     * @link https://tools.ietf.org/html/rfc4918#section-11.5
      */
     public const INSUFFICIENT_STORAGE = 507;
     /**
      * The server detected an infinite loop while processing the request.
+     * @link https://tools.ietf.org/html/rfc5842#section-7.2
      */
-    public const LOOP_DETECTED           = 508;
+    public const LOOP_DETECTED = 508;
     public const BANDWITH_LIMIT_EXCEEDED = 509;
     /**
      * Further extensions to the request are required for the server to fulfil it.
+     * @link https://tools.ietf.org/html/rfc2774#section-7
      */
     public const NOT_EXTENDED = 510;
     /**
      * The 511 status code indicates that the client needs to authenticate to gain network access.
+     * @link https://tools.ietf.org/html/rfc6585#section-6
      */
     public const NETWORK_AUTHENTICATION_REQUIRED = 511;
 
