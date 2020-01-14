@@ -4,6 +4,7 @@ namespace Yiisoft\Http;
 
 /**
  * HTTP status codes
+ * @link https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
  */
 final class Status
 {
@@ -93,7 +94,6 @@ final class Status
      * @link https://tools.ietf.org/html/rfc5842#section-7.1     *
      */
     public const ALREADY_REPORTED = 208;
-    public const CONTENT_DIFFERENT = 210;
     /**
      * The server has fulfilled a GET request for the resource, and the response
      * is a representation of the result of one or more instance-manipulations applied to the current instance.
@@ -141,12 +141,6 @@ final class Status
      * @link https://tools.ietf.org/html/rfc7231#section-6.4.5
      */
     public const USE_PROXY = 305;
-    /**
-     * This response code is no longer used; it is just reserved.
-     * It was used in a previous version of the HTTP/1.1 specification.
-     * @link https://tools.ietf.org/html/rfc7231#section-6.4.6
-     */
-    public const UNUSED = 306;
     /**
      * The server sends this response to direct the client to get the requested resource at another URI with same method
      * that was used in the prior request. This has the same semantics as the 302 Found HTTP response code, with
@@ -299,12 +293,12 @@ final class Status
      * The request failed due to failure of a previous request.
      * @link https://tools.ietf.org/html/rfc4918#section-11.4
      */
-    public const METHOD_FAILURE = 424;
+    public const FAILED_DEPENDENCY = 424;
     /**
      * Indicates that the server is unwilling to risk processing a request that might be replayed.
      * @link https://tools.ietf.org/html/draft-ietf-httpbis-replay-04#section-5.2
      */
-    public const UNORDERED_FAILURE = 425;
+    public const TOO_EARLY = 425;
     /**
      * The server refuses to perform the request using the current protocol but might be willing to do so after
      * the client upgrades to a different protocol.
@@ -330,8 +324,6 @@ final class Status
      * @link https://tools.ietf.org/html/rfc6585#section-5
      */
     public const REQUEST_HEADER_FIELDS_TOO_LARGE = 431;
-    public const RETRY_WITH = 449;
-    public const BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS = 450;
     /**
      * The user-agent requested a resource that cannot legally be provided, such as a web page censored by a government.
      * @link https://tools.ietf.org/html/rfc7725#section-3
@@ -387,7 +379,6 @@ final class Status
      * @link https://tools.ietf.org/html/rfc5842#section-7.2
      */
     public const LOOP_DETECTED = 508;
-    public const BANDWITH_LIMIT_EXCEEDED = 509;
     /**
      * Further extensions to the request are required for the server to fulfil it.
      * @link https://tools.ietf.org/html/rfc2774#section-7
@@ -415,7 +406,6 @@ final class Status
         206 => 'Partial Content',
         207 => 'Multi-Status',
         208 => 'Already Reported',
-        210 => 'Content Different',
         226 => 'IM Used',
         300 => 'Multiple Choices',
         301 => 'Moved Permanently',
@@ -423,7 +413,6 @@ final class Status
         303 => 'See Other',
         304 => 'Not Modified',
         305 => 'Use Proxy',
-        306 => 'Unused',
         307 => 'Temporary Redirect',
         308 => 'Permanent Redirect',
         400 => 'Bad Request',
@@ -448,14 +437,12 @@ final class Status
         421 => 'Misdirected Request',
         422 => 'Unprocessable entity',
         423 => 'Locked',
-        424 => 'Method failure',
-        425 => 'Unordered Collection',
+        424 => 'Failed Dependency',
+        425 => 'Too Early',
         426 => 'Upgrade Required',
         428 => 'Precondition Required',
         429 => 'Too Many Requests',
         431 => 'Request Header Fields Too Large',
-        449 => 'Retry With',
-        450 => 'Blocked by Windows Parental Controls',
         451 => 'Unavailable For Legal Reasons',
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
@@ -465,7 +452,6 @@ final class Status
         505 => 'HTTP Version not supported',
         507 => 'Insufficient storage',
         508 => 'Loop Detected',
-        509 => 'Bandwidth Limit Exceeded',
         510 => 'Not Extended',
         511 => 'Network Authentication Required',
     ];
