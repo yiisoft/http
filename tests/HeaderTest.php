@@ -96,19 +96,33 @@ class HeaderTest extends TestCase
             'simple2' => ['gzip;q=1.0', 'gzip', ['q' => '1.0']],
             'simple3' => ['identity;q=0.5', 'identity', ['q' => '0.5']],
             'simple4' => ['*;q=0', '*', ['q' => '0']],
-            'witQuotedParameter' => [
-                'test;noqoute=test;qoute="test2"',
+            'quotedParameter' => [
+                'test;noquote=test;quote="test2"',
                 'test',
-                ['noqoute' => 'test', 'qoute' => 'test2'],
-                'test;noqoute=test;qoute=test2',
+                ['noquote' => 'test', 'quote' => 'test2'],
+                'test;noquote=test;quote=test2',
             ],
-            'withSpaces' => [
+            'quotedEmptyParameter' => ['quote=""', '', ['quote' => '']],
+            'singleQuoted' => ["a='a'", '', ['a' => "'a'"]],
+            'mixedQuotes' => [
+                'a="tes\'t";sp=" s p ";test="\'test\'";test2="\\"quoted\\" test"',
+                '',
+                ['a' => 'tes\'t', 'sp' => ' s p ', 'test' => '\'test\'', 'test2' => '"quoted" test'],
+                'a=tes\'t;sp= s p ;test=\'test\';test2="\\"quoted\\" test"',
+            ],
+            'slashes' => [
+                'a="\\t\\e\\s\\t";b="te\\\\st";c="\\"\\"',
+                '',
+                ['a' => 'test', 'b' => 'te\\st', 'c' => '""'],
+                'a=test;b="te\\\\st";c="\\"\\""',
+            ],
+            'withSpacesAfterDelimiters' => [
                 'test; q=1.0; version=2',
                 'test',
                 ['q' => '1.0', 'version' => '2'],
                 'test;q=1.0;version=2',
             ],
-            'moreSpaces' => [
+            'spacesAroundDelimiters' => [
                 'test ; q = 1.0 ; version = 2',
                 'test',
                 ['q' => '1.0', 'version' => '2'],
@@ -116,7 +130,7 @@ class HeaderTest extends TestCase
             ],
             'emptyValueWithParam' => ['param=value', '', ['param' => 'value']],
             'emptyValueWithParam2' => ['param=value;a=b', '', ['param' => 'value', 'a' => 'b']],
-            'missingDelimiterBtwValueAndParam' => ['value a=a1', 'value', ['a' => 'a1'], 'value;a=a1'],
+            'missingDelimiterBtwValueAndParam' => ['value   a=a1', 'value', ['a' => 'a1'], 'value;a=a1'],
         ];
     }
 
@@ -146,6 +160,9 @@ class HeaderTest extends TestCase
             'quotedValue' => ['"value"', false, '"value"', []],
             'doubleColon' => [': value;a=b', false, ': value', ['a' => 'b']],
             'missingDelimiterBtwParams' => ['value; a=a1 b=b1', true, 'value', ['a' => 'a1'], 'value;a=a1'],
+            'doubleDelimiter1' => ['value; a=a1;;b=b1', true, 'value', ['a' => 'a1'], 'value;a=a1'],
+            'doubleDelimiter2' => ['value;;a=a1;b=b1', true, 'value', [], 'value'],
+            'tooMoreSpaces' => ['foo bar param=1', true, 'foo', [], 'foo'],
         ];
     }
     /**

@@ -2,6 +2,8 @@
 
 namespace Yiisoft\Http\Header;
 
+use Exception;
+
 abstract class HeaderValue
 {
     public const NAME = null;
@@ -10,7 +12,7 @@ abstract class HeaderValue
     /** @var array<string, string> */
     private array $params = [];
     private string $quality = '1';
-    private ?string $error = null;
+    private ?Exception $error = null;
 
     public function __construct(string $value)
     {
@@ -21,8 +23,9 @@ abstract class HeaderValue
     {
         $params = [];
         foreach ($this->params as $key => $value) {
-            $escaped = preg_replace('/(\\\\.)/', '\\$1', $value);
-            $params[] = $key . '=' . (strlen($escaped) > strlen($value) ? "\"{$escaped}\"" : $value);
+            $escaped = preg_replace('/([\\\\"])/', '\\\\$1', $value);
+            $quoted = $value === '' || strpos(' ', $escaped) !== false || strlen($escaped) > strlen($value);
+            $params[] = $key . '=' . ($quoted ? "\"{$escaped}\"" : $value);
         }
         return $this->value === '' ? implode(';', $params) : implode(';', [$this->value, ...$params]);
     }
@@ -58,13 +61,13 @@ abstract class HeaderValue
     {
         return $this->quality;
     }
-    public function withError(string $error)
+    public function withError(?Exception $error)
     {
         $clone = clone $this;
         $clone->error = $error;
         return $clone;
     }
-    public function getError(): ?string
+    public function getError(): ?Exception
     {
         return $this->error;
     }

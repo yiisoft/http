@@ -8,7 +8,7 @@ use Yiisoft\Http\Header\HeaderValue;
 use Yiisoft\Http\Header\ListedValues;
 use Yiisoft\Http\Header\WithParams;
 
-final class Header
+final class Header implements \IteratorAggregate
 {
     private string $headerClass;
     private string $headerName;
@@ -43,6 +43,11 @@ final class Header
             $this->headerName = $nameOrClass;
             $this->headerClass = DefaultHeaderValue::class;
         }
+    }
+
+    public function getIterator()
+    {
+        return $this->collection;
     }
 
     /**
@@ -110,11 +115,17 @@ final class Header
         $buffer = '';
         $key = '';
         $value = '';
-        $error = '';
         $params = [];
+        $error = null;
         $resetState = static function () use (&$key, &$value, &$buffer, &$params) {
             $key = $buffer = $value = '';
             $params = [];
+        };
+        $addParam = static function ($key, $value) use (&$params) {
+            $key = strtolower($key);
+            if (!key_exists($key, $params)) {
+                $params[$key] = $value;
+            }
         };
         $added = 0;
         try {
@@ -123,17 +134,19 @@ final class Header
                 $s = $body[$i];
                 if ($part === self::PART_VALUE) {
                     if ($s === '=' && $this->withParams) {
-                        $part = self::PART_PARAM_VALUE;
                         $key = trim($buffer);
                         $buffer = '';
                         if (strpos($key, ' ') === false) {
+                            $part = self::PART_PARAM_VALUE;
                             continue;
                         }
                         $key = preg_replace('/\s+/', ' ', $key);
                         $chunks = explode(' ', $key);
                         if (count($chunks) > 2) {
+                            $buffer = $chunks[0];
                             throw new \Exception('Syntax error');
                         }
+                        $part = self::PART_PARAM_VALUE;
                         [$value, $key] = $chunks;
                     } elseif ($s === ';' && $this->withParams) {
                         $part = self::PART_PARAM_NAME;
@@ -185,16 +198,16 @@ final class Header
                         }
                     } elseif (ord($s) <= 32) {
                         $part = self::PART_NONE;
-                        $params[$key] = rtrim($buffer);
+                        $addParam($key, $buffer);
                         $key = $buffer = '';
                     } elseif (strpos(self::DELIMITERS, $s) === false) {
                         $buffer .= $s;
                     } elseif ($s === ';') {
                         $part = self::PART_PARAM_NAME;
-                        $params[$key] = rtrim($buffer);
+                        $addParam($key, $buffer);
                         $key = $buffer = '';
                     } elseif ($s === ',' && $this->listedValues) {
-                        $params[$key] = $buffer;
+                        $addParam($key, $buffer);
                         $this->collection[] = (new $this->headerClass(trim($buffer)))->withParams($params);
                         ++$added;
                         $resetState();
@@ -212,7 +225,7 @@ final class Header
                         }
                     } elseif ($s === '"') { // end
                         $part = self::PART_NONE;
-                        $params[$key] = $buffer;
+                        $addParam($key, $buffer);
                         $key = $buffer = '';
                     } else {
                         $buffer .= $s;
@@ -220,7 +233,7 @@ final class Header
                 }
             }
         } catch (\Exception $e) {
-            $error = $e->getMessage();
+            $error = $e;
         }
         if ($added > 0 && $value === '' && $buffer === '') {
             return;
@@ -228,14 +241,8 @@ final class Header
         /** @var HeaderValue $item */
         $item = new $this->headerClass($part === self::PART_VALUE ? trim($buffer) : $value);
         if (in_array($part, [self::PART_PARAM_VALUE, self::PART_PARAM_QUOTED_VALUE], true)) {
-            $params[$key] = $buffer;
+            $addParam($key, $buffer);
         }
-        if (count($params) > 0) {
-            $item = $item->withParams($params);
-        }
-        if ($error !== '') {
-            $item = $item->withError($error);
-        }
-        $this->collection[] = $item;
+        $this->collection[] = $item->withError($error)->withParams($params);
     }
 }
