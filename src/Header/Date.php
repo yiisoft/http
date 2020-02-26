@@ -4,7 +4,7 @@ namespace Yiisoft\Http\Header;
 
 use DateTimeImmutable;
 
-class Date extends Header
+class Date extends HeaderValue
 {
     public const NAME = 'Date';
 

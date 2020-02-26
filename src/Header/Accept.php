@@ -2,7 +2,7 @@
 
 namespace Yiisoft\Http\Header;
 
-class Accept extends Header implements WithQualityParam
+class Accept extends HeaderValue implements WithQualityParam
 {
     public const NAME = 'Accept';
 

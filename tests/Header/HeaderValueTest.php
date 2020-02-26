@@ -4,7 +4,7 @@ namespace Yiisoft\Http\Tests\Header;
 
 use PHPUnit\Framework\TestCase;
 
-class HeaderTest extends TestCase
+class HeaderValueTest extends TestCase
 {
     public function testInit()
     {
