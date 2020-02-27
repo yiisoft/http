@@ -24,7 +24,9 @@ abstract class HeaderValue
         $params = [];
         foreach ($this->params as $key => $value) {
             $escaped = preg_replace('/([\\\\"])/', '\\\\$1', $value);
-            $quoted = $value === '' || strpos(' ', $escaped) !== false || strlen($escaped) > strlen($value);
+            $quoted = $value === ''
+                || strlen($escaped) > strlen($value)
+                || preg_match('/[(),\\/:;<=>?@\\[\\\\\\]{} ]/', $value) === 1;
             $params[] = $key . '=' . ($quoted ? "\"{$escaped}\"" : $value);
         }
         return $this->value === '' ? implode(';', $params) : implode(';', [$this->value, ...$params]);
@@ -42,11 +44,16 @@ abstract class HeaderValue
         return $this->getValue();
     }
 
-    // with params
     public function withParams(array $params)
     {
         $clone = clone $this;
-        $clone->params = $params;
+        $clone->params = [];
+        foreach ($params as $key => $value) {
+            $key = strtolower($key);
+            if (!key_exists($key, $clone->params)) {
+                $clone->params[$key] = $value;
+            }
+        }
         if ($clone instanceof WithQualityParam) {
             $clone->quality = $params['q'] ?? '1';
         }
@@ -54,7 +61,11 @@ abstract class HeaderValue
     }
     public function getParams(): iterable
     {
-        return $this->params;
+        $result = $this->params;
+        if ($this instanceof WithQualityParam) {
+            $result['q'] = $this->getQuality();
+        }
+        return $result;
     }
     // with quality
     public function getQuality(): string

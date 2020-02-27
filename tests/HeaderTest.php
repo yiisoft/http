@@ -8,7 +8,7 @@ use Yiisoft\Http\Header\Accept;
 use Yiisoft\Http\Header\Date;
 use Yiisoft\Http\Header\HeaderValue;
 use Yiisoft\Http\Header;
-use Yiisoft\Http\Tests\Header\Stub\QualityHeaderValue;
+use Yiisoft\Http\Tests\Header\Stub\WithParamsHeaderValue;
 
 class HeaderTest extends TestCase
 {
@@ -108,7 +108,7 @@ class HeaderTest extends TestCase
                 'a="tes\'t";sp=" s p ";test="\'test\'";test2="\\"quoted\\" test"',
                 '',
                 ['a' => 'tes\'t', 'sp' => ' s p ', 'test' => '\'test\'', 'test2' => '"quoted" test'],
-                'a=tes\'t;sp= s p ;test=\'test\';test2="\\"quoted\\" test"',
+                'a=tes\'t;sp=" s p ";test=\'test\';test2="\\"quoted\\" test"',
             ],
             'slashes' => [
                 'a="\\t\\e\\s\\t";b="te\\\\st";c="\\"\\"',
@@ -116,6 +116,10 @@ class HeaderTest extends TestCase
                 ['a' => 'test', 'b' => 'te\\st', 'c' => '""'],
                 'a=test;b="te\\\\st";c="\\"\\""',
             ],
+            'specChars1' => ['*|*/*\\*;*=test;test=*', '*|*/*\\*', ['*' => 'test', 'test' => '*']],
+            'numbers' => ['123.45;a=8888;b="999"', '123.45', ['a' => '8888', 'b' => '999'], '123.45;a=8888;b=999'],
+            'specChars2' => ['param*1=a;param*2=b', '', ['param*1' => 'a', 'param*2' => 'b']],
+
             'withSpacesAfterDelimiters' => [
                 'test; q=1.0; version=2',
                 'test',
@@ -123,7 +127,7 @@ class HeaderTest extends TestCase
                 'test;q=1.0;version=2',
             ],
             'spacesAroundDelimiters' => [
-                'test ; q = 1.0 ; version = 2',
+                'test ; q=1.0 ; version=2',
                 'test',
                 ['q' => '1.0', 'version' => '2'],
                 'test;q=1.0;version=2',
@@ -131,6 +135,19 @@ class HeaderTest extends TestCase
             'emptyValueWithParam' => ['param=value', '', ['param' => 'value']],
             'emptyValueWithParam2' => ['param=value;a=b', '', ['param' => 'value', 'a' => 'b']],
             'missingDelimiterBtwValueAndParam' => ['value   a=a1', 'value', ['a' => 'a1'], 'value;a=a1'],
+            'case' => ['VaLue;A=TEST;TEST=B', 'VaLue', ['a' => 'TEST', 'test' => 'B'], 'VaLue;a=TEST;test=B'],
+            'percent' => [
+                '%12%34%;a=%1;b="foo-%32-bar"',
+                '%12%34%',
+                ['a' => '%1', 'b' => 'foo-%32-bar'],
+                '%12%34%;a=%1;b=foo-%32-bar',
+            ],
+            'RFC2231/5987-1' => [
+                'attachment;filename*=UTF-8\'\'foo-%c3%a4-%e2%82%ac.html',
+                'attachment',
+                ['filename*' => 'UTF-8\'\'foo-%c3%a4-%e2%82%ac.html'],
+                'attachment;filename*=UTF-8\'\'foo-%c3%a4-%e2%82%ac.html',
+            ],
         ];
     }
 
@@ -143,10 +160,10 @@ class HeaderTest extends TestCase
         array $params,
         string $output = null
     ): void {
-        $header = new Header(QualityHeaderValue::class);
+        $header = new Header(WithParamsHeaderValue::class);
         $header->add($input);
-        /** @var QualityHeaderValue $headerValue */
-        $headerValue = $header->getValues()[0];
+        /** @var WithParamsHeaderValue $headerValue */
+        $headerValue = $header->getValues(true)[0];
 
         $this->assertSame($value, $headerValue->getValue());
         $this->assertSame($params, $headerValue->getParams());
@@ -160,9 +177,29 @@ class HeaderTest extends TestCase
             'quotedValue' => ['"value"', false, '"value"', []],
             'doubleColon' => [': value;a=b', false, ': value', ['a' => 'b']],
             'missingDelimiterBtwParams' => ['value; a=a1 b=b1', true, 'value', ['a' => 'a1'], 'value;a=a1'],
+            'spacesInParamKey' => ['value;a a=b', true, 'value', [], 'value'],
+            'spaces1' => ['test ; q = 1.0 ; version = 2', true, 'test', [], 'test'],
+            'spaces2' => ['q = 1.0', true, 'q', [], 'q'],
+            'spaces3' => ['a=b c', true, '', ['a' => 'b'], 'a=b'],
             'doubleDelimiter1' => ['value; a=a1;;b=b1', true, 'value', ['a' => 'a1'], 'value;a=a1'],
             'doubleDelimiter2' => ['value;;a=a1;b=b1', true, 'value', [], 'value'],
-            'tooMoreSpaces' => ['foo bar param=1', true, 'foo', [], 'foo'],
+            'tooMoreSpaces' => ['foo bar param=1', true, 'foo bar', [], 'foo bar'],
+            'invalidQuotes1' => ['a="', true, '', [], ''],
+            'invalidQuotes2' => ['a="test', false, '', ['a' => 'test'], 'a=test'],
+            'invalidQuotes3' => ['a=test"', true, '', [], ''],
+            'invalidQuotes4' => ['a=te"st', true, '', [], ''],
+            'invalidEmptyValue' => ['a=b; c=', true, '', ['a' => 'b'], 'a=b'],
+            'invalidEmptyParam' => ['a=b; ;c=d', true, '', ['a' => 'b'], 'a=b'],
+            'semicolonAtEnd' => ['a=b;', false, '', ['a' => 'b'], 'a=b'],
+            'comma' => ['a=test,test', true, '', [], ''],
+            'sameParamName' => ['a=T1;a="T2"',false, '', ['a' => 'T1'], 'a=T1'],
+            'sameParamNameCase' => ['aa=T1;Aa="T2"',false, '', ['aa' => 'T1'], 'aa=T1'],
+            'brokenToken' => ['a=foo[1](2).html', true, '', [], ''],
+            'brokenSyntax1' => ['a==b', true, '', [], ''],
+            'brokenSyntax2' => ['value; a *=b', true, 'value', [], 'value'],
+            'brokenSyntax3' => ['value;a *=b', true, 'value', [], 'value'],
+            # Invalid syntax but most browsers accept the umlaut with warn
+            'brokenToken2' => ['a=foo-ä.html', false, '', ['a' => 'foo-ä.html']],
         ];
     }
     /**
@@ -175,10 +212,10 @@ class HeaderTest extends TestCase
         array $params,
         string $output = null
     ): void {
-        $header = new Header(QualityHeaderValue::class);
+        $header = new Header(WithParamsHeaderValue::class);
         $header->add($input);
-        /** @var QualityHeaderValue $headerValue */
-        $headerValue = $header->getValues()[0];
+        /** @var WithParamsHeaderValue $headerValue */
+        $headerValue = $header->getValues(false)[0];
 
         $this->assertSame($withError, $headerValue->getError() !== null);
         $this->assertSame($value, $headerValue->getValue());
