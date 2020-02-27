@@ -7,5 +7,5 @@ use Yiisoft\Http\Header\WithParams;
 
 final class WithParamsHeaderValue extends HeaderValue implements WithParams
 {
-    public const NAME = 'Test-Header';
+    public const NAME = 'Test-Params';
 }

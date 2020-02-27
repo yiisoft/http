@@ -8,6 +8,9 @@ use Yiisoft\Http\Header\Accept;
 use Yiisoft\Http\Header\Date;
 use Yiisoft\Http\Header\HeaderValue;
 use Yiisoft\Http\Header;
+use Yiisoft\Http\Tests\Header\Stub\ListedValuesHeaderValue;
+use Yiisoft\Http\Tests\Header\Stub\ListedValuesWithParamsHeaderValue;
+use Yiisoft\Http\Tests\Header\Stub\QualityHeaderValue;
 use Yiisoft\Http\Tests\Header\Stub\WithParamsHeaderValue;
 
 class HeaderTest extends TestCase
@@ -91,7 +94,7 @@ class HeaderTest extends TestCase
         return [
             'empty' => ['', '', []],
             'noParams' => ['test', 'test', []],
-            'withParams' => ['test;q=1.0;version=2', 'test', ['q' => '1.0', 'version' => '2']],
+            'withParams' => ['test;q=1;version=2', 'test', ['q' => '1', 'version' => '2']],
             'simple1' => ['audio/*;q=0.2', 'audio/*', ['q' => '0.2']],
             'simple2' => ['gzip;q=1.0', 'gzip', ['q' => '1.0']],
             'simple3' => ['identity;q=0.5', 'identity', ['q' => '0.5']],
@@ -150,7 +153,6 @@ class HeaderTest extends TestCase
             ],
         ];
     }
-
     /**
      * @dataProvider valueAndParametersDataProvider
      */
@@ -169,7 +171,6 @@ class HeaderTest extends TestCase
         $this->assertSame($params, $headerValue->getParams());
         $this->assertSame($output ?? $input, $headerValue->__toString());
     }
-
 
     public function incorrectValueAndParametersDataProvider(): array
     {
@@ -191,7 +192,8 @@ class HeaderTest extends TestCase
             'invalidEmptyValue' => ['a=b; c=', true, '', ['a' => 'b'], 'a=b'],
             'invalidEmptyParam' => ['a=b; ;c=d', true, '', ['a' => 'b'], 'a=b'],
             'semicolonAtEnd' => ['a=b;', false, '', ['a' => 'b'], 'a=b'],
-            'comma' => ['a=test,test', true, '', [], ''],
+            'comma1' => ['foo, bar;a=test', false, 'foo, bar', ['a' => 'test'], 'foo, bar;a=test'],
+            'comma2' => ['a=test,test', true, '', [], ''],
             'sameParamName' => ['a=T1;a="T2"',false, '', ['a' => 'T1'], 'a=T1'],
             'sameParamNameCase' => ['aa=T1;Aa="T2"',false, '', ['aa' => 'T1'], 'aa=T1'],
             'brokenToken' => ['a=foo[1](2).html', true, '', [], ''],
@@ -221,5 +223,119 @@ class HeaderTest extends TestCase
         $this->assertSame($value, $headerValue->getValue());
         $this->assertSame($params, $headerValue->getParams());
         $this->assertSame($output ?? $input, $headerValue->__toString());
+    }
+
+    public function QualityParametersDataProvider(): array
+    {
+        return [
+            'q1' => ['1', true, '1'],
+            'q1.0' => ['1.0', true, '1'],
+            'q1.000' => ['1.000', true, '1'],
+            'q1.0000' => ['1.0000', false],
+            'q1.' => ['1.', false],
+            'q1.1' => ['1.1', false],
+            'q2.0' => ['2.0', false],
+            'q-0.001' => ['-0.001', false],
+            'q-0' => ['-0', false],
+            'q<0' => ['-1', false],
+            'q0' => ['0', true, '0'],
+            'q0.0' => ['0.0', true, '0'],
+            'q0.000' => ['0.000', true, '0'],
+            'q0.0000' => ['0.0000', false],
+            'q0.0001' => ['0.0001', false],
+            'q0.05' => ['0.05', true, '0.05'],
+            'q0,05' => ['0,05', false],
+        ];
+    }
+    /**
+     * @dataProvider QualityParametersDataProvider
+     */
+    public function testParsingAndRepackOfQualityParams(
+        string $setQuality,
+        bool $result,
+        ?string $getQuality = null
+    ): void {
+        $defaultValue = '0.987';
+        $headerValue = (new QualityHeaderValue())->withParams(['q' => $defaultValue]);
+
+        $this->assertSame($result, $headerValue->setQuality($setQuality));
+        $this->assertSame($getQuality ?? $defaultValue, $headerValue->getQuality());
+    }
+
+    public function ListedValuesDataProvider(): array
+    {
+        return [
+            'twoSimple' => ['value1,value2', ['value1', 'value2']],
+            'moreSimple' => ['value1,value2,value1,value2', ['value1', 'value2', 'value1', 'value2']],
+            'spaces' => ['  value1  ,  value2  ', ['value1', 'value2']],
+            'paramsImitation' => ['value1;q=1, value2 ; q=2', ['value1;q=1', 'value2 ; q=2']],
+            'commas1' => ['value1,,value2', ['value1', '', 'value2']],
+            'commas2' => [',, ,', ['', '', '', '']],
+            'chars' => [',!@# $%^&*()!"№;%:=-?.,', ['', '!@# $%^&*()!"№;%:=-?.', '']],
+        ];
+    }
+    /**
+     * @dataProvider ListedValuesDataProvider
+     */
+    public function testParsingAndRepackListedValues(string $input, array $values): void
+    {
+        $header = new Header(ListedValuesHeaderValue::class);
+        $header->add($input);
+        $strings = $header->getStrings(true);
+        $this->assertSame($values, $strings);
+    }
+
+    public function ListedValuesWithParamsDataProvider(): array
+    {
+        return [
+            'simpleQ' => ['value1;q=1,value2;q=2', [
+                ['value1', ['q' => '1']],
+                ['value2', ['q' => '2']],
+            ]],
+            'Accept' => ['text/*;q=0.3, text/html;q=0.7, text/html;level=1, text/html;level=2;q=0.4', [
+                ['text/*', ['q' => '0.3']],
+                ['text/html', ['q' => '0.7']],
+                ['text/html', ['level' => '1']],
+                ['text/html', ['level' => '2','q' => '0.4']],
+            ]],
+            'spacesAccept' => [' text/*  ;  q=0.3,text/html; q=0.7  ,  text/html ;level=1,text/html ; level=2;q=0.4', [
+                ['text/*', ['q' => '0.3']],
+                ['text/html', ['q' => '0.7']],
+                ['text/html', ['level' => '1']],
+                ['text/html', ['level' => '2','q' => '0.4']],
+            ]],
+            'Forwarded' => [
+                'for=192.0.2.43, for="[2001:db8:cafe::17]", for=unknown, for=192.0.2.60;proto=http;by=203.0.113.43',
+                [
+                    ['', ['for' => '192.0.2.43']],
+                    ['', ['for' => '[2001:db8:cafe::17]']],
+                    ['', ['for' => 'unknown']],
+                    ['', ['for' => '192.0.2.60', 'proto' => 'http', 'by' => '203.0.113.43']],
+                ],
+            ],
+            'WWW-Authenticate' => [
+                'Newauth realm="apps", type=1, title="Login to \\"apps\\"", Basic realm="simple"',
+                [
+                    ['Newauth', ['realm' => 'apps']],
+                    ['', ['type' => '1']],
+                    ['', ['title' => 'Login to "apps"']],
+                    ['Basic', ['realm' => 'simple']],
+                ],
+            ],
+            'badSyntax1' => [';', [['', []]]], // added empty value
+            'badSyntax2' => [';,', []], // no values added
+        ];
+    }
+    /**
+     * @dataProvider ListedValuesWithParamsDataProvider
+     */
+    public function testParsingAndRepackListedValuesWithParams(string $input, array $valueParams): void {
+        $header = new Header(ListedValuesWithParamsHeaderValue::class);
+        $result = [];
+        $header->add($input);
+        foreach ($header->getValues(true) as $value) {
+            $result[] = [$value->getValue(), $value->getParams()];
+        }
+        $this->assertSame($valueParams, $result);
     }
 }

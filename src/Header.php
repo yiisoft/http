@@ -8,7 +8,7 @@ use Yiisoft\Http\Header\HeaderValue;
 use Yiisoft\Http\Header\ListedValues;
 use Yiisoft\Http\Header\WithParams;
 
-final class Header implements \IteratorAggregate
+final class Header implements \IteratorAggregate, \Countable
 {
     private string $headerClass;
     private string $headerName;
@@ -45,9 +45,13 @@ final class Header implements \IteratorAggregate
         }
     }
 
-    public function getIterator()
+    public function getIterator(): iterable
     {
         return $this->collection;
+    }
+    public function count(): int
+    {
+        return count($this->collection);
     }
 
     /**
@@ -68,6 +72,36 @@ final class Header implements \IteratorAggregate
     public function getName(): string
     {
         return $this->headerName;
+    }
+    /**
+     * @param bool $ignoreIncorrect
+     * @return HeaderValue[]
+     */
+    public function getValues($ignoreIncorrect = true): array
+    {
+        $result = [];
+        foreach ($this->collection as $header) {
+            if ($ignoreIncorrect && $header->getError() !== null) {
+                continue;
+            }
+            $result[] = $header;
+        }
+        return $result;
+    }
+    /**
+     * @param bool $ignoreIncorrect
+     * @return string[]
+     */
+    public function getStrings($ignoreIncorrect = true): array
+    {
+        $result = [];
+        foreach ($this->collection as $header) {
+            if ($ignoreIncorrect && $header->getError() !== null) {
+                continue;
+            }
+            $result[] = $header->__toString();
+        }
+        return $result;
     }
 
     /**
@@ -92,29 +126,6 @@ final class Header implements \IteratorAggregate
         throw new InvalidArgumentException(sprintf('The value must be an instance of %s or string', $this->headerClass));
     }
 
-    public function getValues($ignoreIncorrect = true): array
-    {
-        $result = [];
-        foreach ($this->collection as $header) {
-            if ($ignoreIncorrect && $header->getError() !== null) {
-                continue;
-            }
-            $result[] = $header;
-        }
-        return $result;
-    }
-    public function getStrings($ignoreIncorrect = true): array
-    {
-        $result = [];
-        foreach ($this->collection as $header) {
-            if ($ignoreIncorrect && $header->getError() !== null) {
-                continue;
-            }
-            $result[] = $header->__toString();
-        }
-        return $result;
-    }
-
     private function parseAndCollect(string $body): void
     {
         if (!$this->listedValues && !$this->withParams) {
@@ -127,15 +138,24 @@ final class Header implements \IteratorAggregate
         $value = '';
         $params = [];
         $error = null;
-        $resetState = static function () use (&$key, &$value, &$buffer, &$params) {
-            $key = $buffer = $value = '';
-            $params = [];
-        };
         $addParam = static function ($key, $value) use (&$params) {
-            $key = strtolower($key);
             if (!key_exists($key, $params)) {
                 $params[$key] = $value;
             }
+        };
+        $collectHeaderValue = function () use (&$key, &$value, &$buffer, &$params, &$added, &$error) {
+            /** @var HeaderValue $item */
+            $item = new $this->headerClass($value);
+            if ($this->withParams) {
+                $item = $item->withParams($params);
+            }
+            if ($error !== null) {
+                $item = $item->withError($error);
+            }
+            $this->collection[] = $item;
+            $key = $buffer = $value = '';
+            $params = [];
+            ++$added;
         };
         $added = 0;
         try {
@@ -154,7 +174,7 @@ final class Header implements \IteratorAggregate
                         $chunks = explode(' ', $key);
                         if (count($chunks) > 2 || preg_match('/\s$/', $key) === 1) {
                             array_pop($chunks);
-                            $buffer = implode(' ',$chunks);
+                            $buffer = implode(' ', $chunks);
                             throw new \Exception('Syntax error');
                         }
                         $part = self::PART_PARAM_VALUE;
@@ -164,9 +184,8 @@ final class Header implements \IteratorAggregate
                         $value = trim($buffer);
                         $buffer = '';
                     } elseif ($s === ',' && $this->listedValues) {
-                        $this->collection[] = new $this->headerClass(trim($buffer));
-                        ++$added;
-                        $resetState();
+                        $value = trim($buffer);
+                        $collectHeaderValue();
                     } else {
                         $buffer .= $s;
                     }
@@ -174,31 +193,19 @@ final class Header implements \IteratorAggregate
                 }
                 if ($part === self::PART_PARAM_NAME) {
                     if ($s === '=') {
-                        $key = trim($buffer);
+                        $key = $buffer;
                         $buffer = '';
                         $part = self::PART_PARAM_VALUE;
                     } elseif (strpos(self::DELIMITERS, $s) !== false) {
                         throw new \Exception("Delimiter char \"{$s}\" in a param name");
-                    } elseif (ord($s) <= 32 && $buffer !== '') {
-                        throw new \Exception("Space in a param name");
+                    } elseif (ord($s) <= 32) {
+                        if ($buffer !== '') {
+                            throw new \Exception("Space in a param name");
+                        }
                     } else {
                         $buffer .= $s;
                     }
                     continue;
-                }
-                if ($part === self::PART_NONE) {
-                    if (ord($s) <= 32) {
-                        continue;
-                    } elseif ($s === ';' && $this->withParams) {
-                        $part = self::PART_PARAM_NAME;
-                        continue;
-                    } elseif ($s === ',' && $this->listedValues) {
-                        $this->collection[] = (new $this->headerClass(trim($buffer)))->withParams($params);
-                        ++$added;
-                        $resetState();
-                    } else {
-                        throw new \Exception('Expected Separator');
-                    }
                 }
                 if ($part === self::PART_PARAM_VALUE) {
                     if ($buffer === '') {
@@ -222,10 +229,9 @@ final class Header implements \IteratorAggregate
                         $addParam($key, $buffer);
                         $key = $buffer = '';
                     } elseif ($s === ',' && $this->listedValues) {
+                        $part = self::PART_VALUE;
                         $addParam($key, $buffer);
-                        $this->collection[] = (new $this->headerClass(trim($buffer)))->withParams($params);
-                        ++$added;
-                        $resetState();
+                        $collectHeaderValue();
                     } else {
                         $buffer = '';
                         throw new \Exception("Delimiter char \"{$s}\" in a unquoted param value");
@@ -246,23 +252,34 @@ final class Header implements \IteratorAggregate
                     } else {
                         $buffer .= $s;
                     }
+                    continue;
+                }
+                if ($part === self::PART_NONE) {
+                    if (ord($s) <= 32) {
+                        continue;
+                    } elseif ($s === ';' && $this->withParams) {
+                        $part = self::PART_PARAM_NAME;
+                    } elseif ($s === ',' && $this->listedValues) {
+                        $part = self::PART_VALUE;
+                        $collectHeaderValue();
+                    } else {
+                        throw new \Exception('Expected Separator');
+                    }
                 }
             }
         } catch (\Exception $e) {
             $error = $e;
         }
-        if ($added > 0 && $value === '' && $buffer === '') {
-            return;
-        }
         /** @var HeaderValue $item */
-        $item = new $this->headerClass($part === self::PART_VALUE ? trim($buffer) : $value);
-        if (in_array($part, [self::PART_PARAM_VALUE, self::PART_PARAM_QUOTED_VALUE], true)) {
+        if ($part === self::PART_VALUE) {
+            $value = trim($buffer);
+        } elseif (in_array($part, [self::PART_PARAM_VALUE, self::PART_PARAM_QUOTED_VALUE], true)) {
             if ($buffer === '') {
                 $error = $error ?? new \Exception('Empty value should be quoted');
             } else {
                 $addParam($key, $buffer);
             }
         }
-        $this->collection[] = $item->withError($error)->withParams($params);
+        $collectHeaderValue();
     }
 }
