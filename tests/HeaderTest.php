@@ -15,10 +15,11 @@ use Yiisoft\Http\Tests\Header\Stub\WithParamsHeaderValue;
 
 class HeaderTest extends TestCase
 {
-    public function testHeaderClassPassed()
+    public function testHeaderValueClassPassed()
     {
         $values = new Header(Date::class);
         $this->assertSame('Date', $values->getName());
+        $this->assertSame(Date::class, $values->getValueClass());
     }
     public function testErrorWithDefaultHeaderClass()
     {
@@ -219,13 +220,13 @@ class HeaderTest extends TestCase
         /** @var WithParamsHeaderValue $headerValue */
         $headerValue = $header->getValues(false)[0];
 
-        $this->assertSame($withError, $headerValue->getError() !== null);
+        $this->assertSame($withError, $headerValue->hasError());
         $this->assertSame($value, $headerValue->getValue());
         $this->assertSame($params, $headerValue->getParams());
         $this->assertSame($output ?? $input, $headerValue->__toString());
     }
 
-    public function QualityParametersDataProvider(): array
+    public function qualityParametersDataProvider(): array
     {
         return [
             'q1' => ['1', true, '1'],
@@ -248,7 +249,7 @@ class HeaderTest extends TestCase
         ];
     }
     /**
-     * @dataProvider QualityParametersDataProvider
+     * @dataProvider qualityParametersDataProvider
      */
     public function testParsingAndRepackOfQualityParams(
         string $setQuality,
@@ -262,7 +263,7 @@ class HeaderTest extends TestCase
         $this->assertSame($getQuality ?? $defaultValue, $headerValue->getQuality());
     }
 
-    public function ListedValuesDataProvider(): array
+    public function listedValuesDataProvider(): array
     {
         return [
             'twoSimple' => ['value1,value2', ['value1', 'value2']],
@@ -275,7 +276,7 @@ class HeaderTest extends TestCase
         ];
     }
     /**
-     * @dataProvider ListedValuesDataProvider
+     * @dataProvider listedValuesDataProvider
      */
     public function testParsingAndRepackListedValues(string $input, array $values): void
     {
@@ -285,7 +286,7 @@ class HeaderTest extends TestCase
         $this->assertSame($values, $strings);
     }
 
-    public function ListedValuesWithParamsDataProvider(): array
+    public function listedValuesWithParamsDataProvider(): array
     {
         return [
             'simpleQ' => ['value1;q=1,value2;q=2', [
@@ -327,9 +328,10 @@ class HeaderTest extends TestCase
         ];
     }
     /**
-     * @dataProvider ListedValuesWithParamsDataProvider
+     * @dataProvider listedValuesWithParamsDataProvider
      */
-    public function testParsingAndRepackListedValuesWithParams(string $input, array $valueParams): void {
+    public function testParsingAndRepackListedValuesWithParams(string $input, array $valueParams): void
+    {
         $header = new Header(ListedValuesWithParamsHeaderValue::class);
         $result = [];
         $header->add($input);

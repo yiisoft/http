@@ -4,7 +4,10 @@ namespace Yiisoft\Http\Header;
 
 interface WithParams
 {
-    public function getParams(): iterable;
+    /**
+     * @return array<string, string>
+     */
+    public function getParams(): array;
     /**
      * @param array<string, string> $params
      * @return $this

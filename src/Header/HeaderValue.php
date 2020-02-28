@@ -20,12 +20,12 @@ abstract class HeaderValue
      */
     private string $quality = '1';
     private ?Exception $error = null;
+    protected const HTTP_DATETIME_FORMAT = 'D, d M Y H:i:s \\G\\M\\T';
 
     public function __construct(string $value = '')
     {
         $this->value = $value;
     }
-
     public function __toString(): string
     {
         $params = [];
@@ -44,30 +44,28 @@ abstract class HeaderValue
         return $this->value === '' ? implode(';', $params) : implode(';', [$this->value, ...$params]);
     }
 
+    public function withValue(string $value): self
+    {
+        $clone = clone $this;
+        $clone->value = $value;
+        return $clone;
+    }
     public function getValue(): string
     {
         return $this->value;
     }
-    /**
-     * @return mixed
-     */
-    public function getParsedValue()
-    {
-        return $this->getValue();
-    }
 
     /**
+     * It makes sense to use only for HeaderValues that implement the WithParams interface
      * @param array<string, string> $params
      * @return $this
-     * @throws Exception
      */
     public function withParams(array $params): self
     {
-        if (!$this instanceof WithParams) {
-            #todo: test it
-            throw new Exception(sprintf('Method withParams requires %s interface', WithParams::class));
-        }
         $clone = clone $this;
+        if (!$this instanceof WithParams) {
+            return $clone;
+        }
         $clone->params = [];
         foreach ($params as $key => $value) {
             $key = strtolower($key);
@@ -85,7 +83,7 @@ abstract class HeaderValue
         }
         return $clone;
     }
-    public function getParams(): iterable
+    public function getParams(): array
     {
         $result = $this->params;
         if ($this instanceof WithQualityParam) {
@@ -93,13 +91,11 @@ abstract class HeaderValue
         }
         return $result;
     }
-    /**
-     * @return string value between 0.000 and 1.000
-     */
     public function getQuality(): string
     {
         return $this->quality;
     }
+
     /**
      * @param Exception|null $error
      * @return $this
@@ -109,6 +105,10 @@ abstract class HeaderValue
         $clone = clone $this;
         $clone->error = $error;
         return $clone;
+    }
+    public function hasError(): bool
+    {
+        return $this->error !== null;
     }
     public function getError(): ?Exception
     {

@@ -4,12 +4,20 @@ namespace Yiisoft\Http\Header;
 
 use DateTimeImmutable;
 
-class Date extends HeaderValue
+final class Date extends HeaderValue
 {
     public const NAME = 'Date';
 
-    public function getParsedValue(): DateTimeImmutable
+    /**
+     * @return DateTimeImmutable
+     * @throws \Exception
+     */
+    public function getDatetimeValue(): DateTimeImmutable
     {
         return new DateTimeImmutable($this->value);
+    }
+    public function withValueFromDatetime(DateTimeImmutable $date): self
+    {
+        return $this->withValue($date->format(self::HTTP_DATETIME_FORMAT));
     }
 }

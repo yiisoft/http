@@ -7,5 +7,8 @@ namespace Yiisoft\Http\Header;
  */
 interface WithQualityParam extends ListedValues, WithParams
 {
-    public function getQuality();
+    /**
+     * @return string value between 0.000 and 1.000
+     */
+    public function getQuality(): string;
 }

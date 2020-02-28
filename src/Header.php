@@ -3,6 +3,7 @@
 namespace Yiisoft\Http;
 
 use InvalidArgumentException;
+use Psr\Http\Message\MessageInterface;
 use Yiisoft\Http\Header\DefaultHeaderValue;
 use Yiisoft\Http\Header\HeaderValue;
 use Yiisoft\Http\Header\ListedValues;
@@ -18,13 +19,14 @@ final class Header implements \IteratorAggregate, \Countable
     private bool $listedValues = false;
     private bool $withParams = false;
 
-    private const DELIMITERS = '"(),/:;<=>?@[\\]{}';
-    private const PART_NONE = 0;
-    private const PART_VALUE = 1;
-    private const PART_PARAM_NAME = 2;
-    private const PART_PARAM_QUOTED_VALUE = 3;
-    private const PART_PARAM_VALUE = 4;
-
+    // Parsing's constants
+    private const
+        DELIMITERS = '"(),/:;<=>?@[\\]{}',
+        READ_NONE = 0,
+        READ_VALUE = 1,
+        READ_PARAM_NAME = 2,
+        READ_PARAM_QUOTED_VALUE = 3,
+        READ_PARAM_VALUE = 4;
 
     public function __construct(string $nameOrClass)
     {
@@ -53,7 +55,6 @@ final class Header implements \IteratorAggregate, \Countable
     {
         return count($this->collection);
     }
-
     /**
      * @param HeaderValue[]|string[] $headers
      * @param string                 $headerClass
@@ -73,6 +74,10 @@ final class Header implements \IteratorAggregate, \Countable
     {
         return $this->headerName;
     }
+    public function getValueClass(): string
+    {
+        return $this->headerClass;
+    }
     /**
      * @param bool $ignoreIncorrect
      * @return HeaderValue[]
@@ -81,7 +86,7 @@ final class Header implements \IteratorAggregate, \Countable
     {
         $result = [];
         foreach ($this->collection as $header) {
-            if ($ignoreIncorrect && $header->getError() !== null) {
+            if ($ignoreIncorrect && $header->hasError()) {
                 continue;
             }
             $result[] = $header;
@@ -96,7 +101,7 @@ final class Header implements \IteratorAggregate, \Countable
     {
         $result = [];
         foreach ($this->collection as $header) {
-            if ($ignoreIncorrect && $header->getError() !== null) {
+            if ($ignoreIncorrect && $header->hasError()) {
                 continue;
             }
             $result[] = $header->__toString();
@@ -123,7 +128,23 @@ final class Header implements \IteratorAggregate, \Countable
             $this->parseAndCollect($value);
             return $this;
         }
-        throw new InvalidArgumentException(sprintf('The value must be an instance of %s or string', $this->headerClass));
+        throw new InvalidArgumentException(
+            sprintf('The value must be an instance of %s or string', $this->headerClass)
+        );
+    }
+
+    public function inject(MessageInterface $message, bool $replace = true, bool $ignoreIncorrect = true): MessageInterface
+    {
+        if ($replace) {
+            $message = $message->withoutHeader($this->headerName);
+        }
+        foreach ($this->collection as $value) {
+            if ($ignoreIncorrect && $value->hasError()) {
+                continue;
+            }
+            $message = $message->withAddedHeader($this->headerName, $value->__toString());
+        }
+        return $message;
     }
 
     private function parseAndCollect(string $body): void
@@ -132,7 +153,7 @@ final class Header implements \IteratorAggregate, \Countable
             $this->collection[] = new $this->headerClass(trim($body));
             return;
         }
-        $part = self::PART_VALUE;
+        $part = self::READ_VALUE;
         $buffer = '';
         $key = '';
         $value = '';
@@ -162,12 +183,12 @@ final class Header implements \IteratorAggregate, \Countable
             /** @see https://tools.ietf.org/html/rfc7230#section-3.2.6 */
             for ($i = 0, $length = strlen($body); $i < $length; ++$i) {
                 $s = $body[$i];
-                if ($part === self::PART_VALUE) {
+                if ($part === self::READ_VALUE) {
                     if ($s === '=' && $this->withParams) {
                         $key = ltrim($buffer);
                         $buffer = '';
                         if (preg_match('/\s/', $key) === 0) {
-                            $part = self::PART_PARAM_VALUE;
+                            $part = self::READ_PARAM_VALUE;
                             continue;
                         }
                         $key = preg_replace('/\s+/', ' ', $key);
@@ -177,10 +198,10 @@ final class Header implements \IteratorAggregate, \Countable
                             $buffer = implode(' ', $chunks);
                             throw new \Exception('Syntax error');
                         }
-                        $part = self::PART_PARAM_VALUE;
+                        $part = self::READ_PARAM_VALUE;
                         [$value, $key] = $chunks;
                     } elseif ($s === ';' && $this->withParams) {
-                        $part = self::PART_PARAM_NAME;
+                        $part = self::READ_PARAM_NAME;
                         $value = trim($buffer);
                         $buffer = '';
                     } elseif ($s === ',' && $this->listedValues) {
@@ -191,11 +212,11 @@ final class Header implements \IteratorAggregate, \Countable
                     }
                     continue;
                 }
-                if ($part === self::PART_PARAM_NAME) {
+                if ($part === self::READ_PARAM_NAME) {
                     if ($s === '=') {
                         $key = $buffer;
                         $buffer = '';
-                        $part = self::PART_PARAM_VALUE;
+                        $part = self::READ_PARAM_VALUE;
                     } elseif (strpos(self::DELIMITERS, $s) !== false) {
                         throw new \Exception("Delimiter char \"{$s}\" in a param name");
                     } elseif (ord($s) <= 32) {
@@ -207,10 +228,10 @@ final class Header implements \IteratorAggregate, \Countable
                     }
                     continue;
                 }
-                if ($part === self::PART_PARAM_VALUE) {
+                if ($part === self::READ_PARAM_VALUE) {
                     if ($buffer === '') {
                         if ($s === '"') {
-                            $part = self::PART_PARAM_QUOTED_VALUE;
+                            $part = self::READ_PARAM_QUOTED_VALUE;
                         } elseif (ord($s) <= 32) {
                             continue;
                         } elseif (strpos(self::DELIMITERS, $s) === false) {
@@ -219,17 +240,17 @@ final class Header implements \IteratorAggregate, \Countable
                             throw new \Exception("Delimiter char \"{$s}\" in a unquoted param value");
                         }
                     } elseif (ord($s) <= 32) {
-                        $part = self::PART_NONE;
+                        $part = self::READ_NONE;
                         $addParam($key, $buffer);
                         $key = $buffer = '';
                     } elseif (strpos(self::DELIMITERS, $s) === false) {
                         $buffer .= $s;
                     } elseif ($s === ';') {
-                        $part = self::PART_PARAM_NAME;
+                        $part = self::READ_PARAM_NAME;
                         $addParam($key, $buffer);
                         $key = $buffer = '';
                     } elseif ($s === ',' && $this->listedValues) {
-                        $part = self::PART_VALUE;
+                        $part = self::READ_VALUE;
                         $addParam($key, $buffer);
                         $collectHeaderValue();
                     } else {
@@ -238,7 +259,7 @@ final class Header implements \IteratorAggregate, \Countable
                     }
                     continue;
                 }
-                if ($part === self::PART_PARAM_QUOTED_VALUE) {
+                if ($part === self::READ_PARAM_QUOTED_VALUE) {
                     if ($s === '\\') { // quoted pair
                         if (++$i >= $length) {
                             throw new \Exception('Incorrect quoted pair');
@@ -246,7 +267,7 @@ final class Header implements \IteratorAggregate, \Countable
                             $buffer .= $body[$i];
                         }
                     } elseif ($s === '"') { // end
-                        $part = self::PART_NONE;
+                        $part = self::READ_NONE;
                         $addParam($key, $buffer);
                         $key = $buffer = '';
                     } else {
@@ -254,13 +275,13 @@ final class Header implements \IteratorAggregate, \Countable
                     }
                     continue;
                 }
-                if ($part === self::PART_NONE) {
+                if ($part === self::READ_NONE) {
                     if (ord($s) <= 32) {
                         continue;
                     } elseif ($s === ';' && $this->withParams) {
-                        $part = self::PART_PARAM_NAME;
+                        $part = self::READ_PARAM_NAME;
                     } elseif ($s === ',' && $this->listedValues) {
-                        $part = self::PART_VALUE;
+                        $part = self::READ_VALUE;
                         $collectHeaderValue();
                     } else {
                         throw new \Exception('Expected Separator');
@@ -271,9 +292,9 @@ final class Header implements \IteratorAggregate, \Countable
             $error = $e;
         }
         /** @var HeaderValue $item */
-        if ($part === self::PART_VALUE) {
+        if ($part === self::READ_VALUE) {
             $value = trim($buffer);
-        } elseif (in_array($part, [self::PART_PARAM_VALUE, self::PART_PARAM_QUOTED_VALUE], true)) {
+        } elseif (in_array($part, [self::READ_PARAM_VALUE, self::READ_PARAM_QUOTED_VALUE], true)) {
             if ($buffer === '') {
                 $error = $error ?? new \Exception('Empty value should be quoted');
             } else {
