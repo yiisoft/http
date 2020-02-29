@@ -4,14 +4,15 @@ namespace Yiisoft\Http\Tests\Header;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Http\Header\Accept;
-use Yiisoft\Http\Header\Date;
-use Yiisoft\Http\Header\HeaderValue;
-use Yiisoft\Http\Header;
-use Yiisoft\Http\Tests\Header\Stub\ListedValuesHeaderValue;
-use Yiisoft\Http\Tests\Header\Stub\ListedValuesWithParamsHeaderValue;
-use Yiisoft\Http\Tests\Header\Stub\QualityHeaderValue;
-use Yiisoft\Http\Tests\Header\Stub\WithParamsHeaderValue;
+use Yiisoft\Http\Header\Header;
+use Yiisoft\Http\Header\Value\Accept;
+use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Value\Date;
+use Yiisoft\Http\Header\Value\DefaultValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\QualityHeaderValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\WithParamsHeaderValue;
 
 class HeaderTest extends TestCase
 {
@@ -21,15 +22,17 @@ class HeaderTest extends TestCase
         $this->assertSame('Date', $values->getName());
         $this->assertSame(Date::class, $values->getValueClass());
     }
-    public function testErrorWithDefaultHeaderClass()
+    public function testErrorWhenHeaderValueHasNoHeaderName()
     {
         $this->expectException(InvalidArgumentException::class);
-        new Header(HeaderValue::class);
+        $this->expectExceptionMessageMatches('/no header name/');
+        new Header(DefaultValue::class);
     }
     public function testErrorWithHeaderClass()
     {
         $this->expectException(InvalidArgumentException::class);
-        new Header(HeaderValue::class);
+        $this->expectExceptionMessageMatches('/not a header/');
+        new Header(BaseHeaderValue::class);
     }
     public function testErrorIfNotHeaderClass()
     {

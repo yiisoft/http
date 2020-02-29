@@ -1,10 +1,15 @@
 <?php
 
-namespace Yiisoft\Http\Header;
+declare(strict_types=1);
+
+namespace Yiisoft\Http\Header\Value;
 
 use Exception;
+use Yiisoft\Http\Header\Header;
+use Yiisoft\Http\Header\WithParams;
+use Yiisoft\Http\Header\WithQualityParam;
 
-abstract class HeaderValue
+abstract class BaseHeaderValue
 {
     public const NAME = null;
 
@@ -42,6 +47,11 @@ abstract class HeaderValue
             $params[] = $key . '=' . ($quoted ? "\"{$escaped}\"" : $value);
         }
         return $this->value === '' ? implode(';', $params) : implode(';', [$this->value, ...$params]);
+    }
+
+    public static function createHeader(): Header
+    {
+        return new Header(static::class);
     }
 
     public function withValue(string $value): self

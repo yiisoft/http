@@ -1,15 +1,15 @@
 <?php
 
-namespace Yiisoft\Http\Tests\Header;
+namespace Yiisoft\Http\Tests\Header\Value;
 
-use Exception;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Http\Tests\Header\Stub\DummyHeaderValue;
-use Yiisoft\Http\Tests\Header\Stub\WithParamsHeaderValue;
+use Yiisoft\Http\Header\Header;
+use Yiisoft\Http\Tests\Header\Value\Stub\DummyHeaderValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\WithParamsHeaderValue;
 
-class HeaderValueTest extends TestCase
+class BaseHeaderValueTest extends TestCase
 {
-    public function testWithValueReturnsImmutability()
+    public function testWithValueImmutability()
     {
         $value = new DummyHeaderValue();
 
@@ -18,7 +18,7 @@ class HeaderValueTest extends TestCase
         $this->assertSame(get_class($value), get_class($clone));
         $this->assertNotSame($value, $clone);
     }
-    public function testWithParamsReturnsImmutability()
+    public function testWithParamsImmutability()
     {
         $value = new WithParamsHeaderValue();
 
@@ -27,7 +27,7 @@ class HeaderValueTest extends TestCase
         $this->assertSame(get_class($value), get_class($clone));
         $this->assertNotSame($value, $clone);
     }
-    public function testWithErrorReturnsImmutability()
+    public function testWithErrorImmutability()
     {
         $value = new DummyHeaderValue();
 
@@ -35,5 +35,12 @@ class HeaderValueTest extends TestCase
 
         $this->assertSame(get_class($value), get_class($clone));
         $this->assertNotSame($value, $clone);
+    }
+    public function testCreateHeader()
+    {
+        $header = DummyHeaderValue::createHeader();
+
+        $this->assertInstanceOf(Header::class, $header);
+        $this->assertSame(DummyHeaderValue::NAME, $header->getName());
     }
 }

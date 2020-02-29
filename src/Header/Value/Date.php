@@ -1,10 +1,12 @@
 <?php
 
-namespace Yiisoft\Http\Header;
+declare(strict_types=1);
+
+namespace Yiisoft\Http\Header\Value;
 
 use DateTimeImmutable;
 
-final class Date extends HeaderValue
+final class Date extends BaseHeaderValue
 {
     public const NAME = 'Date';
 
