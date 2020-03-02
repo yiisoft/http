@@ -24,7 +24,7 @@ abstract class BaseHeaderValue
      * @var string
      */
     private string $quality = '1';
-    private ?Exception $error = null;
+    protected ?Exception $error = null;
     protected const HTTP_DATETIME_FORMAT = 'D, d M Y H:i:s \\G\\M\\T';
 
     public function __construct(string $value = '')

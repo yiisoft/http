@@ -5,9 +5,9 @@ namespace Yiisoft\Http\Tests\Header;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Http\Header\Header;
-use Yiisoft\Http\Header\Value\Accept;
+use Yiisoft\Http\Header\Value\Accept\Accept;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
-use Yiisoft\Http\Header\Value\Date;
+use Yiisoft\Http\Header\Value\Date\Date;
 use Yiisoft\Http\Header\Value\DefaultValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;
@@ -43,10 +43,10 @@ class HeaderTest extends TestCase
     {
         $headers = ['Newauth realm="apps", type=1, title="Login to \\"apps\\"", Basic realm="simple"'];
 
-        $values = Header::createFromArray($headers, 'WWW-Authenticate');
+        $header = (new Header('WWW-Authenticate'))->addArray($headers);
 
-        $this->assertSame('WWW-Authenticate', $values->getName());
-        $this->assertSame($headers, $values->getStrings());
+        $this->assertSame('WWW-Authenticate', $header->getName());
+        $this->assertSame($headers, $header->getStrings());
     }
     public function testCreateFromFewStringValues()
     {
@@ -62,10 +62,10 @@ class HeaderTest extends TestCase
             '*/*',
         ];
 
-        $values = Header::createFromArray($headers, 'accept');
+        $header = (new Header('accept'))->addArray($headers);
 
-        $this->assertSame('accept', $values->getName());
-        $this->assertSame($headers, $values->getStrings());
+        $this->assertSame('accept', $header->getName());
+        $this->assertSame($headers, $header->getStrings());
     }
     public function testAddObject()
     {
@@ -73,12 +73,12 @@ class HeaderTest extends TestCase
             'text/*;q=0.3',
             'text/html;q=0.7',
         ];
-        $values = Header::createFromArray($headers, Accept::class);
+        $header = (new Header(Accept::class))->addArray($headers);
 
-        $values->add(new Accept('*/*'));
+        $header->add(new Accept('*/*'));
 
-        $this->assertSame(Accept::NAME, $values->getName());
-        $this->assertSame(['text/*;q=0.3', 'text/html;q=0.7', '*/*'], $values->getStrings());
+        $this->assertSame(Accept::NAME, $header->getName());
+        $this->assertSame(['text/*;q=0.3', 'text/html;q=0.7', '*/*'], $header->getStrings());
     }
     public function testExceptionWhenAddOtherObject()
     {
@@ -86,11 +86,11 @@ class HeaderTest extends TestCase
             'text/*;q=0.3',
             'text/html;q=0.7',
         ];
-        $values = Header::createFromArray($headers, Accept::class);
+        $header = (new Header(Accept::class))->addArray($headers);
 
         $this->expectException(InvalidArgumentException::class);
 
-        $values->add(new Date('*/*'));
+        $header->add(new Date('*/*'));
     }
 
     public function valueAndParametersDataProvider(): array

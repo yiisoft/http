@@ -9,16 +9,16 @@ use Psr\Http\Message\MessageInterface;
 use Yiisoft\Http\Header\Value\DefaultValue;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
-final class Header implements \IteratorAggregate, \Countable
+class Header implements \IteratorAggregate, \Countable
 {
-    private string $headerClass;
-    private string $headerName;
+    protected bool $listedValues = false;
+    protected bool $withParams = false;
+    protected string $headerClass;
+    protected string $headerName;
     /** @var BaseHeaderValue[] */
-    private array $collection = [];
+    protected array $collection = [];
 
-    private bool $listedValues = false;
-    private bool $withParams = false;
-
+    protected const DEFAULT_VALUE_CLASS = DefaultValue::class;
     // Parsing's constants
     private const
         DELIMITERS = '"(),/:;<=>?@[\\]{}',
@@ -49,7 +49,7 @@ final class Header implements \IteratorAggregate, \Countable
                 throw new InvalidArgumentException("Empty header name.");
             }
             $this->headerName = $nameOrClass;
-            $this->headerClass = DefaultValue::class;
+            $this->headerClass = self::DEFAULT_VALUE_CLASS;
         }
     }
 
@@ -60,16 +60,6 @@ final class Header implements \IteratorAggregate, \Countable
     public function count(): int
     {
         return count($this->collection);
-    }
-    /**
-     * @param BaseHeaderValue[]|string[] $values
-     * @param string                     $headerClass
-     * @return static
-     * @throws InvalidArgumentException
-     */
-    public static function createFromArray(array $values, string $headerClass): self
-    {
-        return (new static($headerClass))->addArray($values);
     }
 
     public function getName(): string
@@ -84,7 +74,7 @@ final class Header implements \IteratorAggregate, \Countable
      * @param bool $ignoreIncorrect
      * @return BaseHeaderValue[]
      */
-    public function getValues($ignoreIncorrect = true): array
+    public function getValues(bool $ignoreIncorrect = true): array
     {
         $result = [];
         foreach ($this->collection as $header) {
@@ -99,7 +89,7 @@ final class Header implements \IteratorAggregate, \Countable
      * @param bool $ignoreIncorrect
      * @return string[]
      */
-    public function getStrings($ignoreIncorrect = true): array
+    public function getStrings(bool $ignoreIncorrect = true): array
     {
         $result = [];
         foreach ($this->collection as $header) {
@@ -134,7 +124,7 @@ final class Header implements \IteratorAggregate, \Countable
                     sprintf('The value must be an instance of %s, %s given', $this->headerClass, get_class($value))
                 );
             }
-            $this->collection[] = $value;
+            $this->addValue($value);
             return $this;
         }
         if (is_string($value)) {
@@ -146,8 +136,11 @@ final class Header implements \IteratorAggregate, \Countable
         );
     }
 
-    public function inject(MessageInterface $message, bool $replace = true, bool $ignoreIncorrect = true): MessageInterface
-    {
+    public function inject(
+        MessageInterface $message,
+        bool $replace = true,
+        bool $ignoreIncorrect = true
+    ): MessageInterface {
         if ($replace) {
             $message = $message->withoutHeader($this->headerName);
         }
@@ -160,10 +153,14 @@ final class Header implements \IteratorAggregate, \Countable
         return $message;
     }
 
+    protected function addValue(BaseHeaderValue $value): void
+    {
+        $this->collection[] = $value;
+    }
     private function parseAndCollect(string $body): void
     {
         if (!$this->listedValues && !$this->withParams) {
-            $this->collection[] = new $this->headerClass(trim($body));
+            $this->addValue(new $this->headerClass(trim($body)));
             return;
         }
         $part = self::READ_VALUE;
@@ -186,7 +183,7 @@ final class Header implements \IteratorAggregate, \Countable
             if ($error !== null) {
                 $item = $item->withError($error);
             }
-            $this->collection[] = $item;
+            $this->addValue($item);
             $key = $buffer = $value = '';
             $params = [];
             ++$added;
