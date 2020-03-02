@@ -42,15 +42,15 @@ class Header implements \IteratorAggregate, \Countable
                 throw new InvalidArgumentException("{$nameOrClass} has no header name.");
             }
             $this->headerName = $nameOrClass::NAME;
-            $this->listedValues = is_subclass_of($nameOrClass, ListedValues::class, true);
-            $this->withParams = is_subclass_of($nameOrClass, WithParams::class, true);
         } else {
             if ($nameOrClass === '') {
                 throw new InvalidArgumentException("Empty header name.");
             }
             $this->headerName = $nameOrClass;
-            $this->headerClass = self::DEFAULT_VALUE_CLASS;
+            $this->headerClass = static::DEFAULT_VALUE_CLASS;
         }
+        $this->listedValues = is_subclass_of($this->headerClass, ListedValues::class, true);
+        $this->withParams = is_subclass_of($this->headerClass, WithParams::class, true);
     }
 
     public function getIterator(): iterable
