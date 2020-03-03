@@ -23,8 +23,7 @@ class SortableHeader extends Header
     }
 
     /**
-     * Todo
-     * Add and and sort value
+     * Add value in order
      */
     protected function addValue(BaseHeaderValue $value): void
     {
@@ -34,18 +33,13 @@ class SortableHeader extends Header
         }
         for ($pos = array_key_last($this->collection); $pos >= 0; --$pos) {
             $item = $this->collection[$pos];
-            if ((float)$item->getQuality() >= (float)$value->getQuality()) {
-                break;
+            $result = (float)$item->getQuality() <=> (float)$value->getQuality();
+            if ($result >= 0) {
+                $this->collection[$pos + 1] = $value;
+                return;
             }
+            $this->collection[$pos + 1] = $item;
         }
-        if ($pos < 0) {
-            array_unshift($this->collection, $value);
-        } elseif ($pos === array_key_last($this->collection)) {
-            $this->collection[] = $value;
-        } else {
-            $toPush = array_slice($this->collection, $pos + 1);
-            $this->collection = array_slice($this->collection, 0, $pos + 1);
-            array_push($this->collection, $value, ...$toPush);
-        }
+        $this->collection[0] = $value;
     }
 }

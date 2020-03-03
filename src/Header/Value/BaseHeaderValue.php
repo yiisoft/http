@@ -6,6 +6,7 @@ namespace Yiisoft\Http\Header\Value;
 
 use Exception;
 use Yiisoft\Http\Header\Header;
+use Yiisoft\Http\Header\SortableHeader;
 use Yiisoft\Http\Header\WithParams;
 use Yiisoft\Http\Header\WithQualityParam;
 
@@ -51,7 +52,8 @@ abstract class BaseHeaderValue
 
     public static function createHeader(): Header
     {
-        return new Header(static::class);
+        $class = is_subclass_of(static::class, WithQualityParam::class) ? SortableHeader::class : Header::class;
+        return new $class(static::class);
     }
 
     public function withValue(string $value): self

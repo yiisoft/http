@@ -5,14 +5,8 @@ namespace Yiisoft\Http\Tests\Header;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Http\Header\SortableHeader;
-use Yiisoft\Http\Header\Value\Accept\Accept;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\Date\Date;
-use Yiisoft\Http\Header\Value\DefaultValue;
-use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
-use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\QualityHeaderValue;
-use Yiisoft\Http\Tests\Header\Value\Stub\WithParamsHeaderValue;
 
 class SortableHeaderTest extends TestCase
 {
