@@ -7,7 +7,7 @@ namespace Yiisoft\Http\Header\Value;
 use Yiisoft\Http\Header\SortableHeader;
 use Yiisoft\Http\Header\WithQualityParam;
 
-final class SortableValue extends BaseHeaderValue implements WithQualityParam
+final class SortedValue extends BaseHeaderValue implements WithQualityParam
 {
     public static function createHeader(string $headerName = 'Undefined'): SortableHeader
     {

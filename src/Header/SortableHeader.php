@@ -6,12 +6,12 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
-use Yiisoft\Http\Header\Value\SortableValue;
+use Yiisoft\Http\Header\Value\SortedValue;
 
 class SortableHeader extends Header
 {
     // todo: sorting, comparing
-    protected const DEFAULT_VALUE_CLASS = SortableValue::class;
+    protected const DEFAULT_VALUE_CLASS = SortedValue::class;
 
     public function __construct(string $nameOrClass) {
         parent::__construct($nameOrClass);

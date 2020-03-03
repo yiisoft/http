@@ -8,7 +8,7 @@ use Yiisoft\Http\Header\Header;
 use Yiisoft\Http\Header\Value\Accept\Accept;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\Date\Date;
-use Yiisoft\Http\Header\Value\DefaultValue;
+use Yiisoft\Http\Header\Value\SimpleValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\QualityHeaderValue;
@@ -26,7 +26,7 @@ class HeaderTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/no header name/');
-        new Header(DefaultValue::class);
+        new Header(SimpleValue::class);
     }
     public function testErrorWithHeaderClass()
     {

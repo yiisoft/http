@@ -6,7 +6,7 @@ namespace Yiisoft\Http\Header\Value;
 
 use Yiisoft\Http\Header\Header;
 
-final class DefaultValue extends BaseHeaderValue
+final class SimpleValue extends BaseHeaderValue
 {
     public static function createHeader(string $headerName = 'Undefined'): Header
     {

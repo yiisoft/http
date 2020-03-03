@@ -6,7 +6,7 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
-use Yiisoft\Http\Header\Value\DefaultValue;
+use Yiisoft\Http\Header\Value\SimpleValue;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
 class Header implements \IteratorAggregate, \Countable
@@ -18,7 +18,7 @@ class Header implements \IteratorAggregate, \Countable
     /** @var BaseHeaderValue[] */
     protected array $collection = [];
 
-    protected const DEFAULT_VALUE_CLASS = DefaultValue::class;
+    protected const DEFAULT_VALUE_CLASS = SimpleValue::class;
     // Parsing's constants
     private const
         DELIMITERS = '"(),/:;<=>?@[\\]{}',

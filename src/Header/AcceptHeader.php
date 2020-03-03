@@ -40,7 +40,6 @@ class AcceptHeader extends Header
             } elseif ($result === 0) {
                 $itemTypes = array_reverse(explode('/', $item->getValue()));
                 $valueTypes = array_reverse(explode('/', $value->getValue()));
-                var_dump($itemTypes, $valueTypes);
                 $result = count($itemTypes) <=> count($valueTypes);
                 if ($result > 0) {
                     break;
