@@ -6,15 +6,15 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Http\Header\SortableHeader;
 use Yiisoft\Http\Header\Value\Date\Date;
-use Yiisoft\Http\Tests\Header\Value\Stub\QualityHeaderValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\SortedHeaderValue;
 
 class SortableHeaderTest extends TestCase
 {
     public function testHeaderValueClassPassed()
     {
-        $values = new SortableHeader(QualityHeaderValue::class);
+        $values = new SortableHeader(SortedHeaderValue::class);
         $this->assertSame('Test-Quality', $values->getName());
-        $this->assertSame(QualityHeaderValue::class, $values->getValueClass());
+        $this->assertSame(SortedHeaderValue::class, $values->getValueClass());
     }
     public function testErrorWithHeaderClass()
     {

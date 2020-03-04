@@ -7,7 +7,7 @@ namespace Yiisoft\Http\Header\Value\Date;
 /**
  * @see https://tools.ietf.org/html/rfc7232#section-3.3
  */
-final class IfModifiedSince extends Base
+final class IfModifiedSince extends Date
 {
     public const NAME = 'If-Modified-Since';
 }

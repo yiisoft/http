@@ -14,44 +14,7 @@ The package provides handy HTTP utility such as method constants.
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/http/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/http/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
 
-## Method constants
+## Documentation
 
-Individual HTTP methods could be referenced as
-
-```php
-use Yiisoft\Http\Method;
-
-Method::GET;
-Method::POST;
-Method::PUT;
-Method::DELETE;
-Method::PATCH;
-Method::HEAD;
-Method::OPTIONS;
-```
-
-To have a list of these, use:
-
-```php
-use Yiisoft\Http\Method;
-
-Method::ANY;
-```
-
-## HTTP status codes
-
-Status codes could be referenced by name as:
-
-```php
-use Yiisoft\Http\Status;
-
-Status::NOT_FOUND;
-```
-
-Status text could be obtained as the following:
-
-```php
-use Yiisoft\Http\Status;
-
-Status::TEXTS[Status::NOT_FOUND];
-```
+- [English](docs/en/README.md)
+- [Russian](docs/ru/README.md)

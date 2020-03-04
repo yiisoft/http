@@ -6,19 +6,18 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Yiisoft\Http\Header\Value\Accept\Accept;
-use Yiisoft\Http\Header\Value\Accept\Base;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
 class AcceptHeader extends Header
 {
-    // todo: sorting, comparing
+    // todo: comparing
     protected const DEFAULT_VALUE_CLASS = Accept::class;
 
     public function __construct(string $nameOrClass) {
         parent::__construct($nameOrClass);
-        if (!is_subclass_of($this->headerClass, Base::class, true)) {
+        if (!is_a($this->headerClass, Accept::class, true)) {
             throw new InvalidArgumentException(
-                sprintf("%s class is not an instance of %s", $this->headerClass, Base::class)
+                sprintf("%s class is not an instance of %s", $this->headerClass, Accept::class)
             );
         }
     }
@@ -38,8 +37,14 @@ class AcceptHeader extends Header
             if ($result > 0) {
                 break;
             } elseif ($result === 0) {
-                $itemTypes = array_reverse(explode('/', $item->getValue()));
-                $valueTypes = array_reverse(explode('/', $value->getValue()));
+                $separator = $this->headerClass::VALUE_SEPARATOR;
+                if ($separator !== '') {
+                    $itemTypes = array_reverse(explode($separator, $item->getValue()));
+                    $valueTypes = array_reverse(explode($separator, $value->getValue()));
+                } else {
+                    $itemTypes = [$item->getValue()];
+                    $valueTypes = [$value->getValue()];
+                }
                 $result = count($itemTypes) <=> count($valueTypes);
                 if ($result > 0) {
                     break;

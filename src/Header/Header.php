@@ -152,6 +152,11 @@ class Header implements \IteratorAggregate, \Countable
         }
         return $message;
     }
+    public function extract(MessageInterface $message): self
+    {
+        $this->addArray($message->getHeader($this->headerName));
+        return $this;
+    }
 
     protected function addValue(BaseHeaderValue $value): void
     {

@@ -11,7 +11,7 @@ use Yiisoft\Http\Header\Value\Date\Date;
 use Yiisoft\Http\Header\Value\SimpleValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;
-use Yiisoft\Http\Tests\Header\Value\Stub\QualityHeaderValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\SortedHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\WithParamsHeaderValue;
 
 class HeaderTest extends TestCase
@@ -260,7 +260,7 @@ class HeaderTest extends TestCase
         ?string $getQuality = null
     ): void {
         $defaultValue = '0.987';
-        $headerValue = (new QualityHeaderValue())->withParams(['q' => $defaultValue]);
+        $headerValue = (new SortedHeaderValue())->withParams(['q' => $defaultValue]);
 
         $this->assertSame($result, $headerValue->setQuality($setQuality));
         $this->assertSame($getQuality ?? $defaultValue, $headerValue->getQuality());

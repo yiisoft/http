@@ -35,17 +35,19 @@ abstract class BaseHeaderValue
     public function __toString(): string
     {
         $params = [];
-        foreach ($this->getParams() as $key => $value) {
-            if ($key === 'q' && $this instanceof WithQualityParam) {
-                if ($value === '1') {
-                    continue;
+        if ($this instanceof WithParams) {
+            foreach ($this->getParams() as $key => $value) {
+                if ($key === 'q' && $this instanceof WithQualityParam) {
+                    if ($value === '1') {
+                        continue;
+                    }
                 }
+                $escaped = preg_replace('/([\\\\"])/', '\\\\$1', $value);
+                $quoted = $value === ''
+                    || strlen($escaped) !== strlen($value)
+                    || preg_match('/[\\s,;()\\/:<=>?@\\[\\\\\\]{}]/', $value) === 1;
+                $params[] = $key . '=' . ($quoted ? "\"{$escaped}\"" : $value);
             }
-            $escaped = preg_replace('/([\\\\"])/', '\\\\$1', $value);
-            $quoted = $value === ''
-                || strlen($escaped) !== strlen($value)
-                || preg_match('/[\\s,;()\\/:<=>?@\\[\\\\\\]{}]/', $value) === 1;
-            $params[] = $key . '=' . ($quoted ? "\"{$escaped}\"" : $value);
         }
         return $this->value === '' ? implode(';', $params) : implode(';', [$this->value, ...$params]);
     }
@@ -75,9 +77,6 @@ abstract class BaseHeaderValue
     public function withParams(array $params): self
     {
         $clone = clone $this;
-        if (!$this instanceof WithParams) {
-            return $clone;
-        }
         $clone->params = [];
         foreach ($params as $key => $value) {
             $key = strtolower($key);

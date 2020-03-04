@@ -10,7 +10,6 @@ use Yiisoft\Http\Header\Value\SortedValue;
 
 class SortableHeader extends Header
 {
-    // todo: sorting, comparing
     protected const DEFAULT_VALUE_CLASS = SortedValue::class;
 
     public function __construct(string $nameOrClass) {

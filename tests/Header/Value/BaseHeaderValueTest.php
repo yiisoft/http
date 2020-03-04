@@ -5,6 +5,7 @@ namespace Yiisoft\Http\Tests\Header\Value;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Http\Header\Header;
 use Yiisoft\Http\Tests\Header\Value\Stub\DummyHeaderValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\SortedHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\WithParamsHeaderValue;
 
 class BaseHeaderValueTest extends TestCase
@@ -42,5 +43,38 @@ class BaseHeaderValueTest extends TestCase
 
         $this->assertInstanceOf(Header::class, $header);
         $this->assertSame(DummyHeaderValue::NAME, $header->getName());
+    }
+    public function testBehaviorWithoutParams()
+    {
+        $params = ['q' => '0.4', 'param' => 'test', 'foo' => 'bar'];
+        $value = (new DummyHeaderValue('foo'))
+            ->withParams($params);
+
+        $this->assertFalse($value->hasError());
+        $this->assertSame('foo', (string)$value);
+        $this->assertSame('1', $value->getQuality());
+        $this->assertEquals($params, $value->getParams());
+    }
+    public function testBehaviorWithParams()
+    {
+        $params = ['q' => '0.4', 'param' => 'test', 'foo' => 'bar'];
+        $value = (new WithParamsHeaderValue('foo'))
+            ->withParams($params);
+
+        $this->assertFalse($value->hasError());
+        $this->assertSame('foo;q=0.4;param=test;foo=bar', (string)$value);
+        $this->assertSame('1', $value->getQuality());
+        $this->assertEquals($params, $value->getParams());
+    }
+    public function testBehaviorWithQualityParam()
+    {
+        $params = ['param' => 'test', 'foo' => 'bar', 'q' => '0.4'];
+        $value = (new SortedHeaderValue('foo'))
+            ->withParams($params);
+
+        $this->assertFalse($value->hasError());
+        $this->assertSame('foo;param=test;foo=bar;q=0.4', (string)$value);
+        $this->assertSame('0.4', $value->getQuality());
+        $this->assertEquals(['q' => '0.4', 'param' => 'test', 'foo' => 'bar'], $value->getParams());
     }
 }
