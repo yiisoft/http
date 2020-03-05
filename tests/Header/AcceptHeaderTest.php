@@ -26,7 +26,7 @@ class AcceptHeaderTest extends TestCase
     }
     public function testCreateFromStringValues()
     {
-        $header = (new AcceptHeader('Accept'))->add('*/*');
+        $header = (new AcceptHeader('Accept'))->withValue('*/*');
 
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(['*/*'], $header->getStrings());
@@ -40,7 +40,7 @@ class AcceptHeaderTest extends TestCase
             'text/plain;q=0.5',
         ];
 
-        $header = (new AcceptHeader('Accept-Test'))->addArray($headers);
+        $header = (new AcceptHeader('Accept-Test'))->withValues($headers);
 
         $this->assertSame('Accept-Test', $header->getName());
         $this->assertSame(
@@ -64,7 +64,7 @@ class AcceptHeaderTest extends TestCase
             'text/plain;foo=2',
         ];
 
-        $header = (new AcceptHeader('Accept'))->addArray($headers);
+        $header = (new AcceptHeader('Accept'))->withValues($headers);
 
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(
@@ -84,7 +84,7 @@ class AcceptHeaderTest extends TestCase
     {
         $headers = ' text/*, text/plain, text/plain;format=flowed, */*';
 
-        $header = (new AcceptHeader('Accept'))->add($headers);
+        $header = (new AcceptHeader('Accept'))->withValue($headers);
 
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(
@@ -101,7 +101,7 @@ class AcceptHeaderTest extends TestCase
     {
         $headers = 'foo/bar/*, foo/bar/baz, */bar, */*/*, foo/*/*, foo/*/baz, foo/bar';
 
-        $header = (new AcceptHeader('Accept'))->add($headers);
+        $header = (new AcceptHeader('Accept'))->withValue($headers);
 
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(
@@ -131,7 +131,7 @@ class AcceptHeaderTest extends TestCase
             '*/*',
         ];
 
-        $header = (new AcceptHeader('Accept'))->addArray($headers);
+        $header = (new AcceptHeader('Accept'))->withValues($headers);
 
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(
@@ -154,7 +154,7 @@ class AcceptHeaderTest extends TestCase
     {
         $headers = '*, utf-8, iso-8859-5';
 
-        $header = AcceptCharset::createHeader()->add($headers);
+        $header = AcceptCharset::createHeader()->withValue($headers);
 
         $this->assertSame('Accept-Charset', $header->getName());
         $this->assertSame(
@@ -170,7 +170,7 @@ class AcceptHeaderTest extends TestCase
     {
         $headers = ['iso-8859-5, unicode-1-1;q=0.8, utf-8, undef/ned, *;q=0'];
 
-        $header = AcceptCharset::createHeader()->addArray($headers);
+        $header = AcceptCharset::createHeader()->withValues($headers);
 
         $this->assertSame('Accept-Charset', $header->getName());
         $this->assertSame(
@@ -189,7 +189,7 @@ class AcceptHeaderTest extends TestCase
     {
         $headers = '*, compress, some/encoding, gzip';
 
-        $header = AcceptEncoding::createHeader()->add($headers);
+        $header = AcceptEncoding::createHeader()->withValue($headers);
 
         $this->assertSame('Accept-Encoding', $header->getName());
         $this->assertSame(
@@ -210,7 +210,7 @@ class AcceptHeaderTest extends TestCase
             'gzip;q=1.0, identity; q=0.5, deflate;q=0',
         ];
 
-        $header = AcceptEncoding::createHeader()->addArray($headers);
+        $header = AcceptEncoding::createHeader()->withValues($headers);
 
         $this->assertSame('Accept-Encoding', $header->getName());
         $this->assertSame(
@@ -235,7 +235,7 @@ class AcceptHeaderTest extends TestCase
             'zh-Hant-CN-x-private1',
         ];
 
-        $header = AcceptLanguage::createHeader()->addArray($headers);
+        $header = AcceptLanguage::createHeader()->withValues($headers);
 
         $this->assertSame('Accept-Language', $header->getName());
         $this->assertSame(
@@ -262,7 +262,7 @@ class AcceptHeaderTest extends TestCase
             'ru-RU;q=0.1',
         ];
 
-        $header = AcceptLanguage::createHeader()->addArray($headers);
+        $header = AcceptLanguage::createHeader()->withValues($headers);
 
         $this->assertSame('Accept-Language', $header->getName());
         $this->assertSame(

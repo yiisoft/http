@@ -100,6 +100,7 @@ use \Yiisoft\Http\Header\Value\Forwarded;
 
 /** @var \Psr\Http\Message\ServerRequestInterface $request */
 $header = Forwarded::createHeader()->extract($request);
+
 foreach ($header->getValues() as $headerValue) {
     $paramFor = $headerValue->getParams()['for'] ?? null;
     if ($paramFor === null) {
@@ -112,15 +113,25 @@ foreach ($header->getValues() as $headerValue) {
 
 
 
+```php
+/** @var \Psr\Http\Message\ResponseInterface $response */
+$dateHeader = \Yiisoft\Http\Header\Value\Date::createHeader()
+    ->withValue(new DateTimeImmutable())
+    ->inject($response);
+$dateHeader = \Yiisoft\Http\Header\Value\Cache\Expires::createHeader()
+    ->withValue(new DateTimeImmutable('+1 day'))
+    ->inject($response);
+```
+
 Если вы не хотите описывать заголовок в отдельном классе, то можете использовать заготовленные классы:
 ```php
 <?php
 // создать заголовок с перечисляемыми значениями
 $myListHeader = \Yiisoft\Http\Header\Value\ListedValue::createHeader('My-List')
-    ->addArray(['foo', 'bar', 'baz']);
+    ->withValues(['foo', 'bar', 'baz']);
 // создать заголовок с перечисляемыми сортируемыми значениями
 \Yiisoft\Http\Header\Value\SortedValue::createHeader('My-Sorted-List')
-    ->addArray(['foo', 'bar;q=0.5', 'baz;q=0'])
+    ->withValues(['foo', 'bar;q=0.5', 'baz;q=0'])
     ->inject($response);
 ?>
 ```

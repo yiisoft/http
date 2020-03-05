@@ -5,7 +5,7 @@ namespace Yiisoft\Http\Tests\Header;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Http\Header\SortableHeader;
-use Yiisoft\Http\Header\Value\Date\Date;
+use Yiisoft\Http\Header\Value\Date;
 use Yiisoft\Http\Tests\Header\Value\Stub\SortedHeaderValue;
 
 class SortableHeaderTest extends TestCase
@@ -23,7 +23,7 @@ class SortableHeaderTest extends TestCase
     }
     public function testCreateFromStringValues()
     {
-        $header = (new SortableHeader('Accept'))->add('*/*');
+        $header = (new SortableHeader('Accept'))->withValue('*/*');
 
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(['*/*'], $header->getStrings());
@@ -37,7 +37,7 @@ class SortableHeaderTest extends TestCase
             'text/plain;q=0.5',
         ];
 
-        $header = (new SortableHeader('Accept-Test'))->addArray($headers);
+        $header = (new SortableHeader('Accept-Test'))->withValues($headers);
 
         $this->assertSame('Accept-Test', $header->getName());
         $this->assertSame(
@@ -64,7 +64,7 @@ class SortableHeaderTest extends TestCase
             '*/*',
         ];
 
-        $header = (new SortableHeader('Accept'))->addArray($headers);
+        $header = (new SortableHeader('Accept'))->withValues($headers);
 
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(

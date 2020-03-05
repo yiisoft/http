@@ -7,8 +7,9 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Http\Header\Header;
 use Yiisoft\Http\Header\Value\Accept\Accept;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
-use Yiisoft\Http\Header\Value\Date\Date;
+use Yiisoft\Http\Header\Value\Date;
 use Yiisoft\Http\Header\Value\SimpleValue;
+use Yiisoft\Http\Tests\Header\Value\Stub\DummyHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\SortedHeaderValue;
@@ -39,11 +40,29 @@ class HeaderTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         new Header(\DateTimeImmutable::class);
     }
+    public function testWithValueImmutability()
+    {
+        $header = new Header('WWW-Authenticate');
+
+        $clone = $header->withValue('test');
+
+        $this->assertSame(get_class($header), get_class($clone));
+        $this->assertNotSame($header, $clone);
+    }
+    public function testWithValuesImmutability()
+    {
+        $header = new Header('WWW-Authenticate');
+
+        $clone = $header->withValues(['test']);
+
+        $this->assertSame(get_class($header), get_class($clone));
+        $this->assertNotSame($header, $clone);
+    }
     public function testCreateFromOneStringValue()
     {
         $headers = ['Newauth realm="apps", type=1, title="Login to \\"apps\\"", Basic realm="simple"'];
 
-        $header = (new Header('WWW-Authenticate'))->addArray($headers);
+        $header = (new Header('WWW-Authenticate'))->withValues($headers);
 
         $this->assertSame('WWW-Authenticate', $header->getName());
         $this->assertSame($headers, $header->getStrings());
@@ -62,7 +81,7 @@ class HeaderTest extends TestCase
             '*/*',
         ];
 
-        $header = (new Header('accept'))->addArray($headers);
+        $header = (new Header('accept'))->withValues($headers);
 
         $this->assertSame('accept', $header->getName());
         $this->assertSame($headers, $header->getStrings());
@@ -73,24 +92,24 @@ class HeaderTest extends TestCase
             'text/*;q=0.3',
             'text/html;q=0.7',
         ];
-        $header = (new Header(Accept::class))->addArray($headers);
+        $header = (new Header(Accept::class))->withValues($headers);
 
-        $header->add(new Accept('*/*'));
+        $header = $header->withValue(new Accept('*/*'));
 
         $this->assertSame(Accept::NAME, $header->getName());
         $this->assertSame(['text/*;q=0.3', 'text/html;q=0.7', '*/*'], $header->getStrings());
     }
-    public function testExceptionWhenAddOtherObject()
+    public function testExceptionWhenAddOtherClassObject()
     {
         $headers = [
             'text/*;q=0.3',
             'text/html;q=0.7',
         ];
-        $header = (new Header(Accept::class))->addArray($headers);
+        $header = (new Header(Accept::class))->withValues($headers);
 
         $this->expectException(InvalidArgumentException::class);
 
-        $header->add(new Date('*/*'));
+        $header->withValue(new Date('*/*'));
     }
 
     public function valueAndParametersDataProvider(): array
@@ -166,8 +185,7 @@ class HeaderTest extends TestCase
         array $params,
         string $output = null
     ): void {
-        $header = new Header(WithParamsHeaderValue::class);
-        $header->add($input);
+        $header = (new Header(WithParamsHeaderValue::class))->withValue($input);
         /** @var WithParamsHeaderValue $headerValue */
         $headerValue = $header->getValues(true)[0];
 
@@ -218,8 +236,7 @@ class HeaderTest extends TestCase
         array $params,
         string $output = null
     ): void {
-        $header = new Header(WithParamsHeaderValue::class);
-        $header->add($input);
+        $header = (new Header(WithParamsHeaderValue::class))->withValue($input);
         /** @var WithParamsHeaderValue $headerValue */
         $headerValue = $header->getValues(false)[0];
 
@@ -283,8 +300,7 @@ class HeaderTest extends TestCase
      */
     public function testParsingAndRepackListedValues(string $input, array $values): void
     {
-        $header = new Header(ListedValuesHeaderValue::class);
-        $header->add($input);
+        $header = (new Header(ListedValuesHeaderValue::class))->withValue($input);
         $strings = $header->getStrings(true);
         $this->assertSame($values, $strings);
     }
@@ -335,9 +351,8 @@ class HeaderTest extends TestCase
      */
     public function testParsingAndRepackListedValuesWithParams(string $input, array $valueParams): void
     {
-        $header = new Header(ListedValuesWithParamsHeaderValue::class);
+        $header = (new Header(ListedValuesWithParamsHeaderValue::class))->withValue($input);
         $result = [];
-        $header->add($input);
         foreach ($header->getValues(true) as $value) {
             $result[] = [$value->getValue(), $value->getParams()];
         }

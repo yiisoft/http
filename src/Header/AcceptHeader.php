@@ -8,12 +8,13 @@ use InvalidArgumentException;
 use Yiisoft\Http\Header\Value\Accept\Accept;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
-class AcceptHeader extends Header
+final class AcceptHeader extends Header
 {
     // todo: comparing
     protected const DEFAULT_VALUE_CLASS = Accept::class;
 
-    public function __construct(string $nameOrClass) {
+    public function __construct(string $nameOrClass)
+    {
         parent::__construct($nameOrClass);
         if (!is_a($this->headerClass, Accept::class, true)) {
             throw new InvalidArgumentException(
@@ -25,7 +26,7 @@ class AcceptHeader extends Header
     /**
      * Add value in order
      */
-    protected function addValue(BaseHeaderValue $value): void
+    protected function collect(BaseHeaderValue $value): void
     {
         if (count($this->collection) === 0) {
             $this->collection[] = $value;

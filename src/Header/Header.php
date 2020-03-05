@@ -105,37 +105,32 @@ class Header implements \IteratorAggregate, \Countable
      * @param string[]|BaseHeaderValue[] $values
      * @return $this
      */
-    public function addArray(array $values): self
+    public function withValues(array $values): self
     {
+        $clone = clone $this;
         foreach ($values as $value) {
-            $this->add($value);
+            $clone->addValue($value);
         }
-        return $this;
+        return $clone;
     }
     /**
      * @param string|BaseHeaderValue $value
      * @return $this
      */
-    public function add($value): self
+    public function withValue($value): self
     {
-        if ($value instanceof BaseHeaderValue) {
-            if (get_class($value) !== $this->headerClass) {
-                throw new InvalidArgumentException(
-                    sprintf('The value must be an instance of %s, %s given', $this->headerClass, get_class($value))
-                );
-            }
-            $this->addValue($value);
-            return $this;
-        }
-        if (is_string($value)) {
-            $this->parseAndCollect($value);
-            return $this;
-        }
-        throw new InvalidArgumentException(
-            sprintf('The value must be an instance of %s or string', $this->headerClass)
-        );
+        $clone = clone $this;
+        $clone->addValue($value);
+        return $clone;
     }
 
+    /**
+     * Export header values into Request or Response
+     * @param MessageInterface $message Request or Response instance
+     * @param bool $replace Replace existing headers
+     * @param bool $ignoreIncorrect Don't export values that have error
+     * @return MessageInterface
+     */
     public function inject(
         MessageInterface $message,
         bool $replace = true,
@@ -152,20 +147,47 @@ class Header implements \IteratorAggregate, \Countable
         }
         return $message;
     }
+    /**
+     * Import header values from Request or Response
+     * @param MessageInterface $message Request or Response instance
+     * @return $this
+     */
     public function extract(MessageInterface $message): self
     {
-        $this->addArray($message->getHeader($this->headerName));
+        $this->withValues($message->getHeader($this->headerName));
         return $this;
     }
 
-    protected function addValue(BaseHeaderValue $value): void
+    /**
+     * @param string|BaseHeaderValue $value
+     */
+    protected function addValue($value): void
+    {
+        if ($value instanceof BaseHeaderValue) {
+            if (get_class($value) !== $this->headerClass) {
+                throw new InvalidArgumentException(
+                    sprintf('The value must be an instance of %s, %s given', $this->headerClass, get_class($value))
+                );
+            }
+            $this->collect($value);
+            return;
+        }
+        if (is_string($value)) {
+            $this->parseAndCollect($value);
+            return;
+        }
+        throw new InvalidArgumentException(
+            sprintf('The value must be an instance of %s or string', $this->headerClass)
+        );
+    }
+    protected function collect(BaseHeaderValue $value): void
     {
         $this->collection[] = $value;
     }
     private function parseAndCollect(string $body): void
     {
         if (!$this->listedValues && !$this->withParams) {
-            $this->addValue(new $this->headerClass(trim($body)));
+            $this->collect(new $this->headerClass(trim($body)));
             return;
         }
         $part = self::READ_VALUE;
@@ -188,7 +210,7 @@ class Header implements \IteratorAggregate, \Countable
             if ($error !== null) {
                 $item = $item->withError($error);
             }
-            $this->addValue($item);
+            $this->collect($item);
             $key = $buffer = $value = '';
             $params = [];
             ++$added;

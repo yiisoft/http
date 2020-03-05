@@ -8,11 +8,12 @@ use InvalidArgumentException;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\SortedValue;
 
-class SortableHeader extends Header
+final class SortableHeader extends Header
 {
     protected const DEFAULT_VALUE_CLASS = SortedValue::class;
 
-    public function __construct(string $nameOrClass) {
+    public function __construct(string $nameOrClass)
+    {
         parent::__construct($nameOrClass);
         if (!is_subclass_of($this->headerClass, WithQualityParam::class, true)) {
             throw new InvalidArgumentException(
@@ -24,7 +25,7 @@ class SortableHeader extends Header
     /**
      * Add value in order
      */
-    protected function addValue(BaseHeaderValue $value): void
+    protected function collect(BaseHeaderValue $value): void
     {
         if (count($this->collection) === 0) {
             $this->collection[] = $value;
