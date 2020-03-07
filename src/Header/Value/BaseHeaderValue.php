@@ -61,7 +61,7 @@ abstract class BaseHeaderValue
     public function withValue(string $value): self
     {
         $clone = clone $this;
-        $clone->value = $value;
+        $clone->setValue($value);
         return $clone;
     }
     public function getValue(): string
@@ -132,5 +132,9 @@ abstract class BaseHeaderValue
         }
         $this->quality = rtrim($q, '0.') ?: '0';
         return true;
+    }
+    protected function setValue(string $value): void
+    {
+        $this->value = $value;
     }
 }

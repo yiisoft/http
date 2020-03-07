@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Http\Header\Value\Cache;
+namespace Yiisoft\Http\Header\Value\Condition;
 
 use Yiisoft\Http\Header\Value\Date;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Http\Header\Value\Condition;
 
-use Yiisoft\Http\Header\Value\Cache;
+use Yiisoft\Http\Header\Value\Date;
 
 /**
  * @see https://tools.ietf.org/html/rfc7232#section-3.4

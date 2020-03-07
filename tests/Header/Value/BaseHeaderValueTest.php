@@ -16,6 +16,11 @@ class BaseHeaderValueTest extends TestCase
 
         $clone = $value->withValue('test');
 
+        // the default value of the original object has not changed
+        $this->assertSame('', $value->getValue());
+        // changes applied
+        $this->assertSame('test', $clone->getValue());
+        // immutability
         $this->assertSame(get_class($value), get_class($clone));
         $this->assertNotSame($value, $clone);
     }
