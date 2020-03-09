@@ -6,7 +6,7 @@ namespace Yiisoft\Http\Header;
 
 use DateTimeInterface;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
-use Yiisoft\Http\Header\Value\Cache;
+use Yiisoft\Http\Header\Value\Date;
 
 /**
  * @method $this withValue(string|DateTimeInterface|BaseHeaderValue $value)

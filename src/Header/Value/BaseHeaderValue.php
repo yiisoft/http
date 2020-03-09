@@ -77,21 +77,7 @@ abstract class BaseHeaderValue
     public function withParams(array $params): self
     {
         $clone = clone $this;
-        $clone->params = [];
-        foreach ($params as $key => $value) {
-            $key = strtolower($key);
-            if (!key_exists($key, $clone->params)) {
-                $clone->params[$key] = $value;
-            }
-        }
-        if ($clone instanceof WithQualityParam) {
-            if (key_exists('q', $clone->params)) {
-                $clone->setQuality($clone->params['q']);
-                unset($clone->params['q']);
-            } else {
-                $clone->setQuality('1');
-            }
-        }
+        $clone->setParams($params);
         return $clone;
     }
     public function getParams(): array
@@ -136,5 +122,23 @@ abstract class BaseHeaderValue
     protected function setValue(string $value): void
     {
         $this->value = $value;
+    }
+    protected function setParams(array $params): void
+    {
+        $this->params = [];
+        foreach ($params as $key => $value) {
+            $key = strtolower($key);
+            if (!key_exists($key, $this->params)) {
+                $this->params[$key] = $value;
+            }
+        }
+        if ($this instanceof WithQualityParam) {
+            if (key_exists('q', $this->params)) {
+                $this->setQuality($this->params['q']);
+                unset($this->params['q']);
+            } else {
+                $this->setQuality('1');
+            }
+        }
     }
 }
