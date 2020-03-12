@@ -53,6 +53,7 @@ final class ETag extends BaseHeaderValue
         if (preg_match('/^(?<weak>W\\/)?"(?<etagc>[^"\\x00-\\x20\\x7F]+)"$/', $this->value, $matches) === 1) {
             $this->tag = $matches['etagc'];
             $this->weak = $matches['weak'] === 'W/';
+            $this->error = null;
         } else {
             $this->error = new ParsingException($value, 0, 'Invalid ETag value format', 0, $this->error);
         }

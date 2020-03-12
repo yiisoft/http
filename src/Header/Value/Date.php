@@ -13,6 +13,8 @@ class Date extends BaseHeaderValue
 {
     public const NAME = 'Date';
 
+    private ?DateTimeImmutable $datetimeObject = null;
+
     /**
      * Date constructor.
      * @param DateTimeInterface|string $value
@@ -25,6 +27,13 @@ class Date extends BaseHeaderValue
         parent::__construct($value);
     }
 
+    public function __toString(): string
+    {
+        return $this->datetimeObject === null
+            ? parent::__toString()
+            : $this->datetimeObject->format(DateTimeInterface::RFC7231);
+    }
+
     final public static function createHeader(): DateHeader
     {
         return new DateHeader(static::class);
@@ -32,16 +41,22 @@ class Date extends BaseHeaderValue
 
     final public function getDatetimeValue(): ?DateTimeImmutable
     {
-        try {
-            return new DateTimeImmutable($this->value);
-        } catch (Exception $e) {
-            $this->error = $e;
-            return null;
-        }
+        return $this->datetimeObject;
     }
 
     final public function withValueFromDatetime(DateTimeInterface $date): self
     {
         return $this->withValue($date->format(DateTimeInterface::RFC7231));
+    }
+
+    final protected function setValue(string $value): void
+    {
+        try {
+            $this->datetimeObject = new DateTimeImmutable($value);
+        } catch (Exception $e) {
+            $this->datetimeObject = null;
+            $this->error = $e;
+        }
+        parent::setValue($value);
     }
 }

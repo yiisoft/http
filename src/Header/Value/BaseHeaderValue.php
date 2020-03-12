@@ -30,7 +30,7 @@ abstract class BaseHeaderValue
 
     public function __construct(string $value = '')
     {
-        $this->value = $value;
+        $this->setValue($value);
     }
     public function __toString(): string
     {
@@ -127,6 +127,7 @@ abstract class BaseHeaderValue
     {
         $this->params = [];
         foreach ($params as $key => $value) {
+            # todo decide: what about numeric keys?
             $key = strtolower($key);
             if (!key_exists($key, $this->params)) {
                 $this->params[$key] = $value;

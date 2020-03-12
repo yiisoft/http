@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Tests\Header\Value\Cache;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Http\Header\CacheControlHeader;
 use Yiisoft\Http\Header\Value\Cache\CacheControl;
 
 class CacheControlTest extends TestCase
 {
+    public function testCreateHeader()
+    {
+        $header = CacheControl::createHeader();
+        $this->assertInstanceOf(CacheControlHeader::class, $header);
+    }
     public function testWithDirectiveImmutability()
     {
         $origin = new CacheControl();
@@ -157,11 +163,13 @@ class CacheControlTest extends TestCase
             'header-list-arg-2' => ['private', ' '],
             'header-list-arg-3' => ['private', ',,'],
             'header-list-arg-4' => ['private', 'test , , test'],
+            'header-list-arg-5' => ['private', 'ETag,'],
             'numeric-arg-0' => ['max-age', null],
             'numeric-arg-1' => ['max-age', 'test'],
             'numeric-arg-2' => ['max-age', '123test'],
             'numeric-arg-3' => ['max-age', '0x123'],
             'numeric-arg-4' => ['max-age', '-123'],
+            'numeric-arg-5' => ['max-age', '12 34'],
             'argument-should-be-empty' => ['No-Store', 'null'],
         ];
     }

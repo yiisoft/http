@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header\Value\Cache;
 
 use InvalidArgumentException;
+use Yiisoft\Http\Header\CacheControlHeader;
 use Yiisoft\Http\Header\ListedValues;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 use Yiisoft\Http\Header\WithParams;
@@ -93,6 +94,11 @@ class CacheControl extends BaseHeaderValue implements ListedValues, WithParams
         return "{$this->directive}={$this->argument}";
     }
 
+    final public static function createHeader(): CacheControlHeader
+    {
+        return new CacheControlHeader(static::class);
+    }
+
     /**
      * @return string|null Returns null if the directive is not defined or cannot be parsed without error
      */
@@ -116,6 +122,12 @@ class CacheControl extends BaseHeaderValue implements ListedValues, WithParams
         return $this->argument === null ? [] : explode(',', $this->argument);
     }
 
+    /**
+     * @param string $directive
+     * @param string|null $argument
+     * @return $this
+     * @throws InvalidArgumentException
+     */
     final public function withDirective(string $directive, string $argument = null): self
     {
         $clone = clone $this;

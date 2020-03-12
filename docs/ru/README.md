@@ -123,9 +123,46 @@ $dateHeader = \Yiisoft\Http\Header\Value\Cache\Expires::createHeader()
     ->inject($response);
 ```
 
+### Заголовки кеширования [RFC7234](https://tools.ietf.org/html/rfc7234)
+
+Сюда относятся заголовки:
+
+- `Age` - простой заоловок, в котором задаётся количество секунд с момента модификации ресурса.
+- `Cache-Control` - список директив правил кеширования.
+- `Expires` - дата истечения срока актуальности сущности. Класс заголовка `Expires` наследуется от класса `Date`.
+- `Pragma` - устаревший заголовок из HTTP/1.0, использующийся для обратной совместимости.
+  Класс `Pragma` наследуется от класса `CacheControl`.
+- `Warning` - заголовок для дополнительной информации об ошибках.
+
+#### Cache-Control
+
+```php
+$header = \Yiisoft\Http\Header\Value\Cache\CacheControl::createHeader()
+    ->withDirective('max-age', '27000')
+    ->withDirective('no-transform')
+    ->withDirective('foo', 'bar');
+```
+
+Для всех стандартных директив, которые описаны в [главе 5.2 RFC7234](https://tools.ietf.org/html/rfc7234#section-5.2),
+присваиваемые значения (аргументы) будут проходить этап валидации. Если вы указываете директиву вручную, будьте готовы к
+тому, что метод `withDirective()` может выбросить исключение.
+
+```php
+use Yiisoft\Http\Header\Value\Cache\CacheControl;
+// исключения будут брошены в каждой строчке ниже
+(new CacheControl())->withDirective('max-age'); // у директивы max-age должно быть аргумент
+(new CacheControl())->withDirective('max-age', 'not numeric'); // аргумент директивы max-age должен быть числовым
+(new CacheControl())->withDirective('max-age', '-456'); // допускаются только цифры
+(new CacheControl())->withDirective('private', 'ETag,'); // нарушение синтаксиса списка заголовков
+(new CacheControl())->withDirective('no-store', 'yes'); // директива no-store не принимает аргумент
+```
+
+### Пользовательские заголовки
+
 Если вы не хотите описывать заголовок в отдельном классе, то можете использовать заготовленные классы:
 ```php
-<?php
+/** @var \Psr\Http\Message\ResponseInterface $response */
+
 // создать заголовок с перечисляемыми значениями
 $myListHeader = \Yiisoft\Http\Header\Value\ListedValue::createHeader('My-List')
     ->withValues(['foo', 'bar', 'baz']);
@@ -133,5 +170,4 @@ $myListHeader = \Yiisoft\Http\Header\Value\ListedValue::createHeader('My-List')
 \Yiisoft\Http\Header\Value\SortedValue::createHeader('My-Sorted-List')
     ->withValues(['foo', 'bar;q=0.5', 'baz;q=0'])
     ->inject($response);
-?>
 ```
