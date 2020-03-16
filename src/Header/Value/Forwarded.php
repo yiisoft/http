@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Http\Header\Value;
 
-use Yiisoft\Http\Header\ListedValues;
-use Yiisoft\Http\Header\WithParams;
+use Yiisoft\Http\Header\Rule\ListedValues;
+use Yiisoft\Http\Header\Rule\WithParams;
 
 /**
  * @see https://tools.ietf.org/html/rfc7239

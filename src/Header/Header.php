@@ -6,6 +6,8 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
+use Yiisoft\Http\Header\Rule\ListedValues;
+use Yiisoft\Http\Header\Rule\WithParams;
 use Yiisoft\Http\Header\Value\SimpleValue;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
@@ -125,7 +127,7 @@ class Header implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Export header values into Request or Response
+     * Export header values into HTTP message
      * @param MessageInterface $message Request or Response instance
      * @param bool $replace Replace existing headers
      * @param bool $ignoreIncorrect Don't export values that have error
@@ -148,14 +150,14 @@ class Header implements \IteratorAggregate, \Countable
         return $message;
     }
     /**
-     * Import header values from Request or Response
+     * Import header values from HTTP message
      * @param MessageInterface $message Request or Response instance
      * @return $this
      */
     public function extract(MessageInterface $message): self
     {
-        $this->withValues($message->getHeader($this->headerName));
-        return $this;
+        #todo test it
+        return $this->withValues($message->getHeader($this->headerName));
     }
 
     /**

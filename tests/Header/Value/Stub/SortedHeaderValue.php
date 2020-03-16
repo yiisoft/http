@@ -2,7 +2,7 @@
 
 namespace Yiisoft\Http\Tests\Header\Value\Stub;
 
-use Yiisoft\Http\Header\WithQualityParam;
+use Yiisoft\Http\Header\Rule\WithQualityParam;
 
 final class SortedHeaderValue extends \Yiisoft\Http\Header\Value\BaseHeaderValue implements WithQualityParam
 {

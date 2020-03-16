@@ -1,6 +1,6 @@
 <?php
 
-namespace Yiisoft\Http\Header;
+namespace Yiisoft\Http\Header\Rule;
 
 interface WithParams
 {

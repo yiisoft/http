@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
+use Yiisoft\Http\Header\Rule\WithQualityParam;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\SortedValue;
 

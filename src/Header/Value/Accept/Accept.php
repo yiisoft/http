@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header\Value\Accept;
 
 use Yiisoft\Http\Header\AcceptHeader;
+use Yiisoft\Http\Header\Rule\WithQualityParam;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
-use Yiisoft\Http\Header\WithQualityParam;
 
 /**
  * @see https://tools.ietf.org/html/rfc7231#section-5.3.2

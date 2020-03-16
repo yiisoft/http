@@ -1,6 +1,6 @@
 <?php
 
-namespace Yiisoft\Http\Header;
+namespace Yiisoft\Http\Header\Rule;
 
 /**
  * @see https://tools.ietf.org/html/rfc7231#section-5.3.1

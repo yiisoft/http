@@ -33,25 +33,25 @@ class CacheControlTest extends TestCase
     }
     public function testToStringWithoutArgument()
     {
-        $headerValue = (new CacheControl())->withDirective(CacheControl::D_NO_CACHE);
+        $headerValue = (new CacheControl())->withDirective(CacheControl::NO_CACHE);
 
         $this->assertSame('no-cache', (string)$headerValue);
     }
     public function testToStringNumericArgument()
     {
-        $headerValue = (new CacheControl())->withDirective(CacheControl::D_MAX_AGE, '1560');
+        $headerValue = (new CacheControl())->withDirective(CacheControl::MAX_AGE, '1560');
 
         $this->assertSame('max-age=1560', (string)$headerValue);
     }
     public function testToStringEmptyListedArgument()
     {
-        $headerValue = (new CacheControl())->withDirective(CacheControl::D_PRIVATE);
+        $headerValue = (new CacheControl())->withDirective(CacheControl::PRIVATE);
 
         $this->assertSame('private', (string)$headerValue);
     }
     public function testToStringListedArgument()
     {
-        $headerValue = (new CacheControl())->withDirective(CacheControl::D_PRIVATE, 'etag');
+        $headerValue = (new CacheControl())->withDirective(CacheControl::PRIVATE, 'etag');
 
         $this->assertSame('private="etag"', (string)$headerValue);
     }

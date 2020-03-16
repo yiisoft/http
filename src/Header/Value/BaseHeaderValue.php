@@ -6,9 +6,9 @@ namespace Yiisoft\Http\Header\Value;
 
 use Exception;
 use Yiisoft\Http\Header\Header;
+use Yiisoft\Http\Header\Rule\WithParams;
+use Yiisoft\Http\Header\Rule\WithQualityParam;
 use Yiisoft\Http\Header\SortableHeader;
-use Yiisoft\Http\Header\WithParams;
-use Yiisoft\Http\Header\WithQualityParam;
 
 abstract class BaseHeaderValue
 {

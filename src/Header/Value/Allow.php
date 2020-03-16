@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Http\Header\Value;
 
-use Yiisoft\Http\Header\ListedValues;
+use Yiisoft\Http\Header\Rule\ListedValues;
 
 /**
  * @see https://tools.ietf.org/html/rfc7231#section-7.4.1

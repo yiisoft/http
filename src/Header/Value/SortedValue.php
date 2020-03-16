@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Http\Header\Value;
 
+use Yiisoft\Http\Header\Rule\WithQualityParam;
 use Yiisoft\Http\Header\SortableHeader;
-use Yiisoft\Http\Header\WithQualityParam;
 
 final class SortedValue extends BaseHeaderValue implements WithQualityParam
 {
