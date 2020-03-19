@@ -8,7 +8,7 @@ use Yiisoft\Http\Header\ParsingException;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
 /**
- * @see https://tools.ietf.org/html/rfc7232#section-2.3
+ * @link https://tools.ietf.org/html/rfc7232#section-2.3
  */
 final class ETag extends BaseHeaderValue
 {

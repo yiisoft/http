@@ -9,7 +9,7 @@ use Yiisoft\Http\Header\Rule\WithQualityParam;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
 /**
- * @see https://tools.ietf.org/html/rfc7231#section-5.3.2
+ * @link https://tools.ietf.org/html/rfc7231#section-5.3.2
  */
 class Accept extends BaseHeaderValue implements WithQualityParam
 {

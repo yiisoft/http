@@ -7,7 +7,7 @@ namespace Yiisoft\Http\Header\Value\Condition;
 use Yiisoft\Http\Header\Value\Date;
 
 /**
- * @see https://tools.ietf.org/html/rfc7232#section-3.4
+ * @link https://tools.ietf.org/html/rfc7232#section-3.4
  */
 final class IfUnmodifiedSince extends Date
 {

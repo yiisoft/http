@@ -8,7 +8,7 @@ use Yiisoft\Http\Header\Rule\ListedValues;
 use Yiisoft\Http\Header\Rule\WithParams;
 
 /**
- * @see https://tools.ietf.org/html/rfc7239
+ * @link https://tools.ietf.org/html/rfc7239
  */
 final class Forwarded extends BaseHeaderValue implements WithParams, ListedValues
 {

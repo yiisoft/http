@@ -3,7 +3,7 @@
 namespace Yiisoft\Http\Header\Rule;
 
 /**
- * @see https://tools.ietf.org/html/rfc7231#section-5.3.1
+ * @link https://tools.ietf.org/html/rfc7231#section-5.3.1
  */
 interface WithQualityParam extends ListedValues, WithParams
 {

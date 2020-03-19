@@ -51,11 +51,11 @@ use \Yiisoft\Http\Header\Rule\ListedValues;
 use \Yiisoft\Http\Header\Rule\WithParams;
 use \Yiisoft\Http\Header\Value\BaseHeaderValue;
 
-# В поле значения заголовка передаётся только одно значение
+// В поле значения заголовка передаётся только одно значение
 final class Date extends BaseHeaderValue {}
-# Заголовок со списком значений
+// Заголовок со списком значений
 final class Allow extends BaseHeaderValue implements ListedValues {}
-# Со списком значений и параметрами
+// Со списком значений и параметрами
 final class Forwarded extends BaseHeaderValue implements WithParams, ListedValues {}
 ```
 
@@ -170,6 +170,10 @@ use \Yiisoft\Http\Header\Value\Date;
 $date = (string)(new Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000')));
 ```
 
+### ETag
+
+...
+
 ## Заголовки кеширования
 
 [RFC7234](https://tools.ietf.org/html/rfc7234)
@@ -191,6 +195,12 @@ $dateHeader = \Yiisoft\Http\Header\Value\Cache\Expires::createHeader()
 ### Warning
 
 Заголовок для дополнительной информации об ошибках.
+```php
+use \Yiisoft\Http\Header\Value\Cache\Warning;
+
+$dateHeader = Warning::createHeader()
+    ->withValue((new Warning())->withDataset(Warning::RESPONSE_IS_STALE, '-', 'Response is stale'));
+```
 
 ### Cache-Control
 

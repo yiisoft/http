@@ -26,7 +26,7 @@ class CacheControlTest extends TestCase
         $this->assertNull($origin->getArgument());
         // changes applied
         $this->assertSame('no-cache', $clone->getDirective());
-        $this->assertNull($origin->getArgument());
+        $this->assertNull($clone->getArgument());
         // immutability
         $this->assertSame(get_class($origin), get_class($clone));
         $this->assertNotSame($origin, $clone);

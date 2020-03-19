@@ -11,7 +11,7 @@ use Yiisoft\Http\Header\Rule\WithParams;
 use Yiisoft\Http\Header\Value\BaseHeaderValue;
 
 /**
- * @see https://tools.ietf.org/html/rfc7234#section-5.2
+ * @link https://tools.ietf.org/html/rfc7234#section-5.2
  */
 class CacheControl extends BaseHeaderValue implements ListedValues, WithParams
 {
@@ -33,7 +33,7 @@ class CacheControl extends BaseHeaderValue implements ListedValues, WithParams
 
     /**
      * Request Directives
-     * @see https://tools.ietf.org/html/rfc7234#section-5.2.1
+     * @link https://tools.ietf.org/html/rfc7234#section-5.2.1
      */
     public const REQUEST_DIRECTIVES = [
         self::MAX_AGE => self::ARG_DELTA_SECONDS,
@@ -46,7 +46,7 @@ class CacheControl extends BaseHeaderValue implements ListedValues, WithParams
     ];
     /**
      * Response Directives
-     * @see https://tools.ietf.org/html/rfc7234#section-5.2.2
+     * @link https://tools.ietf.org/html/rfc7234#section-5.2.2
      */
     public const RESPONSE_DIRECTIVES  = [
         self::MUST_REVALIDATE => self::ARG_EMPTY,
@@ -81,7 +81,7 @@ class CacheControl extends BaseHeaderValue implements ListedValues, WithParams
             return "{$this->directive}=\"{$this->argument}\"";
         }
         if ($this->argumentType === self::ARG_CUSTOM) {
-            $argument = preg_replace('/([\\\\"])/', '\\\\$1', $this->argument);
+            $argument = $this->encodeQuotedString($this->argument);
             if (
                 $argument === ''
                 || strlen($argument) !== strlen($this->argument)

@@ -42,7 +42,7 @@ abstract class BaseHeaderValue
                         continue;
                     }
                 }
-                $escaped = preg_replace('/([\\\\"])/', '\\\\$1', $value);
+                $escaped = $this->encodeQuotedString($value);
                 $quoted = $value === ''
                     || strlen($escaped) !== strlen($value)
                     || preg_match('/[\\s,;()\\/:<=>?@\\[\\\\\\]{}]/', $value) === 1;
@@ -141,5 +141,9 @@ abstract class BaseHeaderValue
                 $this->setQuality('1');
             }
         }
+    }
+    protected function encodeQuotedString(string $string): string
+    {
+        return preg_replace('/([\\\\"])/', '\\\\$1', $string);
     }
 }

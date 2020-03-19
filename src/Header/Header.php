@@ -219,7 +219,7 @@ class Header implements \IteratorAggregate, \Countable
         };
         $added = 0;
         try {
-            /** @see https://tools.ietf.org/html/rfc7230#section-3.2.6 */
+            /** @link https://tools.ietf.org/html/rfc7230#section-3.2.6 */
             for ($pos = 0, $length = strlen($body); $pos < $length; ++$pos) {
                 $s = $body[$pos];
                 if ($part === self::READ_VALUE) {
