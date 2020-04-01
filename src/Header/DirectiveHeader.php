@@ -6,7 +6,7 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Yiisoft\Http\Header\Internal\DirectivesHeaderValue;
-use Yiisoft\Http\Header\Value\DirectiveValue;
+use Yiisoft\Http\Header\Value\Unnamed\DirectiveValue;
 
 final class DirectiveHeader extends Header
 {

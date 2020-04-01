@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Http\Header;
+namespace Yiisoft\Http\Header\Parser;
 
 use Throwable;
 

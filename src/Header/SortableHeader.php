@@ -7,7 +7,7 @@ namespace Yiisoft\Http\Header;
 use InvalidArgumentException;
 use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 use Yiisoft\Http\Header\Internal\WithParamsHeaderValue;
-use Yiisoft\Http\Header\Value\SortedValue;
+use Yiisoft\Http\Header\Value\Unnamed\SortedValue;
 
 final class SortableHeader extends Header
 {

@@ -8,7 +8,7 @@ use Yiisoft\Http\Header\Header;
 use Yiisoft\Http\Header\Value\Accept\Accept;
 use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\Date;
-use Yiisoft\Http\Header\Value\SimpleValue;
+use Yiisoft\Http\Header\Value\Unnamed\SimpleValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\DummyHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;

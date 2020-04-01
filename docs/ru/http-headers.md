@@ -199,10 +199,10 @@ CacheControl::createHeader()->withValue('max-stale, max-age=test, private="ETag,
 /** @var \Psr\Http\Message\ResponseInterface $response */
 
 // извлечь из запроса заголовок с перечисляемыми значениями
-$listed = \Yiisoft\Http\Header\Value\ListedValue::createHeader('My-List')
+$listed = \Yiisoft\Http\Header\Value\Unnamed\ListedValue::createHeader('My-List')
     ->extract($request);
 
 // создать заголовок с перечисляемыми сортируемыми значениями
-$sorted = \Yiisoft\Http\Header\Value\SortedValue::createHeader('My-Sorted-List')
+$sorted = \Yiisoft\Http\Header\Value\Unnamed\SortedValue::createHeader('My-Sorted-List')
     ->withValues(['foo', 'bar;q=0.5', 'baz;q=0']);
 ```

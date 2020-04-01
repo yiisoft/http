@@ -6,6 +6,7 @@ namespace Yiisoft\Http\Header\Internal;
 
 use Exception;
 use Yiisoft\Http\Header\Header;
+use Yiisoft\Http\Header\Parser\HeaderParsingParams;
 
 abstract class BaseHeaderValue
 {
@@ -62,13 +63,14 @@ abstract class BaseHeaderValue
         return $this->error;
     }
 
-    final public static function getParsingParams(): array
+    final public static function getParsingParams(): HeaderParsingParams
     {
-        return [
-            'list' => static::PARSING_LIST,
-            'params' => static::PARSING_PARAMS,
-            'q' => static::PARSING_Q_PARAM,
-        ];
+        $params = new HeaderParsingParams();
+        $params->directives = is_subclass_of(static::class, DirectivesHeaderValue::class, true);
+        $params->valuesList = $params->directives || static::PARSING_LIST;
+        $params->withParams = $params->directives || static::PARSING_PARAMS;
+        $params->q = static::PARSING_Q_PARAM;
+        return $params;
     }
 
     protected function setValue(string $value): void

@@ -5,7 +5,7 @@ namespace Yiisoft\Http\Tests\Header;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Http\Header\SortableHeader;
-use Yiisoft\Http\Header\Value\Date;
+use Yiisoft\Http\Tests\Header\Value\Stub\DummyHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\SortedHeaderValue;
 
 class SortableHeaderTest extends TestCase
@@ -19,7 +19,7 @@ class SortableHeaderTest extends TestCase
     public function testErrorWithHeaderClass()
     {
         $this->expectException(InvalidArgumentException::class);
-        new SortableHeader(Date::class);
+        new SortableHeader(DummyHeaderValue::class);
     }
     public function testCreateFromStringValues()
     {

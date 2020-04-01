@@ -6,9 +6,9 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
-use Yiisoft\Http\Header\Internal\DirectivesHeaderValue;
-use Yiisoft\Http\Header\Internal\WithParamsHeaderValue;
-use Yiisoft\Http\Header\Value\SimpleValue;
+use Yiisoft\Http\Header\Parser\HeaderParsingParams;
+use Yiisoft\Http\Header\Parser\ValueFieldParser;
+use Yiisoft\Http\Header\Value\Unnamed\SimpleValue;
 use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 class Header implements \IteratorAggregate, \Countable
@@ -19,18 +19,6 @@ class Header implements \IteratorAggregate, \Countable
     protected array $collection = [];
 
     protected const DEFAULT_VALUE_CLASS = SimpleValue::class;
-    // Parsing params
-    private bool $listedValues = false;
-    private bool $withParams = false;
-    private bool $directives = false;
-    // Parsing's constants
-    private const
-        DELIMITERS = '"(),/:;<=>?@[\\]{}',
-        READ_NONE = 0,
-        READ_VALUE = 1,
-        READ_PARAM_NAME = 2,
-        READ_PARAM_QUOTED_VALUE = 3,
-        READ_PARAM_VALUE = 4;
 
     /**
      * @param string $nameOrClass Header name or header value class
@@ -53,10 +41,6 @@ class Header implements \IteratorAggregate, \Countable
             $this->headerName = $nameOrClass;
             $this->headerClass = static::DEFAULT_VALUE_CLASS;
         }
-        $parsing = $this->headerClass::getParsingParams();
-        $this->listedValues = $parsing['list'];
-        $this->withParams = $parsing['params'];
-        $this->directives = is_subclass_of($this->headerClass, DirectivesHeaderValue::class, true);
     }
 
     public function getIterator(): iterable
@@ -192,162 +176,15 @@ class Header implements \IteratorAggregate, \Countable
     }
     private function parseAndCollect(string $body): void
     {
-        if (!$this->listedValues && !$this->withParams && !$this->directives) {
-            $this->collect(new $this->headerClass(trim($body)));
-            return;
+        /**
+         * @var HeaderParsingParams $parsingParams
+         * @see \Yiisoft\Http\Header\Internal\BaseHeaderValue::getParsingParams
+         */
+        $parsingParams = $this->headerClass::getParsingParams();
+
+        // var_dump($body, $this->headerClass, $parsingParams); die;
+        foreach (ValueFieldParser::parse($body, $this->headerClass, $parsingParams) as $value) {
+            $this->collect($value);
         }
-        $part = self::READ_VALUE;
-        $buffer = '';
-        $key = '';
-        $value = '';
-        $params = [];
-        $error = null;
-        $parseList = $this->listedValues || $this->directives;
-        $parseParams = $this->withParams || $this->directives;
-        $addParam = static function ($key, $value) use (&$params) {
-            if (!key_exists($key, $params)) {
-                $params[$key] = $value;
-            }
-        };
-        $collectHeaderValue = function () use (&$key, &$value, &$buffer, &$params, &$added, &$error) {
-            /** @var DirectivesHeaderValue|BaseHeaderValue $item */
-            $item = new $this->headerClass($value);
-            if ($this->directives) {
-                // $item->withDirective($value, );
-            } elseif ($this->withParams) {
-                $item = $item->withParams($params);
-            }
-            if ($error !== null) {
-                $item = $item->withError($error);
-            }
-            $this->collect($item);
-            $key = $buffer = $value = '';
-            $params = [];
-            ++$added;
-        };
-        $added = 0;
-        try {
-            /** @link https://tools.ietf.org/html/rfc7230#section-3.2.6 */
-            for ($pos = 0, $length = strlen($body); $pos < $length; ++$pos) {
-                $s = $body[$pos];
-                if ($part === self::READ_VALUE) {
-                    if ($s === '=' && $parseParams) {
-                        $key = ltrim($buffer);
-                        $buffer = '';
-                        if (preg_match('/\s/', $key) === 0) {
-                            $part = self::READ_PARAM_VALUE;
-                            continue;
-                        }
-                        $key = preg_replace('/\s+/', ' ', $key);
-                        $chunks = explode(' ', $key);
-                        if (count($chunks) > 2 || preg_match('/\s$/', $key) === 1) {
-                            array_pop($chunks);
-                            $buffer = implode(' ', $chunks);
-                            throw new ParsingException($body, $pos, 'Syntax error');
-                        }
-                        $part = self::READ_PARAM_VALUE;
-                        [$value, $key] = $chunks;
-                    } elseif ($s === ';' && $parseParams) {
-                        $part = self::READ_PARAM_NAME;
-                        $value = trim($buffer);
-                        $buffer = '';
-                    } elseif ($s === ',' && $parseList) {
-                        $value = trim($buffer);
-                        $collectHeaderValue();
-                    } else {
-                        $buffer .= $s;
-                    }
-                    continue;
-                }
-                if ($part === self::READ_PARAM_NAME) {
-                    if ($s === '=') {
-                        $key = $buffer;
-                        $buffer = '';
-                        $part = self::READ_PARAM_VALUE;
-                    } elseif (strpos(self::DELIMITERS, $s) !== false) {
-                        throw new ParsingException($body, $pos, 'Delimiter char in a param name');
-                    } elseif (ord($s) <= 32) {
-                        if ($buffer !== '') {
-                            throw new ParsingException($body, $pos, 'Space in a param name');
-                        }
-                    } else {
-                        $buffer .= $s;
-                    }
-                    continue;
-                }
-                if ($part === self::READ_PARAM_VALUE) {
-                    if ($buffer === '') {
-                        if ($s === '"') {
-                            $part = self::READ_PARAM_QUOTED_VALUE;
-                        } elseif (ord($s) <= 32) {
-                            continue;
-                        } elseif (strpos(self::DELIMITERS, $s) === false) {
-                            $buffer .= $s;
-                        } else {
-                            throw new ParsingException($body, $pos, 'Delimiter char in a unquoted param value');
-                        }
-                    } elseif (ord($s) <= 32) {
-                        $part = self::READ_NONE;
-                        $addParam($key, $buffer);
-                        $key = $buffer = '';
-                    } elseif (strpos(self::DELIMITERS, $s) === false) {
-                        $buffer .= $s;
-                    } elseif ($s === ';') {
-                        $part = self::READ_PARAM_NAME;
-                        $addParam($key, $buffer);
-                        $key = $buffer = '';
-                    } elseif ($s === ',' && $parseList) {
-                        $part = self::READ_VALUE;
-                        $addParam($key, $buffer);
-                        $collectHeaderValue();
-                    } else {
-                        $buffer = '';
-                        throw new ParsingException($body, $pos, 'Delimiter char in a unquoted param value');
-                    }
-                    continue;
-                }
-                if ($part === self::READ_PARAM_QUOTED_VALUE) {
-                    if ($s === '\\') { // quoted pair
-                        if (++$pos >= $length) {
-                            throw new ParsingException($body, $pos, 'Incorrect quoted pair');
-                        } else {
-                            $buffer .= $body[$pos];
-                        }
-                    } elseif ($s === '"') { // end
-                        $part = self::READ_NONE;
-                        $addParam($key, $buffer);
-                        $key = $buffer = '';
-                    } else {
-                        $buffer .= $s;
-                    }
-                    continue;
-                }
-                if ($part === self::READ_NONE) {
-                    if (ord($s) <= 32) {
-                        continue;
-                    } elseif ($s === ';' && $parseParams) {
-                        $part = self::READ_PARAM_NAME;
-                    } elseif ($s === ',' && $parseList) {
-                        $part = self::READ_VALUE;
-                        $collectHeaderValue();
-                    } else {
-                        throw new ParsingException($body, $pos, 'Expected Separator');
-                    }
-                }
-            }
-        } catch (ParsingException $e) {
-            $error = $e;
-        }
-        /** @var BaseHeaderValue $item */
-        if ($part === self::READ_VALUE) {
-            $value = trim($buffer);
-        } elseif (in_array($part, [self::READ_PARAM_VALUE, self::READ_PARAM_QUOTED_VALUE], true)) {
-            if ($buffer === '') {
-                $error = $error ?? new ParsingException($body, $pos, 'Empty value should be quoted');
-            } else {
-                $addParam($key, $buffer);
-            }
-        }
-        $collectHeaderValue();
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Http\Header\Value\Cache;
 
-use Yiisoft\Http\Header\ParsingException;
+use Yiisoft\Http\Header\Parser\ParsingException;
 use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 /**

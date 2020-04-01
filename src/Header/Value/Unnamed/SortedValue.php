@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Http\Header\Value;
+namespace Yiisoft\Http\Header\Value\Unnamed;
 
 use Yiisoft\Http\Header\SortableHeader;
 use Yiisoft\Http\Header\Internal\WithParamsHeaderValue;

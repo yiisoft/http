@@ -6,7 +6,7 @@ namespace Yiisoft\Http\Header\Value\Cache;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Yiisoft\Http\Header\ParsingException;
+use Yiisoft\Http\Header\Parser\ParsingException;
 use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 /**
