@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
 use Yiisoft\Http\Header\DateHeader;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 class Date extends BaseHeaderValue
 {
@@ -52,7 +53,11 @@ class Date extends BaseHeaderValue
     final protected function setValue(string $value): void
     {
         try {
+            if ($value !== '' && !$this->validateDateTime($value)) {
+                throw new \InvalidArgumentException('Invalid date format.');
+            }
             $this->datetimeObject = new DateTimeImmutable($value);
+            $this->error = null;
         } catch (Exception $e) {
             $this->datetimeObject = null;
             $this->error = $e;

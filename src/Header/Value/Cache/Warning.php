@@ -6,9 +6,8 @@ namespace Yiisoft\Http\Header\Value\Cache;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use InvalidArgumentException;
 use Yiisoft\Http\Header\ParsingException;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 /**
  * @link https://tools.ietf.org/html/rfc7234#section-5.5
@@ -137,11 +136,7 @@ final class Warning extends BaseHeaderValue
             $this->text = preg_replace("/\\\\(.)/", '$1', $matches['text']);
             // date
             if (isset($matches['date'])) {
-                if (preg_match(
-                        '/^\\w{3,}, [0-3]?\\d[ \\-]\\w{3}[ \\-]\\d+ [0-2]\\d:[0-5]\\d:[0-5]\\d \\w+|'
-                        . '\\w{3} \\w{3} [0-3]?\\d [0-2]\\d:[0-5]\\d:[0-5]\\d \\d+$/i',
-                        $matches['date']
-                    ) !== 1) {
+                if (!$this->validateDateTime($matches['date'])) {
                     throw new ParsingException($matches['date'], 0, 'Incorrect datetime format.');
                 }
                 $this->date = new DateTimeImmutable($matches['date']);

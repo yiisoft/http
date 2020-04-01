@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header\Value\Condition;
 
 use Yiisoft\Http\Header\ParsingException;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 /**
  * @link https://tools.ietf.org/html/rfc7232#section-2.3

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
-use Yiisoft\Http\Header\Rule\WithQualityParam;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\WithParamsHeaderValue;
 use Yiisoft\Http\Header\Value\SortedValue;
 
 final class SortableHeader extends Header
@@ -16,9 +16,9 @@ final class SortableHeader extends Header
     public function __construct(string $nameOrClass)
     {
         parent::__construct($nameOrClass);
-        if (!is_subclass_of($this->headerClass, WithQualityParam::class, true)) {
+        if (!is_subclass_of($this->headerClass, WithParamsHeaderValue::class, true)) {
             throw new InvalidArgumentException(
-                sprintf("%s class does not implement %s", $this->headerClass, WithQualityParam::class)
+                sprintf("%s class does not implement %s", $this->headerClass, WithParamsHeaderValue::class)
             );
         }
     }

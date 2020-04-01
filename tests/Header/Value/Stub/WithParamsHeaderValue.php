@@ -2,10 +2,7 @@
 
 namespace Yiisoft\Http\Tests\Header\Value\Stub;
 
-use Yiisoft\Http\Header\Rule\WithParams;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
-
-final class WithParamsHeaderValue extends BaseHeaderValue implements WithParams
+final class WithParamsHeaderValue extends \Yiisoft\Http\Header\Internal\WithParamsHeaderValue
 {
     public const NAME = 'Test-Params';
 }

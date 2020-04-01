@@ -6,21 +6,23 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Psr\Http\Message\MessageInterface;
-use Yiisoft\Http\Header\Rule\ListedValues;
-use Yiisoft\Http\Header\Rule\WithParams;
+use Yiisoft\Http\Header\Internal\DirectivesHeaderValue;
+use Yiisoft\Http\Header\Internal\WithParamsHeaderValue;
 use Yiisoft\Http\Header\Value\SimpleValue;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 class Header implements \IteratorAggregate, \Countable
 {
-    protected bool $listedValues = false;
-    protected bool $withParams = false;
     protected string $headerClass;
     protected string $headerName;
     /** @var BaseHeaderValue[] */
     protected array $collection = [];
 
     protected const DEFAULT_VALUE_CLASS = SimpleValue::class;
+    // Parsing params
+    private bool $listedValues = false;
+    private bool $withParams = false;
+    private bool $directives = false;
     // Parsing's constants
     private const
         DELIMITERS = '"(),/:;<=>?@[\\]{}',
@@ -51,8 +53,10 @@ class Header implements \IteratorAggregate, \Countable
             $this->headerName = $nameOrClass;
             $this->headerClass = static::DEFAULT_VALUE_CLASS;
         }
-        $this->listedValues = is_subclass_of($this->headerClass, ListedValues::class, true);
-        $this->withParams = is_subclass_of($this->headerClass, WithParams::class, true);
+        $parsing = $this->headerClass::getParsingParams();
+        $this->listedValues = $parsing['list'];
+        $this->withParams = $parsing['params'];
+        $this->directives = is_subclass_of($this->headerClass, DirectivesHeaderValue::class, true);
     }
 
     public function getIterator(): iterable
@@ -188,7 +192,7 @@ class Header implements \IteratorAggregate, \Countable
     }
     private function parseAndCollect(string $body): void
     {
-        if (!$this->listedValues && !$this->withParams) {
+        if (!$this->listedValues && !$this->withParams && !$this->directives) {
             $this->collect(new $this->headerClass(trim($body)));
             return;
         }
@@ -198,15 +202,19 @@ class Header implements \IteratorAggregate, \Countable
         $value = '';
         $params = [];
         $error = null;
+        $parseList = $this->listedValues || $this->directives;
+        $parseParams = $this->withParams || $this->directives;
         $addParam = static function ($key, $value) use (&$params) {
             if (!key_exists($key, $params)) {
                 $params[$key] = $value;
             }
         };
         $collectHeaderValue = function () use (&$key, &$value, &$buffer, &$params, &$added, &$error) {
-            /** @var BaseHeaderValue $item */
+            /** @var DirectivesHeaderValue|BaseHeaderValue $item */
             $item = new $this->headerClass($value);
-            if ($this->withParams) {
+            if ($this->directives) {
+                // $item->withDirective($value, );
+            } elseif ($this->withParams) {
                 $item = $item->withParams($params);
             }
             if ($error !== null) {
@@ -223,7 +231,7 @@ class Header implements \IteratorAggregate, \Countable
             for ($pos = 0, $length = strlen($body); $pos < $length; ++$pos) {
                 $s = $body[$pos];
                 if ($part === self::READ_VALUE) {
-                    if ($s === '=' && $this->withParams) {
+                    if ($s === '=' && $parseParams) {
                         $key = ltrim($buffer);
                         $buffer = '';
                         if (preg_match('/\s/', $key) === 0) {
@@ -239,11 +247,11 @@ class Header implements \IteratorAggregate, \Countable
                         }
                         $part = self::READ_PARAM_VALUE;
                         [$value, $key] = $chunks;
-                    } elseif ($s === ';' && $this->withParams) {
+                    } elseif ($s === ';' && $parseParams) {
                         $part = self::READ_PARAM_NAME;
                         $value = trim($buffer);
                         $buffer = '';
-                    } elseif ($s === ',' && $this->listedValues) {
+                    } elseif ($s === ',' && $parseList) {
                         $value = trim($buffer);
                         $collectHeaderValue();
                     } else {
@@ -288,7 +296,7 @@ class Header implements \IteratorAggregate, \Countable
                         $part = self::READ_PARAM_NAME;
                         $addParam($key, $buffer);
                         $key = $buffer = '';
-                    } elseif ($s === ',' && $this->listedValues) {
+                    } elseif ($s === ',' && $parseList) {
                         $part = self::READ_VALUE;
                         $addParam($key, $buffer);
                         $collectHeaderValue();
@@ -317,9 +325,9 @@ class Header implements \IteratorAggregate, \Countable
                 if ($part === self::READ_NONE) {
                     if (ord($s) <= 32) {
                         continue;
-                    } elseif ($s === ';' && $this->withParams) {
+                    } elseif ($s === ';' && $parseParams) {
                         $part = self::READ_PARAM_NAME;
-                    } elseif ($s === ',' && $this->listedValues) {
+                    } elseif ($s === ',' && $parseList) {
                         $part = self::READ_VALUE;
                         $collectHeaderValue();
                     } else {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header;
 
 use DateTimeInterface;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\Date;
 
 /**

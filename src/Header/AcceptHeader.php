@@ -6,7 +6,7 @@ namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
 use Yiisoft\Http\Header\Value\Accept\Accept;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 final class AcceptHeader extends Header
 {

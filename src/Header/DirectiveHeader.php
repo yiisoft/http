@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header;
 
 use InvalidArgumentException;
-use Yiisoft\Http\Header\Value\Cache\CacheControl;
+use Yiisoft\Http\Header\Internal\DirectivesHeaderValue;
+use Yiisoft\Http\Header\Value\DirectiveValue;
 
-final class CacheControlHeader extends Header
+final class DirectiveHeader extends Header
 {
-    protected const DEFAULT_VALUE_CLASS = CacheControl::class;
+    protected const DEFAULT_VALUE_CLASS = DirectiveValue::class;
 
     public function __construct(string $nameOrClass)
     {
         parent::__construct($nameOrClass);
-        if (!is_a($this->headerClass, CacheControl::class, true)) {
+        if (!is_a($this->headerClass, DirectivesHeaderValue::class, true)) {
             throw new InvalidArgumentException(
-                sprintf("%s class is not an instance of %s", $this->headerClass, CacheControl::class)
+                sprintf("%s class is not an instance of %s", $this->headerClass, DirectivesHeaderValue::class)
             );
         }
     }
@@ -30,7 +31,7 @@ final class CacheControlHeader extends Header
     public function withDirective(string $directive, string $argument = null): self
     {
         $clone = clone $this;
-        /** @var CacheControl $headerValue */
+        /** @var DirectivesHeaderValue $headerValue */
         $headerValue = new $this->headerClass();
         $clone->addValue($headerValue->withDirective($directive, $argument));
         return $clone;
@@ -43,7 +44,7 @@ final class CacheControlHeader extends Header
     public function getDirectives(bool $ignoreIncorrect = true): array
     {
         $result = [];
-        /** @var CacheControl $header */
+        /** @var DirectivesHeaderValue $header */
         foreach ($this->collection as $header) {
             if ($ignoreIncorrect && $header->hasError()) {
                 continue;

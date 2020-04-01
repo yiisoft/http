@@ -2,11 +2,11 @@
 
 namespace Yiisoft\Http\Tests\Header\Value\Stub;
 
-use Yiisoft\Http\Header\Rule\ListedValues;
-use Yiisoft\Http\Header\Rule\WithParams;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\WithParamsHeaderValue;
 
-final class ListedValuesWithParamsHeaderValue extends BaseHeaderValue implements ListedValues, WithParams
+final class ListedValuesWithParamsHeaderValue extends WithParamsHeaderValue
 {
     public const NAME = 'Test-Listed-Params';
+
+    protected const PARSING_LIST = true;
 }

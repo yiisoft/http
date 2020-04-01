@@ -2,10 +2,11 @@
 
 namespace Yiisoft\Http\Tests\Header\Value\Stub;
 
-use Yiisoft\Http\Header\Rule\ListedValues;
-use Yiisoft\Http\Header\Value\BaseHeaderValue;
+use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
-final class ListedValuesHeaderValue extends BaseHeaderValue implements ListedValues
+final class ListedValuesHeaderValue extends BaseHeaderValue
 {
     public const NAME = 'Test-Listed';
+
+    protected const PARSING_LIST = true;
 }
