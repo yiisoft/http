@@ -29,14 +29,13 @@ Content-Disposition: attachment; filename="filename.jpg"
 ## Класс Header
 
 Абсолютно любой заголовок в поле заголовков HTTP-сообщения может быть указан несколько раз, даже если это не разрешается
-правилами самого заголовка. Поэтому работа с любым заголовком происходит как с коллекцией валидных и не валидных
-значений.
+правилами самого заголовка. Поэтому в результате парсинга любого заголовка вы получите коллекцию значений.
 
-Базовым классом для коллекции значений заголовков является `\Yiisoft\Http\Header\Header`. \
-Для заголовков, поддерживающих множество значений, бывает важно соблюдение последовательности этих значений. Поэтому для
-сортируемых списков значений выделена отдельная коллекция `\Yiisoft\Http\Header\SortableHeader`, а также специальная
-коллекция `\Yiisoft\Http\Header\AcceptHeader` для семейства заголовков `Accept`. В сортируемых коллекциях значения сразу
-занимают места по порядку согласно параметру `q` или иным правилам, описанным в коллекции.
+Базовым классом для коллекции значений заголовков является `\Yiisoft\Http\Header\Header`. Он подходит для заголовков,
+в которых важно соблюдение порядка значений в заданной последовательности. Для сортируемых списков значений выделена
+отдельная коллекция `\Yiisoft\Http\Header\SortableHeader`, а также специальная коллекция
+`\Yiisoft\Http\Header\AcceptHeader` для семейства заголовков `Accept`. В сортируемых коллекциях значения сразу занимают
+места по порядку согласно параметру `q` или иным правилам, описанным в коллекции.
 
 Рассмотрим пример с заголовком `Forwarded` [RFC7239](https://tools.ietf.org/html/rfc7239).\
 Заголовок представляет собой список из пустых значений с возможными параметрами `by`, `for`, `host` и `proto`:
@@ -91,38 +90,33 @@ $header = Allow::createHeader()->extract($request);
 $response = $header->inject($response, $replace = true);
 ```
 
-## Примеры
-
-
-
 ## Заголовки
 
 ### Date
 
-Для заголовков `Date` и других, значением которых является дата, выделен отдельный класс-коллекция `DateHeader`,
-который поддерживает работу со значениями, реализующими интерфейс `\DateTimeInterface`.
+Вы можете использовать класс `Date` для конвертирования объекта `\DateTimeInterface` в строку формата времени HTTP.
 
 ```php
 use \Yiisoft\Http\Header\Value\Date;
+
+$date = new Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000'));
+
+echo new Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000'));
+// Wed, 01 Jan 2020 00:00:00 GMT
+
+// Внедрить в ответ качестве заголовка
 /** @var \Psr\Http\Message\ResponseInterface $response */
-
-$response = Date::createHeader()
-    ->withValue(new DateTimeImmutable())
-    ->inject($response);
-```
-
-Вы можете использовать класс `Date` для конвертирования объекта `\DateTimeInterface` в строку формата времени HTTP:
-
-```php
-use \Yiisoft\Http\Header\Value\Date;
-
-// В $date будет записано "Wed, 01 Jan 2020 00:00:00 GMT"
-$date = (string)(new Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000')));
+$response = $date->inject($response);
 ```
 
 ### ETag
 
-...
+```php
+use Yiisoft\Http\Header\Value\Condition\ETag;
+/** @var \Psr\Http\Message\ResponseInterface $response */
+
+$etag = (new ETag())->withTag('56d-9989200-1132c580', true)->inject($response);
+```
 
 ## Заголовки кеширования
 
@@ -138,8 +132,11 @@ $date = (string)(new Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000')));
 Дата истечения срока актуальности сущности. Класс заголовка `Expires` наследуется от класса `Date`.
 
 ```php
-$dateHeader = \Yiisoft\Http\Header\Value\Cache\Expires::createHeader()
-    ->withValue(new DateTimeImmutable('+1 day'));
+use Yiisoft\Http\Header\Value\Cache\Expires;
+/** @var \Psr\Http\Message\ResponseInterface $response */
+
+$dateHeader = (new Expires(new DateTimeImmutable('+1 day')))
+    ->inject($response);
 ```
 
 ### Warning
@@ -147,9 +144,12 @@ $dateHeader = \Yiisoft\Http\Header\Value\Cache\Expires::createHeader()
 Заголовок для дополнительной информации об ошибках.
 ```php
 use \Yiisoft\Http\Header\Value\Cache\Warning;
+/** @var \Psr\Http\Message\ResponseInterface $response */
 
 $dateHeader = Warning::createHeader()
-    ->withValue((new Warning())->withDataset(Warning::RESPONSE_IS_STALE, '-', 'Response is stale'));
+    ->withValue((new Warning())->withDataset(Warning::RESPONSE_IS_STALE, '-', 'Response is stale'))
+    ->withValue((new Warning())->withDataset(Warning::REVALIDATION_FAILED, '-', 'Revalidation failed'))
+    ->inject($response);
 ```
 
 ### Cache-Control
@@ -191,18 +191,19 @@ CacheControl::createHeader()->withValue('max-stale, max-age=test, private="ETag,
 
 ## Пользовательские заголовки
 
-Если вы не хотите описывать заголовок в отдельном классе, либо целевой заголовок не имеет заранее определённое имя, то
-вы можете использовать заготовленные классы:
+Если для требуемого заголовка вы не нашли среди классов подходящий, либо целевой заголовок не имеет заранее определённое
+имя, то вы можете также использовать классы безымянных заголовков с предопределёнными правилами парсинга:
 
 ```php
 /** @var \Psr\Http\Message\ServerRequestInterface $request */
 /** @var \Psr\Http\Message\ResponseInterface $response */
 
-// извлечь из запроса заголовок с перечисляемыми значениями
-$listed = \Yiisoft\Http\Header\Value\Unnamed\ListedValue::createHeader('My-List')
-    ->extract($request);
+// извлечь из запроса заголовок My-List с перечисляемыми значениями
+$values = \Yiisoft\Http\Header\Value\Unnamed\ListedValue::createHeader('My-List')
+    ->extract($request)
+    ->getValues();
 
-// создать заголовок с перечисляемыми сортируемыми значениями
+// создать заголовок My-Sorted-List с перечисляемыми сортируемыми значениями
 $sorted = \Yiisoft\Http\Header\Value\Unnamed\SortedValue::createHeader('My-Sorted-List')
     ->withValues(['foo', 'bar;q=0.5', 'baz;q=0']);
 ```

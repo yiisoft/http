@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header\Internal;
 
 use Exception;
+use http\Exception\RuntimeException;
+use Psr\Http\Message\MessageInterface;
 use Yiisoft\Http\Header\Header;
 use Yiisoft\Http\Header\Parser\HeaderParsingParams;
 
@@ -26,6 +28,16 @@ abstract class BaseHeaderValue
     public function __toString(): string
     {
         return $this->value;
+    }
+    final public function inject(MessageInterface $message, bool $replace = true): MessageInterface
+    {
+        if (static::NAME === null) {
+            throw new \RuntimeException('Can not inject unnamed header value');
+        }
+        if ($replace) {
+            $message = $message->withoutHeader(static::NAME);
+        }
+        return $message->withAddedHeader(static::NAME, $this->__toString());
     }
 
     public static function createHeader(): Header
