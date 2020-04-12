@@ -86,6 +86,5 @@ namespace PHPSTORM_META {
         \Yiisoft\Http\Status::LOOP_DETECTED,
         \Yiisoft\Http\Status::NOT_EXTENDED,
         \Yiisoft\Http\Status::NETWORK_AUTHENTICATION_REQUIRED,
-        \Yiisoft\Http\Status::TEXTS,
     );
 }
