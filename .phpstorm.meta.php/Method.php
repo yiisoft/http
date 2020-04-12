@@ -27,12 +27,12 @@ namespace PHPSTORM_META {
 
     registerArgumentsSet(
         'yiisoft/http/methods',
-        \Yiisoft\Http\Method::DELETE,
         \Yiisoft\Http\Method::GET,
-        \Yiisoft\Http\Method::HEAD,
-        \Yiisoft\Http\Method::OPTIONS,
-        \Yiisoft\Http\Method::PATCH,
         \Yiisoft\Http\Method::POST,
         \Yiisoft\Http\Method::PUT,
+        \Yiisoft\Http\Method::DELETE,
+        \Yiisoft\Http\Method::PATCH,
+        \Yiisoft\Http\Method::HEAD,
+        \Yiisoft\Http\Method::OPTIONS,
     );
 }
