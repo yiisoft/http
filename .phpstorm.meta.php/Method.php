@@ -4,29 +4,29 @@ namespace PHPSTORM_META {
 
     expectedReturnValues(
         \Psr\Http\Message\RequestInterface::getMethod(),
-        argumentsSet('yiisoft/http/methods'),
+        argumentsSet('\Yiisoft\Http\Method::METHODS'),
     );
 
     expectedArguments(
         \Psr\Http\Message\RequestInterface::withMethod(),
         0,
-        argumentsSet('yiisoft/http/methods'),
+        argumentsSet('\Yiisoft\Http\Method::METHODS'),
     );
 
     expectedArguments(
         \Psr\Http\Message\RequestFactoryInterface::createRequest(),
         0,
-        argumentsSet('yiisoft/http/methods'),
+        argumentsSet('\Yiisoft\Http\Method::METHODS'),
     );
 
     expectedArguments(
         \Psr\Http\Message\ServerRequestFactoryInterface::createServerRequest(),
         0,
-        argumentsSet('yiisoft/http/methods'),
+        argumentsSet('\Yiisoft\Http\Method::METHODS'),
     );
 
     registerArgumentsSet(
-        'yiisoft/http/methods',
+        '\Yiisoft\Http\Method::METHODS',
         \Yiisoft\Http\Method::GET,
         \Yiisoft\Http\Method::POST,
         \Yiisoft\Http\Method::PUT,

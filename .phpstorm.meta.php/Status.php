@@ -4,22 +4,23 @@ namespace PHPSTORM_META {
 
     expectedReturnValues(
         \Psr\Http\Message\ResponseInterface::getStatusCode(),
-        argumentsSet('yiisoft/http/statuses'),
+        argumentsSet('\Yiisoft\Http\Status::STATUSES'),
     );
 
     expectedArguments(
         \Psr\Http\Message\ResponseInterface::withStatus(),
         0,
-        argumentsSet('yiisoft/http/statuses'),
+        argumentsSet('\Yiisoft\Http\Status::STATUSES'),
     );
 
     expectedArguments(
         \Psr\Http\Message\ResponseFactoryInterface::createResponse(),
         0,
-        argumentsSet('yiisoft/http/statuses'),
+        argumentsSet('\Yiisoft\Http\Status::STATUSES'),
     );
 
-    registerArgumentsSet('yiisoft/http/statuses',
+    registerArgumentsSet(
+        '\Yiisoft\Http\Status::STATUSES',
         // 1xx
         \Yiisoft\Http\Status::CONTINUE,
         \Yiisoft\Http\Status::SWITCHING_PROTOCOLS,
