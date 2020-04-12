@@ -2,40 +2,31 @@
 
 namespace PHPSTORM_META {
 
-    expectedReturnValues(\Psr\Http\Message\RequestInterface::getMethod(),
-        \Yiisoft\Http\Method::DELETE,
-        \Yiisoft\Http\Method::GET,
-        \Yiisoft\Http\Method::HEAD,
-        \Yiisoft\Http\Method::OPTIONS,
-        \Yiisoft\Http\Method::PATCH,
-        \Yiisoft\Http\Method::POST,
-        \Yiisoft\Http\Method::PUT,
+    expectedReturnValues(
+        \Psr\Http\Message\RequestInterface::getMethod(),
+        argumentsSet('yiisoft/http/methods'),
     );
 
-    expectedArguments(\Psr\Http\Message\RequestInterface::withMethod(),
+    expectedArguments(
+        \Psr\Http\Message\RequestInterface::withMethod(),
         0,
-        \Yiisoft\Http\Method::DELETE,
-        \Yiisoft\Http\Method::GET,
-        \Yiisoft\Http\Method::HEAD,
-        \Yiisoft\Http\Method::OPTIONS,
-        \Yiisoft\Http\Method::PATCH,
-        \Yiisoft\Http\Method::POST,
-        \Yiisoft\Http\Method::PUT,
+        argumentsSet('yiisoft/http/methods'),
     );
 
-    expectedArguments(\Psr\Http\Message\RequestFactoryInterface::createRequest(),
+    expectedArguments(
+        \Psr\Http\Message\RequestFactoryInterface::createRequest(),
         0,
-        \Yiisoft\Http\Method::DELETE,
-        \Yiisoft\Http\Method::GET,
-        \Yiisoft\Http\Method::HEAD,
-        \Yiisoft\Http\Method::OPTIONS,
-        \Yiisoft\Http\Method::PATCH,
-        \Yiisoft\Http\Method::POST,
-        \Yiisoft\Http\Method::PUT,
+        argumentsSet('yiisoft/http/methods'),
     );
 
-    expectedArguments(\Psr\Http\Message\ServerRequestFactoryInterface::createServerRequest(),
+    expectedArguments(
+        \Psr\Http\Message\ServerRequestFactoryInterface::createServerRequest(),
         0,
+        argumentsSet('yiisoft/http/methods'),
+    );
+
+    registerArgumentsSet(
+        'yiisoft/http/methods',
         \Yiisoft\Http\Method::DELETE,
         \Yiisoft\Http\Method::GET,
         \Yiisoft\Http\Method::HEAD,
