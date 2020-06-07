@@ -714,4 +714,25 @@ final class Header
      * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control
      */
     public const X_DNS_PREFETCH_CONTROL = 'X-DNS-Prefetch-Control';
+
+    /**
+     * Pagination
+     */
+
+    /**
+     * The per page limit.
+     */
+    public const X_PAGINATION_LIMIT = 'X-Pagination-Limit';
+    /**
+     * The current page.
+     */
+    public const X_PAGINATION_CURRENT_PAGE = 'X-Pagination-Current-Page';
+    /**
+     * The total number of pages in the result set.
+     */
+    public const X_PAGINATION_TOTAL_PAGES = 'X-Pagination-Total-Pages';
+    /**
+     * The total number of records across all pages.
+     */
+    public const X_PAGINATION_TOTAL_COUNT = 'X-Pagination-Total-Count';
 }
