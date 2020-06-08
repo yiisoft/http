@@ -10,11 +10,7 @@ namespace Yiisoft\Http;
  */
 final class Header
 {
-    /**
-     * Authentication
-     *
-     * @link https://tools.ietf.org/html/rfc7235
-     */
+    // Authentication
 
     /**
      * Defines the authentication method that should be used to access a resource.
@@ -41,11 +37,7 @@ final class Header
      */
     public const PROXY_AUTHORIZATION = 'Proxy-Authorization';
 
-    /**
-     * Caching
-     *
-     * @link https://tools.ietf.org/html/rfc7234
-     */
+    // Caching
 
     /**
      * The time, in seconds, that the object has been in a proxy cache.
@@ -85,9 +77,7 @@ final class Header
      */
     public const WARNING = 'Warning';
 
-    /**
-     * Conditionals
-     */
+    // Conditionals
 
     /**
      * The last modification date of the resource, used to compare several versions of the same resource. It is less
@@ -148,11 +138,7 @@ final class Header
      */
     public const VARY = 'Vary';
 
-    /**
-     * Connection management
-     *
-     * @link https://tools.ietf.org/html/rfc7230#section-6
-     */
+    // Connection management
 
     /**
      * Controls whether the network connection stays open after the current transaction finishes.
@@ -168,9 +154,7 @@ final class Header
      */
     public const KEEP_ALIVE = 'Keep-Alive';
 
-    /**
-     * Content negotiation
-     */
+    // Content negotiation
 
     /**
      * Informs the server about the types of data that can be sent back.
@@ -200,9 +184,7 @@ final class Header
      */
     public const ACCEPT_LANGUAGE = 'Accept-Language';
 
-    /**
-     * Controls
-     */
+    // Controls
 
     /**
      * Indicates expectations that need to be fulfilled by the server to properly handle the request.
@@ -216,12 +198,7 @@ final class Header
      */
     public const MAX_FORWARDS = 'Max-Forwards';
 
-    /**
-     * Cookies
-     *
-     * @link https://tools.ietf.org/html/rfc6265
-     * @link https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-05
-     */
+    // Cookies
 
     /**
      * Contains stored HTTP cookies previously sent by the server with the Set-Cookie header.
@@ -237,11 +214,7 @@ final class Header
      */
     public const SET_COOKIE = 'Set-Cookie';
 
-    /**
-     * CORS
-     *
-     * @link https://developer.mozilla.org/docs/Web/HTTP/CORS
-     */
+    // CORS
 
     /**
      * Indicates whether the response can be shared.
@@ -301,9 +274,7 @@ final class Header
      */
     public const TIMING_ALLOW_ORIGIN = 'Timing-Allow-Origin';
 
-    /**
-     * Do Not Track
-     */
+    // Do Not Track
 
     /**
      * Expresses the user's tracking preference.
@@ -316,9 +287,7 @@ final class Header
      */
     public const TK = 'TK';
 
-    /**
-     * Message body information
-     */
+    // Message body information
 
     /**
      * Indicates if the resource transmitted should be displayed inline (default behavior without the header), or if it
@@ -364,11 +333,7 @@ final class Header
      */
     public const CONTENT_LOCATION = 'Content-Location';
 
-    /**
-     * Proxies
-     *
-     * @see MAX_FORWARDS
-     */
+    // Proxies
 
     /**
      * Contains information from the client-facing side of proxy servers that is altered or lost when a proxy is
@@ -385,9 +350,7 @@ final class Header
      */
     public const VIA = 'Via';
 
-    /**
-     * Redirects
-     */
+    // Redirects
 
     /**
      * Indicates the URL to redirect a page to.
@@ -396,9 +359,7 @@ final class Header
      */
     public const LOCATION = 'Location';
 
-    /**
-     * Request context
-     */
+    // Request context
 
     /**
      * Contains an Internet email address for a human user who controls the requesting user agent.
@@ -435,9 +396,7 @@ final class Header
      */
     public const USER_AGENT = 'User-Agent';
 
-    /**
-     * Response context
-     */
+    // Response context
 
     /**
      * Lists the set of HTTP request methods supported by a resource.
@@ -453,11 +412,7 @@ final class Header
      */
     public const SERVER = 'Server';
 
-    /**
-     * Range requests
-     *
-     * @see IF_RANGE
-     */
+    // Range requests
 
     /**
      * Indicates if the server supports range requests, and if so in which unit the range can be expressed.
@@ -478,9 +433,7 @@ final class Header
      */
     public const CONTENT_RANGE = 'Content-Range';
 
-    /**
-     * Security
-     */
+    //Security
 
     /**
      * Allows a server to declare an embedder policy for a given document.
@@ -597,9 +550,7 @@ final class Header
      */
     public const SEC_FETCH_DEST = 'Sec-Fetch-Dest';
 
-    /**
-     * Transfer coding
-     */
+    // Transfer coding
 
     /**
      * Specifies the form of encoding used to safely transfer the entity to the user.
@@ -621,10 +572,7 @@ final class Header
      */
     public const TRAILER = 'Trailer';
 
-    /**
-     * WebSockets
-     * These headers are used only for WebSocket opening handshake.
-     */
+    // WebSockets
 
     /**
      * @link https://tools.ietf.org/html/rfc6455#section-11.3.1
@@ -648,9 +596,7 @@ final class Header
      */
     public const SEC_WEBSOCKET_VERSION = 'Sec-WebSocket-Version';
 
-    /**
-     * Other
-     */
+    // Other
 
     /**
      * Used to list alternate ways to reach this service.
@@ -715,9 +661,7 @@ final class Header
      */
     public const X_DNS_PREFETCH_CONTROL = 'X-DNS-Prefetch-Control';
 
-    /**
-     * Pagination
-     */
+    // Pagination
 
     /**
      * The per page limit.
