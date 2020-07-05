@@ -437,12 +437,10 @@ final class Header
 
     /**
      * Allows a server to declare an embedder policy for a given document.
-     * @link
      */
     public const CROSS_ORIGIN_EMBEDDER_POLICY = 'Cross-Origin-Embedder-Policy';
     /**
      * Prevents other domains from opening/controlling a window.
-     * @link
      */
     public const CROSS_ORIGIN_OPENER_POLICY = 'Cross-Origin-Opener-Policy';
     /**
@@ -498,14 +496,14 @@ final class Header
     /**
      * Indicates whether a browser should be allowed to render a page in a <frame>, <iframe>, <embed> or <object>.
      * @link https://tools.ietf.org/html/rfc7034
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/X-Frame-Options
      */
     public const X_FRAME_OPTIONS = 'X-Frame-Options';
     /**
      * Specifies if a cross-domain policy file (crossdomain.xml) is allowed. The file may define a policy to grant
      * clients, such as Adobe's Flash Player, Adobe Acrobat, Microsoft Silverlight, or Apache Flex, permission to handle
      * data across domains that would otherwise be restricted due to the Same-Origin Policy.
-     * @link https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy Same-Origin Policy
+     * @link https://developer.mozilla.org/docs/Web/Security/Same-origin_policy Same-Origin Policy
      */
     public const X_PERMITTED_CROSS_DOMAIN_POLICIES = 'X-Permitted-Cross-Domain-Policies';
     /**
@@ -515,7 +513,7 @@ final class Header
     public const X_POWERED_BY = 'X-Powered-By';
     /**
      * Enables cross-site scripting filtering.
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/X-XSS-Protection
      */
     public const X_XSS_PROTECTION = 'X-XSS-Protection';
     /**
@@ -523,21 +521,21 @@ final class Header
      * origin. It is a Structured Header whose value is a token with possible values cross-site, same-origin, same-site,
      * and none.
      * @link https://w3c.github.io/webappsec-fetch-metadata/#sec-fetch-site-header
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Site
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Sec-Fetch-Site
      */
     public const SEC_FETCH_SITE = 'Sec-Fetch-Site';
     /**
      * It is a request header that indicates the request's mode to a server. It is a Structured Header whose value is a
      * token with possible values cors, navigate, nested-navigate, no-cors, same-origin, and websocket.
      * @link https://w3c.github.io/webappsec-fetch-metadata/#sec-fetch-mode-header
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Mode
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Sec-Fetch-Mode
      */
     public const SEC_FETCH_MODE = 'Sec-Fetch-Mode';
     /**
      * It is a request header that indicates whether or not a navigation request was triggered by user activation. It is
      * a Structured Header whose value is a boolean so possible values are ?0 for false and ?1 for true.
      * @link https://w3c.github.io/webappsec-fetch-metadata/#sec-fetch-user-header
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-User
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Sec-Fetch-User
      */
     public const SEC_FETCH_USER = 'Sec-Fetch-User';
     /**
@@ -546,7 +544,7 @@ final class Header
      * paintworklet, report, script, serviceworker, sharedworker, style, track, video, worker, xslt, and
      * nested-document.
      * @link https://w3c.github.io/webappsec-fetch-metadata/#sec-fetch-dest-header
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-Fetch-Dest
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Sec-Fetch-Dest
      */
     public const SEC_FETCH_DEST = 'Sec-Fetch-Dest';
 
@@ -555,20 +553,20 @@ final class Header
     /**
      * Specifies the form of encoding used to safely transfer the entity to the user.
      * @link https://tools.ietf.org/html/rfc7230#section-3.3.1
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Transfer-Encoding
      */
     public const TRANSFER_ENCODING = 'Transfer-Encoding';
     /**
      * Specifies the transfer encodings the user agent is willing to accept.
      * @link https://tools.ietf.org/html/rfc7230#section-4.3
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/TE
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/TE
      */
     public const TE = 'TE';
     /**
      * Allows the sender to include additional fields at the end of chunked message.
      * @link https://tools.ietf.org/html/rfc7230#section-4.4
      * @link https://tools.ietf.org/html/rfc7230#section-4.1.2 Chunked trailer part
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Trailer
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Trailer
      */
     public const TRAILER = 'Trailer';
 
@@ -584,7 +582,7 @@ final class Header
     public const SEC_WEBSOCKET_EXTENSIONS = 'Sec-WebSocket-Extensions';
     /**
      * @link https://tools.ietf.org/html/rfc6455#section-11.3.3
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Sec-WebSocket-Accept
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Sec-WebSocket-Accept
      */
     public const SEC_WEBSOCKET_ACCEPT = 'Sec-WebSocket-Accept';
     /**
@@ -601,19 +599,19 @@ final class Header
     /**
      * Used to list alternate ways to reach this service.
      * @link https://tools.ietf.org/html/rfc7838
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Alt-Svc
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Alt-Svc
      */
     public const ALT_SVC = 'Alt-Svc';
     /**
      * Contains the date and time at which the message was originated.
      * @link https://tools.ietf.org/html/rfc7231#section-7.1.1.2
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Date
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Date
      */
     public const DATE = 'Date';
     /**
      * Tells the browser that the page being loaded is going to want to perform a large allocation.
      * @link https://gist.github.com/mystor/5739e222e398efc6c29108be55eb6fe3
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Large-Allocation
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Large-Allocation
      */
     public const LARGE_ALLOCATION = 'Large-Allocation';
     /**
@@ -621,19 +619,19 @@ final class Header
      * semantically equivalent to the HTML <link> element.
      * @link https://tools.ietf.org/html/rfc5988#section-5 The Link Header Field
      * @link https://tools.ietf.org/html/rfc8288#section-3 Link Serialisation in HTTP Headers
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Link
      */
     public const LINK = 'Link';
     /**
      * Indicates how long the user agent should wait before making a follow-up request.
      * @link https://tools.ietf.org/html/rfc7231#section-7.1.3
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Retry-After
      */
     public const RETRY_AFTER = 'Retry-After';
     /**
      * Communicates one or more metrics and descriptions for the given request-response cycle.
      * @link https://w3c.github.io/server-timing/#the-server-timing-header-field
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server-Timing
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/Server-Timing
      */
     public const SERVER_TIMING = 'Server-Timing';
     /**
@@ -643,7 +641,7 @@ final class Header
     public const SERVICE_WORKER_ALLOWED = 'Service-Worker-Allowed';
     /**
      * Links generated code to a source map.
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/SourceMap
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/SourceMap
      */
     public const SOURCEMAP = 'SourceMap';
     /**
@@ -656,8 +654,7 @@ final class Header
      * Controls DNS prefetching, a feature by which browsers proactively perform domain name resolution on both links
      * that the user may choose to follow as well as URLs for items referenced by the document, including images, CSS,
      * JavaScript, and so forth.
-     * @link
-     * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control
+     * @link https://developer.mozilla.org/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control
      */
     public const X_DNS_PREFETCH_CONTROL = 'X-DNS-Prefetch-Control';
 
