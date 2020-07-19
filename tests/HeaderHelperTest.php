@@ -128,32 +128,6 @@ class HeaderHelperTest extends TestCase
         $this->assertSame($expected, HeaderHelper::getSortedAcceptTypes($input));
     }
 
-    public function sortedAcceptTypesFromRequestDataProvider(): array
-    {
-        $serverRequest = $this->createMock(ServerRequestInterface::class);
-        $serverRequest
-            ->method('getHeader')
-            ->willReturn([
-                'text/html;q=0.1',
-                'text/xml',
-            ]);
-
-        return [
-            'simple' => [
-                $serverRequest,
-                ['text/xml', 'text/html'],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider sortedAcceptTypesFromRequestDataProvider
-     */
-    public function testSortedAcceptTypesFromRequest(ServerRequestInterface $request, array $expected): void
-    {
-        $this->assertSame($expected, HeaderHelper::getSortedAcceptTypesFromRequest($request));
-    }
-
     public function getParametersDataProvider(): array
     {
         return [

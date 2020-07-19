@@ -2,8 +2,6 @@
 
 namespace Yiisoft\Http;
 
-use Psr\Http\Message\RequestInterface;
-
 final class HeaderHelper
 {
     /**
@@ -137,14 +135,6 @@ final class HeaderHelper
             return $a > $b ? -1 : 1;
         });
         return $output;
-    }
-
-    /**
-     * @see getSortedAcceptTypes
-     */
-    public static function getSortedAcceptTypesFromRequest(RequestInterface $request): array
-    {
-        return static::getSortedAcceptTypes($request->getHeader('accept'));
     }
 
     /**
