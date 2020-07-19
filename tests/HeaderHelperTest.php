@@ -3,7 +3,6 @@
 namespace Yiisoft\Http\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Http\HeaderHelper;
 
 class HeaderHelperTest extends TestCase
@@ -77,7 +76,6 @@ class HeaderHelperTest extends TestCase
             'qInvalidDigits2' => ['text/xml;q=1.0000', \InvalidArgumentException::class],
             'int' => [3, \InvalidArgumentException::class],
             'float' => [3.0, \InvalidArgumentException::class],
-            'request' => [$this->createMock(ServerRequestInterface::class), \InvalidArgumentException::class],
         ];
     }
 
