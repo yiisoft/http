@@ -2,6 +2,10 @@
 
 namespace Yiisoft\Http;
 
+/**
+ * HTTP request methods
+ * @link https://developer.mozilla.org/docs/Web/HTTP/Methods
+ */
 final class Method
 {
     /**

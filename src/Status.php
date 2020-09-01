@@ -3,7 +3,8 @@
 namespace Yiisoft\Http;
 
 /**
- * HTTP status codes
+ * HTTP response status codes
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
  * @link https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
  */
 final class Status
