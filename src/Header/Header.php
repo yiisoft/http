@@ -45,7 +45,7 @@ class Header implements \IteratorAggregate, \Countable
 
     public function getIterator(): iterable
     {
-        return $this->getValues(true);
+        yield from $this->getValues(true);
     }
     public function count(): int
     {
