@@ -6,13 +6,13 @@
     <br>
 </p>
 
-The package provides handy HTTP utility such as method constants.
-
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/http/v/stable.png)](https://packagist.org/packages/yiisoft/http)
 [![Total Downloads](https://poser.pugx.org/yiisoft/http/downloads.png)](https://packagist.org/packages/yiisoft/http)
-[![Build Status](https://travis-ci.com/yiisoft/http.svg?branch=master)](https://travis-ci.com/yiisoft/http)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/http/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/http/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
+
+The package provides:
+
+- Constants for HTTP protocol headers, methods and statuses. All along with short descriptions and RFC links. 
+- PSR-7, PSR-17 PhpStorm meta for HTTP protocol headers, methods and statuses.
 
 ## Documentation
 
