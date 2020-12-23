@@ -15,22 +15,22 @@ final class HeaderHelperTest extends TestCase
             [
                 'inline',
                 'face.png',
-                'inline; filename="face.png"'
+                'inline; filename="face.png"',
             ],
             [
                 'inline',
                 'a/b test.png',
-                'inline; filename="a_b test.png"; filename*=utf-8\'\'ab%20test.png'
+                'inline; filename="a_b test.png"; filename*=utf-8\'\'ab%20test.png',
             ],
             [
                 'attachment',
                 "a\x7Fb.png",
-                'attachment; filename="a_b.png"; filename*=utf-8\'\'a%7Fb.png'
+                'attachment; filename="a_b.png"; filename*=utf-8\'\'a%7Fb.png',
             ],
             [
                 'attachment',
                 'a%20b.png',
-                'attachment; filename="a_20b.png"; filename*=utf-8\'\'a20b.png'
+                'attachment; filename="a_20b.png"; filename*=utf-8\'\'a20b.png',
             ],
         ];
     }
