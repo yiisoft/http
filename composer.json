@@ -20,11 +20,17 @@
         "source": "https://github.com/yiisoft/http"
     },
     "require": {
-        "php": "^7.4|^8.0"
+        "php": "^7.4|^8.0",
+        "yiisoft/strings": "^1.1"
     },
     "autoload": {
         "psr-4": {
             "Yiisoft\\Http\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yiisoft\\Http\\Tests\\": "tests"
         }
     },
     "config": {
