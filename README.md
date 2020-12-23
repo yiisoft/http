@@ -8,6 +8,11 @@
 
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/http/v/stable.png)](https://packagist.org/packages/yiisoft/http)
 [![Total Downloads](https://poser.pugx.org/yiisoft/http/downloads.png)](https://packagist.org/packages/yiisoft/http)
+[![Build status](https://github.com/yiisoft/http/workflows/build/badge.svg)](https://github.com/yiisoft/http/actions?query=workflow%3Abuild)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/http/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/http/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fhttp%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/http/master)
+[![static analysis](https://github.com/yiisoft/http/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/http/actions?query=workflow%3A%22static+analysis%22)
 
 The package provides:
 
