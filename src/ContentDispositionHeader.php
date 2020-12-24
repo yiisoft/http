@@ -48,6 +48,8 @@ final class ContentDispositionHeader
      * @param string $type The disposition type.
      * @param string|null $fileName The file name.
      *
+     * @throws InvalidArgumentException if `$type` is incorrect
+     *
      * @return string
      */
     public static function value(string $type, ?string $fileName = null): string
@@ -79,5 +81,15 @@ final class ContentDispositionHeader
         }
 
         return $header;
+    }
+
+    public static function inline(?string $fileName = null): string
+    {
+        return self::value(self::INLINE, $fileName);
+    }
+
+    public static function attachment(?string $fileName = null): string
+    {
+        return self::value(self::ATTACHMENT, $fileName);
     }
 }

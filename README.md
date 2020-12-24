@@ -73,6 +73,10 @@ $value = \Yiisoft\Http\ContentDispositionHeader::value(
     \Yiisoft\Http\ContentDispositionHeader::INLINE,
      'avatar.png'
 );
+
+$value = \Yiisoft\Http\ContentDispositionHeader::inline('document.pdf');
+
+$value = \Yiisoft\Http\ContentDispositionHeader::attachment('document.pdf');
 ```
 
 ## PSR-7 and PSR-17 PhpStorm meta

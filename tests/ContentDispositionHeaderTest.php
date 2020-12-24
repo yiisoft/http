@@ -92,4 +92,14 @@ final class ContentDispositionHeaderTest extends TestCase
         $this->expectExceptionMessageMatches('/^Disposition type must be/');
         ContentDispositionHeader::value('unknown');
     }
+
+    public function testInline(): void
+    {
+        $this->assertSame('inline; filename="avatar.png"', ContentDispositionHeader::inline('avatar.png'));
+    }
+
+    public function testAttachment(): void
+    {
+        $this->assertSame('attachment; filename="avatar.png"', ContentDispositionHeader::attachment('avatar.png'));
+    }
 }
