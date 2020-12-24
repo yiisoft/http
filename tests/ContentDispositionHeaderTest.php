@@ -66,6 +66,11 @@ final class ContentDispositionHeaderTest extends TestCase
                 "a\x7f.png",
                 'attachment; filename="a_.png"; filename*=utf-8\'\'a%7F.png',
             ],
+            'fileNameWithEOL' => [
+                ContentDispositionHeader::INLINE,
+                "a\nb\rc\r\nd.png",
+                'inline; filename="a_b_c_d.png"; filename*=utf-8\'\'a%0Ab%0Dc%0D%0Ad.png',
+            ],
         ];
     }
 
