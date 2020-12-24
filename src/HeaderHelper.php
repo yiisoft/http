@@ -26,7 +26,7 @@ final class HeaderHelper
      * - Should be urlencoded since headers are ASCII-only.
      * - Could be omitted if it exactly matches fallback name.
      *
-     * @see https://tools.ietf.org/html/rfc6266#page-5
+     * @see https://tools.ietf.org/html/rfc6266
      *
      * @param string $disposition
      * @param string|null $fileName
@@ -41,12 +41,13 @@ final class HeaderHelper
             return $header;
         }
 
-        $fallbackName = str_replace(
-            ['%', '/', '\\', '"', "\x7F"],
-            ['_', '_', '_', '\\"', '_'],
-            (new Inflector())->toTransliterated($fileName, Inflector::TRANSLITERATE_LOOSE)
-        );
-        $utfName = rawurlencode(str_replace(['%', '/', '\\'], '', $fileName));
+        $fileName = str_replace(['%', '/', '\\'], '_', $fileName);
+
+        $fallbackName = (new Inflector())->toTransliterated($fileName, Inflector::TRANSLITERATE_LOOSE);
+        $fallbackName = preg_replace('/[^\x20-\x7e]/u', "_", $fallbackName);
+        $fallbackName = str_replace('"', '\\"', $fallbackName);
+
+        $utfName = rawurlencode($fileName);
 
         $header .= "; filename=\"{$fallbackName}\"";
         if ($utfName !== $fallbackName) {

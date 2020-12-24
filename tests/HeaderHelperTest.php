@@ -12,55 +12,49 @@ final class HeaderHelperTest extends TestCase
     public function dataContentDispositionValue(): array
     {
         return [
-            'base' => [
+            'inlineOnly' => ['inline', null, 'inline'],
+            'inlineWithAsciiFileName' => ['inline', 'foo.html', 'inline; filename="foo.html"'],
+            'attachmentOnly' => ['attachment', null, 'attachment'],
+            'attachmentWithAsciiFileName' => ['attachment', 'foo.html', 'attachment; filename="foo.html"'],
+            'fileNameWithSlashes' => [
+                'attachment',
+                'f\o/o.html',
+                'attachment; filename="f_o_o.html"',
+            ],
+            'fileNameWithSpace' => [
                 'inline',
-                'face.png',
-                'inline; filename="face.png"',
+                'hello world.html',
+                'inline; filename="hello world.html"; filename*=utf-8\'\'hello%20world.html',
             ],
-            'withoutFileName' => [
-                'attachment',
-                null,
-                'attachment',
-            ],
-            'slash' => [
+            'fileNameWithQuote' => [
                 'inline',
-                'a/\b.png',
-                'inline; filename="a__b.png"; filename*=utf-8\'\'ab.png',
+                'a\'b.png',
+                'inline; filename="a\'b.png"; filename*=utf-8\'\'a%27b.png',
             ],
-            'space' => [
+            'fileNameWithDoubleQuote' => [
                 'inline',
-                'a b.png',
-                'inline; filename="a b.png"; filename*=utf-8\'\'a%20b.png',
+                'a"b.png',
+                'inline; filename="a\"b.png"; filename*=utf-8\'\'a%22b.png',
             ],
-            'hex' => [
-                'attachment',
-                "a\x41.png",
-                'attachment; filename="aA.png"',
-            ],
-            'x7f' => [
-                'attachment',
-                "a\x7f.png",
-                'attachment; filename="a_.png"; filename*=utf-8\'\'a%7F.png',
-            ],
-            'procent' => [
-                'attachment',
+            'fileNameWithProcent' => [
+                'inline',
                 'a%20b.png',
-                'attachment; filename="a_20b.png"; filename*=utf-8\'\'a20b.png',
+                'inline; filename="a_20b.png"',
             ],
-            'unicode' => [
+            'fileNameWithUnicode' => [
                 'inline',
                 'aёüöäßb.png',
                 'inline; filename="aeuoassb.png"; filename*=utf-8\'\'a%D1%91%C3%BC%C3%B6%C3%A4%C3%9Fb.png',
             ],
-            'quotes' => [
-                'inline',
-                'a"b"c\'d\'.png',
-                'inline; filename="a\"b\"c\'d\'.png"; filename*=utf-8\'\'a%22b%22c%27d%27.png',
-            ],
-            'emoji' => [
+            'fileNameWithEmoji' => [
                 'inline',
                 'a😎b.png',
-                'inline; filename="a😎b.png"; filename*=utf-8\'\'a%F0%9F%98%8Eb.png',
+                'inline; filename="a_b.png"; filename*=utf-8\'\'a%F0%9F%98%8Eb.png',
+            ],
+            'fileNameWithDelete' => [
+                'attachment',
+                "a\x7f.png",
+                'attachment; filename="a_.png"; filename*=utf-8\'\'a%7F.png',
             ],
         ];
     }
