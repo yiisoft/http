@@ -18,7 +18,7 @@ The package provides:
 
 - Constants for HTTP protocol headers, methods and statuses. All along with short descriptions and RFC links. 
 - PSR-7, PSR-17 PhpStorm meta for HTTP protocol headers, methods and statuses.
-- Header helper that has static methods to generate values.
+- `ContentDispositionHeader` that has static methods to generate `Content-Disposition` header name and value.
 
 ## Method constants
 
@@ -62,17 +62,18 @@ use Yiisoft\Http\Status;
 Status::TEXTS[Status::NOT_FOUND];
 ```
 
-## Header helper usage
+## `ContentDispositionHeader` usage
 
-Header helper methods are static so usage is like the following:
+`ContentDispositionHeader` methods are static so usage is like the following:
 
 ```php
-$value = \Yiisoft\Http\HeaderHelper::contentDispositionValue('inline', 'avatar.png');
+$name = \Yiisoft\Http\ContentDispositionHeader::name();
+
+$value = \Yiisoft\Http\ContentDispositionHeader::value(
+    \Yiisoft\Http\ContentDispositionHeader::INLINE,
+     'avatar.png'
+);
 ```
-
-Overall the helper has the following methods:
-
-- contentDispositionValue
 
 ## PSR-7 and PSR-17 PhpStorm meta
 

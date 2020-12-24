@@ -10,7 +10,7 @@ use Yiisoft\Strings\Inflector;
 use function in_array;
 
 /**
- * Content disposition header
+ * Content-Disposition header
  *
  * @see https://tools.ietf.org/html/rfc6266
  */
@@ -20,7 +20,7 @@ final class ContentDispositionHeader
     public const INLINE = 'inline';
 
     /**
-     * @return string Content disposition header name
+     * @return string Content-Disposition header name
      */
     public static function name(): string
     {
