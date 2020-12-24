@@ -67,7 +67,7 @@ final class ContentDispositionHeader
         $fileName = str_replace(['%', '/', '\\'], '_', $fileName);
 
         $fallbackName = (new Inflector())->toTransliterated($fileName, Inflector::TRANSLITERATE_LOOSE);
-        $fallbackName = preg_replace('/[^\x20-\x7e]/u', "_", $fallbackName);
+        $fallbackName = preg_replace('/[^\x20-\x7e]/u', '_', $fallbackName);
         $fallbackName = str_replace('"', '\\"', $fallbackName);
 
         $utfName = rawurlencode($fileName);
