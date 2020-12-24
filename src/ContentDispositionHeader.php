@@ -4,10 +4,29 @@ declare(strict_types=1);
 
 namespace Yiisoft\Http;
 
+use InvalidArgumentException;
 use Yiisoft\Strings\Inflector;
 
-final class HeaderHelper
+use function in_array;
+
+/**
+ * Content disposition header
+ *
+ * @see https://tools.ietf.org/html/rfc6266
+ */
+final class ContentDispositionHeader
 {
+    public const ATTACHMENT = 'attachment';
+    public const INLINE = 'inline';
+
+    /**
+     * @return string Content disposition header name
+     */
+    public static function name(): string
+    {
+        return 'Content-Disposition';
+    }
+
     /**
      * Returns Content-Disposition header value that is safe to use with both old and new browsers.
      *
@@ -26,16 +45,20 @@ final class HeaderHelper
      * - Should be urlencoded since headers are ASCII-only.
      * - Could be omitted if it exactly matches fallback name.
      *
-     * @see https://tools.ietf.org/html/rfc6266
-     *
-     * @param string $disposition
-     * @param string|null $fileName
+     * @param string $type The disposition type.
+     * @param string|null $fileName The file name.
      *
      * @return string
      */
-    public static function contentDispositionValue(string $disposition, ?string $fileName = null): string
+    public static function value(string $type, ?string $fileName = null): string
     {
-        $header = $disposition;
+        if (!in_array($type, [self::INLINE, self::ATTACHMENT])) {
+            throw new InvalidArgumentException(
+                'Disposition type must be either "' . self::ATTACHMENT . '" or "' . self::INLINE . '".'
+            );
+        }
+
+        $header = $type;
 
         if ($fileName === null) {
             return $header;
