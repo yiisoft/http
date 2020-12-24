@@ -29,24 +29,30 @@ final class HeaderHelper
      * @see https://tools.ietf.org/html/rfc6266#page-5
      *
      * @param string $disposition
-     * @param string $attachmentName
+     * @param string|null $fileName
      *
      * @return string
      */
-    public static function contentDispositionValue(string $disposition, string $attachmentName): string
+    public static function contentDispositionValue(string $disposition, ?string $fileName = null): string
     {
+        $header = $disposition;
+
+        if ($fileName === null) {
+            return $header;
+        }
+
         $fallbackName = str_replace(
             ['%', '/', '\\', '"', "\x7F"],
             ['_', '_', '_', '\\"', '_'],
-            (new Inflector())->toTransliterated($attachmentName, Inflector::TRANSLITERATE_LOOSE)
+            (new Inflector())->toTransliterated($fileName, Inflector::TRANSLITERATE_LOOSE)
         );
-        $utfName = rawurlencode(str_replace(['%', '/', '\\'], '', $attachmentName));
+        $utfName = rawurlencode(str_replace(['%', '/', '\\'], '', $fileName));
 
-        $dispositionHeader = "{$disposition}; filename=\"{$fallbackName}\"";
+        $header .= "; filename=\"{$fallbackName}\"";
         if ($utfName !== $fallbackName) {
-            $dispositionHeader .= "; filename*=utf-8''{$utfName}";
+            $header .= "; filename*=utf-8''{$utfName}";
         }
 
-        return $dispositionHeader;
+        return $header;
     }
 }
