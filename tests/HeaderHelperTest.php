@@ -62,7 +62,6 @@ final class HeaderHelperTest extends TestCase
                 'a😎b.png',
                 'inline; filename="a😎b.png"; filename*=utf-8\'\'a%F0%9F%98%8Eb.png',
             ],
-
         ];
     }
 
