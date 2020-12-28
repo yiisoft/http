@@ -41,7 +41,7 @@ To have a list of these, use:
 ```php
 use Yiisoft\Http\Method;
 
-Method::ANY;
+Method::ALL;
 ```
 
 ## HTTP status codes
