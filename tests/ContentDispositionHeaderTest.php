@@ -53,8 +53,8 @@ final class ContentDispositionHeaderTest extends TestCase
             ],
             'fileNameWithUnicode' => [
                 ContentDispositionHeader::INLINE,
-                'aёüöäßb.png',
-                'inline; filename="aeuoassb.png"; filename*=utf-8\'\'a%D1%91%C3%BC%C3%B6%C3%A4%C3%9Fb.png',
+                'aüöäßb.png',
+                'inline; filename="auoassb.png"; filename*=utf-8\'\'a%C3%BC%C3%B6%C3%A4%C3%9Fb.png',
             ],
             'fileNameWithEmoji' => [
                 ContentDispositionHeader::INLINE,
