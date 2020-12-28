@@ -20,11 +20,17 @@
         "source": "https://github.com/yiisoft/http"
     },
     "require": {
-        "php": "^7.4|^8.0"
+        "php": "^7.4|^8.0",
+        "yiisoft/strings": "^1.1"
     },
     "autoload": {
         "psr-4": {
             "Yiisoft\\Http\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yiisoft\\Http\\Tests\\": "tests"
         }
     },
     "config": {
@@ -36,9 +42,9 @@
         "test-watch": "phpunit-watcher watch"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.4",
-        "roave/infection-static-analysis-plugin": "^1.5",
+        "phpunit/phpunit": "^9.5",
+        "roave/infection-static-analysis-plugin": "^1.6",
         "spatie/phpunit-watcher": "^1.23",
-        "vimeo/psalm": "^4.2"
+        "vimeo/psalm": "^4.3"
     }
 }
