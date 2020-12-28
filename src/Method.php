@@ -91,7 +91,11 @@ final class Method
      */
     public const OPTIONS = 'OPTIONS';
 
+    /**
+     * @deprecated Use {@see Method::ALL} instead.
+     */
     public const ANY = self::ALL;
+
     public const ALL = [
         self::GET,
         self::POST,
