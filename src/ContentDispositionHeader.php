@@ -10,7 +10,7 @@ use Yiisoft\Strings\Inflector;
 use function in_array;
 
 /**
- * Content-Disposition header
+ * Helps building Content-Disposition header that complies to RFC-6266 and works in majority of modern browsers.
  *
  * @see https://tools.ietf.org/html/rfc6266
  */
@@ -20,7 +20,7 @@ final class ContentDispositionHeader
     public const INLINE = 'inline';
 
     /**
-     * @return string Content-Disposition header name
+     * @return string Content-Disposition header name.
      */
     public static function name(): string
     {
@@ -48,7 +48,7 @@ final class ContentDispositionHeader
      * @param string $type The disposition type.
      * @param string|null $fileName The file name.
      *
-     * @throws InvalidArgumentException if `$type` is incorrect
+     * @throws InvalidArgumentException if `$type` is incorrect.
      *
      * @return string
      */
