@@ -91,7 +91,8 @@ final class Method
      */
     public const OPTIONS = 'OPTIONS';
 
-    public const ANY = [
+    public const ANY = self::ALL;
+    public const ALL = [
         self::GET,
         self::POST,
         self::PUT,
