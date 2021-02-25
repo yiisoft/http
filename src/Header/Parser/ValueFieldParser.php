@@ -20,6 +20,10 @@ class ValueFieldParser
         READ_PARAM_QUOTED_VALUE = 3,
         READ_PARAM_VALUE = 4;
 
+    /**
+     * @param string $class
+     * @psalm-return Generator<int, BaseHeaderValue, void, void>
+     */
     public static function parse(string $body, string $class, HeaderParsingParams $params): Generator
     {
         if (!$params->valuesList && !$params->withParams && !$params->directives) {

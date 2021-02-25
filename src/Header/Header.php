@@ -13,15 +13,17 @@ use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 
 class Header implements \IteratorAggregate, \Countable
 {
+    /** @psalm-var class-string<BaseHeaderValue> */
     protected string $headerClass;
     protected string $headerName;
-    /** @var BaseHeaderValue[] */
+    /** @var array<int, BaseHeaderValue> */
     protected array $collection = [];
 
     protected const DEFAULT_VALUE_CLASS = SimpleValue::class;
 
     /**
      * @param string $nameOrClass Header name or header value class
+     * @psalm-param class-string<BaseHeaderValue> $nameOrClass
      */
     public function __construct(string $nameOrClass)
     {
@@ -43,23 +45,26 @@ class Header implements \IteratorAggregate, \Countable
         }
     }
 
-    public function getIterator(): iterable
+    final public function getIterator(): iterable
     {
         yield from $this->getValues(true);
     }
-    public function count(): int
+
+    final public function count(): int
     {
         return count($this->collection);
     }
 
-    public function getName(): string
+    final public function getName(): string
     {
         return $this->headerName;
     }
-    public function getValueClass(): string
+
+    final public function getValueClass(): string
     {
         return $this->headerClass;
     }
+
     /**
      * @param bool $ignoreIncorrect
      * @return BaseHeaderValue[]
@@ -75,6 +80,7 @@ class Header implements \IteratorAggregate, \Countable
         }
         return $result;
     }
+
     /**
      * @param bool $ignoreIncorrect
      * @return string[]
@@ -93,9 +99,8 @@ class Header implements \IteratorAggregate, \Countable
 
     /**
      * @param string[]|BaseHeaderValue[] $values
-     * @return $this
      */
-    public function withValues(array $values): self
+    final public function withValues(array $values): self
     {
         $clone = clone $this;
         foreach ($values as $value) {
@@ -103,11 +108,11 @@ class Header implements \IteratorAggregate, \Countable
         }
         return $clone;
     }
+
     /**
      * @param string|BaseHeaderValue $value
-     * @return $this
      */
-    public function withValue($value): self
+    final public function withValue($value): self
     {
         $clone = clone $this;
         $clone->addValue($value);
@@ -121,7 +126,7 @@ class Header implements \IteratorAggregate, \Countable
      * @param bool $ignoreIncorrect Don't export values that have error
      * @return MessageInterface
      */
-    public function inject(
+    final public function inject(
         MessageInterface $message,
         bool $replace = true,
         bool $ignoreIncorrect = true
@@ -137,14 +142,13 @@ class Header implements \IteratorAggregate, \Countable
         }
         return $message;
     }
+
     /**
      * Import header values from HTTP message
      * @param MessageInterface $message Request or Response instance
-     * @return $this
      */
-    public function extract(MessageInterface $message): self
+    final public function extract(MessageInterface $message): self
     {
-        #todo test it
         return $this->withValues($message->getHeader($this->headerName));
     }
 
@@ -170,19 +174,20 @@ class Header implements \IteratorAggregate, \Countable
             sprintf('The value must be an instance of %s or string', $this->headerClass)
         );
     }
+
     protected function collect(BaseHeaderValue $value): void
     {
         $this->collection[] = $value;
     }
+
     private function parseAndCollect(string $body): void
     {
         /**
          * @var HeaderParsingParams $parsingParams
-         * @see \Yiisoft\Http\Header\Internal\BaseHeaderValue::getParsingParams
+         * @see BaseHeaderValue::getParsingParams
          */
         $parsingParams = $this->headerClass::getParsingParams();
 
-        // var_dump($body, $this->headerClass, $parsingParams); die;
         foreach (ValueFieldParser::parse($body, $this->headerClass, $parsingParams) as $value) {
             $this->collect($value);
         }

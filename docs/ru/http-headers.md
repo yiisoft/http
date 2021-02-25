@@ -3,12 +3,12 @@
 ## Список HTTP заголовков
 
 
-Пакет `yiisoft/http` предоставляет инструменты для парсинга и генерирования заголовков с учётом их особенностей
+Пакет `yiisoft/http` предоставляет инструменты для парсинга и генерирования HTTP заголовков с учётом их особенностей
 
 ## Класс Header
 
 Абсолютно любой заголовок в поле заголовков HTTP-сообщения может быть указан несколько раз, даже если это не разрешается
-правилами самого заголовка. Поэтому в результате парсинга любого заголовка вы получите коллекцию значений.
+в RFC самого заголовка. Поэтому в результате парсинга любого заголовка вы получите коллекцию значений.
 
 Базовым классом для коллекции значений заголовков является `\Yiisoft\Http\Header\Header`. Он подходит для заголовков,
 в которых важно соблюдение порядка значений в заданной последовательности. Для сортируемых списков значений выделена
@@ -64,6 +64,8 @@ use \Yiisoft\Http\Header\Value\Allow;
 
 // Получить коллекцию значений заголовка Allow из объекта запроса
 $header = Allow::createHeader()->extract($request);
+// Или
+$header = Allow::extract($request);
 
 // Записать заголовки в объект ответа
 $response = $header->inject($response, $replace = true);
@@ -76,16 +78,10 @@ $response = $header->inject($response, $replace = true);
 Вы можете использовать класс `Date` для конвертирования объекта `\DateTimeInterface` в строку формата времени HTTP.
 
 ```php
-use \Yiisoft\Http\Header\Value\Date;
+$date = new \Yiisoft\Http\Header\Value\Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000'));
 
-$date = new Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000'));
-
-echo new Date(new DateTimeImmutable('2020-01-01 00:00:00 +0000'));
+echo $date;
 // Wed, 01 Jan 2020 00:00:00 GMT
-
-// Внедрить в ответ качестве заголовка
-/** @var \Psr\Http\Message\ResponseInterface $response */
-$response = $date->inject($response);
 ```
 
 ### ETag
@@ -104,7 +100,7 @@ $etag = (new ETag())->withTag('56d-9989200-1132c580', true)->inject($response);
 ### Age
 
 В заголовке `Age` задаётся количество секунд с момента модификации ресурса. Поэтому все значения, имеющие символы,
-отличные от десятичных цифр, будут помечены как не валидные.
+отличные от десятичных цифр, будут помечены как невалидные.
 
 ### Expires
 
@@ -152,14 +148,14 @@ $header = \Yiisoft\Http\Header\Value\Cache\CacheControl::createHeader()
 ```php
 use Yiisoft\Http\Header\Value\Cache\CacheControl;
 
-// исключения будут брошены в каждой строчке ниже
+// исключения будут брошены в каждом из этих случаев:
 (new CacheControl())->withDirective('max-stale'); // у директивы max-stale должен быть аргумент
 (new CacheControl())->withDirective('max-age', 'not numeric'); // аргумент директивы max-age должен быть числовым
 (new CacheControl())->withDirective('max-age', '-456'); // допускаются только цифры
 (new CacheControl())->withDirective('private', 'ETag,'); // нарушение синтаксиса списка заголовков
 (new CacheControl())->withDirective('no-store', 'yes'); // директива no-store не принимает аргумент
 
-// Исключение выброшено не будет, однако все элементы коллекции будут не валидными
+// Исключение выброшено не будет, однако все элементы коллекции будут невалидными
 CacheControl::createHeader()->withValue('max-stale, max-age=test, private="ETag,", no-store=yes');
 ```
 
@@ -170,8 +166,8 @@ CacheControl::createHeader()->withValue('max-stale, max-age=test, private="ETag,
 
 ## Пользовательские заголовки
 
-Если для требуемого заголовка вы не нашли среди классов подходящий, либо целевой заголовок не имеет заранее определённое
-имя, то вы можете также использовать классы безымянных заголовков с предопределёнными правилами парсинга:
+Если для требуемого заголовка не нашёлся подходящий, либо целевой заголовок не имеет заранее определённое имя,
+то вы можете также использовать классы безымянных заголовков с предопределёнными правилами парсинга:
 
 ```php
 /** @var \Psr\Http\Message\ServerRequestInterface $request */
@@ -185,4 +181,13 @@ $values = \Yiisoft\Http\Header\Value\Unnamed\ListedValue::createHeader('My-List'
 // создать заголовок My-Sorted-List с перечисляемыми сортируемыми значениями
 $sorted = \Yiisoft\Http\Header\Value\Unnamed\SortedValue::createHeader('My-Sorted-List')
     ->withValues(['foo', 'bar;q=0.5', 'baz;q=0']);
+
+// создать заголовок My-Directives с форматом директив
+$directives = \Yiisoft\Http\Header\Value\Unnamed\DirectiveValue::createHeader('My-Directives')
+    ->withValues(['foo', 'bar=baz'])
+    ->withDirective('answer', '42');
+
+// создать заголовок My-Simple-Header, к которому не будут применяться правила парсинга
+$simple = \Yiisoft\Http\Header\Value\Unnamed\SimpleValue::createHeader('My-Simple-Header')
+    ->withValues(['foo', 'bar=baz', 'answer=42']);
 ```

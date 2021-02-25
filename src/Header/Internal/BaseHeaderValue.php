@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header\Internal;
 
 use Exception;
-use http\Exception\RuntimeException;
 use Psr\Http\Message\MessageInterface;
 use Yiisoft\Http\Header\Header;
 use Yiisoft\Http\Header\Parser\HeaderParsingParams;
@@ -45,6 +44,11 @@ abstract class BaseHeaderValue
         return new Header(static::class);
     }
 
+    public static function extract(MessageInterface $message): Header
+    {
+        return (new Header(static::class))->extract($message);
+    }
+
     public function withValue(string $value): self
     {
         $clone = clone $this;
@@ -58,7 +62,6 @@ abstract class BaseHeaderValue
 
     /**
      * @param Exception|null $error
-     * @return $this
      */
     final public function withError(?Exception $error): self
     {

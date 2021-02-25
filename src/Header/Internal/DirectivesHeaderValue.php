@@ -78,7 +78,7 @@ abstract class DirectivesHeaderValue extends BaseHeaderValue
     /**
      * @param string $directive
      * @param string|null $argument
-     * @return $this
+     *
      * @throws InvalidArgumentException
      */
     public function withDirective(string $directive, string $argument = null): self

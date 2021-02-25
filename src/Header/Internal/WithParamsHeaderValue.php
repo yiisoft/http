@@ -49,7 +49,6 @@ abstract class WithParamsHeaderValue extends BaseHeaderValue
     /**
      * It makes sense to use only for HeaderValues that implement the WithParams interface
      * @param array<string, string> $params
-     * @return $this
      */
     public function withParams(array $params): self
     {
@@ -57,6 +56,10 @@ abstract class WithParamsHeaderValue extends BaseHeaderValue
         $clone->setParams($params);
         return $clone;
     }
+
+    /**
+     * @return array<string, string>
+     */
     public function getParams(): array
     {
         $result = $this->params;
@@ -65,6 +68,7 @@ abstract class WithParamsHeaderValue extends BaseHeaderValue
         }
         return $result;
     }
+
     public function getQuality(): string
     {
         return $this->quality;
@@ -78,18 +82,19 @@ abstract class WithParamsHeaderValue extends BaseHeaderValue
         $this->quality = rtrim($q, '0.') ?: '0';
         return true;
     }
+
     protected function setParams(array $params): void
     {
         $this->params = [];
         foreach ($params as $key => $value) {
             # todo decide: what about numeric keys?
             $key = strtolower($key);
-            if (!key_exists($key, $this->params)) {
+            if (!array_key_exists($key, $this->params)) {
                 $this->params[$key] = $value;
             }
         }
         if (static::PARSING_Q_PARAM) {
-            if (key_exists('q', $this->params)) {
+            if (array_key_exists('q', $this->params)) {
                 $this->setQuality($this->params['q']);
                 unset($this->params['q']);
             } else {
