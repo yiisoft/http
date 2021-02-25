@@ -6,7 +6,7 @@ the "headers" or the "header section"), an empty line indicating the end of the 
 body.
 
 - [HTTP start line](http-start-line.md) (Method constants and status codes)
-- [HTTP заголовки](http-headers.md)
+- [HTTP headers](http-headers.md)
 
 Related links to RFC:
 

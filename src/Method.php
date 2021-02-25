@@ -92,35 +92,11 @@ final class Method
     public const OPTIONS = 'OPTIONS';
 
     /**
-     * The TRACE method requests a remote, application-level loop-back of
-     * the request message.The final recipient of the request SHOULD
-     * reflect the message received, excluding some fields,
-     * back to the client as the message body of a 200 (OK) response with a
-     * Content-Type of "message/http" (Section 8.3.1 of [RFC7230]).  The
-     * final recipient is either the origin server or the first server to
-     * receive a Max-Forwards value of zero (0) in the request
-     *
-     * @link https://tools.ietf.org/html/rfc7231#section-4.3.8
+     * @deprecated Use {@see Method::ALL} instead.
      */
-    public const TRACE = 'TRACE';
+    public const ANY = self::ALL;
 
-    /**
-     * The CONNECT method requests that the recipient establish a tunnel to
-     * the destination origin server identified by the request-target and,
-     * if successful, thereafter restrict its behavior to blind forwarding
-     * of packets, in both directions, until the tunnel is closed.  Tunnels
-     * are commonly used to create an end-to-end virtual connection, through
-     * one or more proxies, which can then be secured using TLS (Transport
-     * Layer Security, [RFC5246]).
-     *
-     * @link https://tools.ietf.org/html/rfc7231#section-4.3.6
-     */
-    public const CONNECT = 'CONNECT';
-
-    /**
-     * Array of content related methods
-     */
-    public const ANY = [
+    public const ALL = [
         self::GET,
         self::POST,
         self::PUT,
