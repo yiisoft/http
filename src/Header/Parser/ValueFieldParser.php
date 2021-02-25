@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Http\Header\Parser;
 
 use Generator;
+use InvalidArgumentException;
 use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 use Yiisoft\Http\Header\Internal\DirectivesHeaderValue;
-use Yiisoft\Http\Header\Parser\ParsingException;
 
-class ValueFieldParser
+final class ValueFieldParser
 {
     // Parsing's constants
     private const
@@ -21,11 +21,14 @@ class ValueFieldParser
         READ_PARAM_VALUE = 4;
 
     /**
-     * @param string $class
+     * @psalm-param class-string<BaseHeaderValue> $class
      * @psalm-return Generator<int, BaseHeaderValue, void, void>
      */
     public static function parse(string $body, string $class, HeaderParsingParams $params): Generator
     {
+        if (!is_a($class, BaseHeaderValue::class, true)) {
+            throw new InvalidArgumentException('$class should be instance of BaseHeaderValue.');
+        }
         if (!$params->valuesList && !$params->withParams && !$params->directives) {
             yield new $class(trim($body));
             return;
@@ -115,9 +118,8 @@ class ValueFieldParser
                     if ($sym === '\\') { // quoted pair
                         if (++$pos >= $length) {
                             throw new ParsingException($body, $pos, 'Incorrect quoted pair');
-                        } else {
-                            $state->buffer .= $body[$pos];
                         }
+                        $state->buffer .= $body[$pos];
                     } elseif ($sym === '"') { // end
                         $state->part = self::READ_NONE;
                         $state->addParamFromBuffer();
@@ -129,7 +131,8 @@ class ValueFieldParser
                 if ($state->part === self::READ_NONE) {
                     if (ord($sym) <= 32) {
                         continue;
-                    } elseif ($sym === ';' && $params->withParams) {
+                    }
+                    if ($sym === ';' && $params->withParams) {
                         $state->part = self::READ_PARAM_NAME;
                     } elseif ($sym === ',' && $params->valuesList) {
                         $state->part = self::READ_VALUE;
@@ -142,7 +145,6 @@ class ValueFieldParser
         } catch (ParsingException $e) {
             $state->error = $e;
         }
-        /** @var BaseHeaderValue $item */
         if ($state->part === self::READ_VALUE) {
             $state->value = trim($state->buffer);
         } elseif (in_array($state->part, [self::READ_PARAM_VALUE, self::READ_PARAM_QUOTED_VALUE], true)) {
@@ -155,6 +157,9 @@ class ValueFieldParser
         yield static::createHeaderValue($class, $params, $state);
     }
 
+    /**
+     * @psalm-param class-string<BaseHeaderValue> $class
+     */
     protected static function createHeaderValue(
         string $class,
         HeaderParsingParams $params,
@@ -162,7 +167,7 @@ class ValueFieldParser
     ): BaseHeaderValue {
         /** @var DirectivesHeaderValue|BaseHeaderValue $item */
         $item = new $class($state->value);
-        if ($params->directives) {
+        if ($params->directives && $item instanceof DirectivesHeaderValue) {
             if ($state->value === '' && count($state->params) > 0) {
                 $item = $item->withDirective(key($state->params), current($state->params));
             }
