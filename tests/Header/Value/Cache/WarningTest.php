@@ -30,12 +30,14 @@ class WarningTest extends TestCase
         $this->assertSame(get_class($origin), get_class($clone));
         $this->assertNotSame($origin, $clone);
     }
+
     public function testToStringWithoutDate()
     {
         $headerValue = (new Warning())->withDataset(100, '-', 'test');
 
         $this->assertSame('100 - "test"', (string)$headerValue);
     }
+
     public function testWithValueParsing()
     {
         $headerValue = (new Warning())->withValue('100 localhost "test" "Wed, 01 Jan 2020 00:00:00 GMT"');
@@ -64,6 +66,7 @@ class WarningTest extends TestCase
             'time-deprecated' => ['100 - "" "Fri Jul 4 08:42:36 2008"', 100, '-', '', '2008-07-04-08-42-36'],
         ];
     }
+
     /**
      * @dataProvider withValueDataProvider
      */
@@ -79,7 +82,9 @@ class WarningTest extends TestCase
         $this->assertSame($code, $headerValue->getCode());
         $this->assertSame($agent, $headerValue->getAgent());
         $this->assertSame($text, $headerValue->getText());
-        $this->assertSame($date, $headerValue->getDate() === null
+        $this->assertSame(
+            $date,
+            $headerValue->getDate() === null
             ? null
             : $headerValue->getDate()->format('Y-m-d-H-i-s')
         );
@@ -108,6 +113,7 @@ class WarningTest extends TestCase
             'datetime-deprecated-1' => ['100 - "" "Fri Jul 99 08:42:36 2008"'],
         ];
     }
+
     /**
      * @dataProvider withValueIncorrectDataProvider
      */

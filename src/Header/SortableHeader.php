@@ -18,7 +18,7 @@ final class SortableHeader extends Header
         parent::__construct($nameOrClass);
         if (!is_subclass_of($this->headerClass, WithParamsHeaderValue::class, true)) {
             throw new InvalidArgumentException(
-                sprintf("%s class does not implement %s", $this->headerClass, WithParamsHeaderValue::class)
+                sprintf('%s class does not implement %s', $this->headerClass, WithParamsHeaderValue::class)
             );
         }
     }

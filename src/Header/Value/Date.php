@@ -18,6 +18,7 @@ class Date extends BaseHeaderValue
 
     /**
      * Date constructor.
+     *
      * @param DateTimeInterface|string $value
      */
     public function __construct($value = '')

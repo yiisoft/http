@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header;
 
 use InvalidArgumentException;
@@ -9,7 +11,6 @@ use Yiisoft\Http\Header\Value\Accept\Accept;
 use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\Date;
 use Yiisoft\Http\Header\Value\Unnamed\SimpleValue;
-use Yiisoft\Http\Tests\Header\Value\Stub\DummyHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\ListedValuesWithParamsHeaderValue;
 use Yiisoft\Http\Tests\Header\Value\Stub\SortedHeaderValue;
@@ -23,23 +24,27 @@ class HeaderTest extends TestCase
         $this->assertSame('Date', $values->getName());
         $this->assertSame(Date::class, $values->getValueClass());
     }
+
     public function testErrorWhenHeaderValueHasNoHeaderName()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/no header name/');
         new Header(SimpleValue::class);
     }
+
     public function testErrorWithHeaderClass()
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/not a header/');
         new Header(BaseHeaderValue::class);
     }
+
     public function testErrorIfNotHeaderClass()
     {
         $this->expectException(InvalidArgumentException::class);
         new Header(\DateTimeImmutable::class);
     }
+
     public function testWithValueImmutability()
     {
         $header = new Header('WWW-Authenticate');
@@ -49,6 +54,7 @@ class HeaderTest extends TestCase
         $this->assertSame(get_class($header), get_class($clone));
         $this->assertNotSame($header, $clone);
     }
+
     public function testWithValuesImmutability()
     {
         $header = new Header('WWW-Authenticate');
@@ -58,6 +64,7 @@ class HeaderTest extends TestCase
         $this->assertSame(get_class($header), get_class($clone));
         $this->assertNotSame($header, $clone);
     }
+
     public function testCreateFromOneStringValue()
     {
         $headers = ['Newauth realm="apps", type=1, title="Login to \\"apps\\"", Basic realm="simple"'];
@@ -67,6 +74,7 @@ class HeaderTest extends TestCase
         $this->assertSame('WWW-Authenticate', $header->getName());
         $this->assertSame($headers, $header->getStrings());
     }
+
     public function testCreateFromFewStringValues()
     {
         $headers = [
@@ -86,6 +94,7 @@ class HeaderTest extends TestCase
         $this->assertSame('accept', $header->getName());
         $this->assertSame($headers, $header->getStrings());
     }
+
     public function testAddObject()
     {
         $headers = [
@@ -99,6 +108,7 @@ class HeaderTest extends TestCase
         $this->assertSame(Accept::NAME, $header->getName());
         $this->assertSame(['text/*;q=0.3', 'text/html;q=0.7', '*/*'], $header->getStrings());
     }
+
     public function testExceptionWhenAddOtherClassObject()
     {
         $headers = [
@@ -176,6 +186,7 @@ class HeaderTest extends TestCase
             ],
         ];
     }
+
     /**
      * @dataProvider valueAndParametersDataProvider
      */
@@ -222,10 +233,11 @@ class HeaderTest extends TestCase
             'brokenSyntax1' => ['a==b', true, '', [], ''],
             'brokenSyntax2' => ['value; a *=b', true, 'value', [], 'value'],
             'brokenSyntax3' => ['value;a *=b', true, 'value', [], 'value'],
-            # Invalid syntax but most browsers accept the umlaut with warn
+            // Invalid syntax but most browsers accept the umlaut with warn
             'brokenToken2' => ['a=foo-ä.html', false, '', ['a' => 'foo-ä.html']],
         ];
     }
+
     /**
      * @dataProvider incorrectValueAndParametersDataProvider
      */
@@ -268,6 +280,7 @@ class HeaderTest extends TestCase
             'q0,05' => ['0,05', false],
         ];
     }
+
     /**
      * @dataProvider qualityParametersDataProvider
      */
@@ -295,6 +308,7 @@ class HeaderTest extends TestCase
             'chars' => [',!@# $%^&*()!"№;%:=-?.,', ['', '!@# $%^&*()!"№;%:=-?.', '']],
         ];
     }
+
     /**
      * @dataProvider listedValuesDataProvider
      */
@@ -346,6 +360,7 @@ class HeaderTest extends TestCase
             'badSyntax2' => [';,', []], // no values added
         ];
     }
+
     /**
      * @dataProvider listedValuesWithParamsDataProvider
      */

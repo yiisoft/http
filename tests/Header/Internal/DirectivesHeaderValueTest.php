@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header\Internal;
 
 use PHPUnit\Framework\TestCase;
@@ -24,6 +26,7 @@ class DirectivesHeaderValueTest extends TestCase
         $this->assertSame(get_class($origin), get_class($clone));
         $this->assertNotSame($origin, $clone);
     }
+
     public function testWithDirectiveArg()
     {
         $value = (new DirectivesHeaderValue())
@@ -35,6 +38,7 @@ class DirectivesHeaderValueTest extends TestCase
         $this->assertSame('foo', $value->getDirective());
         $this->assertSame('bar', $value->getArgument());
     }
+
     public function testCreateHeader()
     {
         $header = DirectivesHeaderValue::createHeader();
@@ -42,24 +46,28 @@ class DirectivesHeaderValueTest extends TestCase
         $this->assertInstanceOf(DirectiveHeader::class, $header);
         $this->assertSame(DirectivesHeaderValue::NAME, $header->getName());
     }
+
     public function testToStringWithoutArgument()
     {
         $headerValue = (new DirectivesHeaderValue())->withDirective(DirectivesHeaderValue::EMPTY);
 
         $this->assertSame('empty', (string)$headerValue);
     }
+
     public function testToStringNumericArgument()
     {
         $headerValue = (new DirectivesHeaderValue())->withDirective(DirectivesHeaderValue::NUMERIC, '1560');
 
         $this->assertSame('numeric=1560', (string)$headerValue);
     }
+
     public function testToStringEmptyListedArgument()
     {
         $headerValue = (new DirectivesHeaderValue())->withDirective(DirectivesHeaderValue::LIST_OR_EMPTY);
 
         $this->assertSame('list-or-empty', (string)$headerValue);
     }
+
     public function testToStringListedArgument()
     {
         $headerValue = (new DirectivesHeaderValue())->withDirective(DirectivesHeaderValue::HEADER_LIST, 'etag');
@@ -73,12 +81,14 @@ class DirectivesHeaderValueTest extends TestCase
 
         $this->assertSame('custom-directive-name=custom_value', (string)$headerValue);
     }
+
     public function testToStringEmptyDirective()
     {
         $headerValue = (new DirectivesHeaderValue());
 
         $this->assertSame('', (string)$headerValue);
     }
+
     public function testWithValue()
     {
         $headerValue = (new DirectivesHeaderValue())->withValue('test-value-to-directive');
@@ -132,6 +142,7 @@ class DirectivesHeaderValueTest extends TestCase
             ],
         ];
     }
+
     /**
      * @dataProvider withDirectiveDataProvider
      */
@@ -168,6 +179,7 @@ class DirectivesHeaderValueTest extends TestCase
             'argument-should-be-empty' => ['empty', 'null'],
         ];
     }
+
     /**
      * @dataProvider withDirectiveIncorrectDataProvider
      */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header\Value\Stub;
 
 use Yiisoft\Http\Header\Internal\WithParamsHeaderValue;

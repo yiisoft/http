@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header\Internal;
 
 use PHPUnit\Framework\TestCase;
@@ -17,6 +19,7 @@ class WithParamsHeaderValueTest extends TestCase
         $this->assertInstanceOf(Header::class, $header);
         $this->assertSame(WithParamsHeaderValue::NAME, $header->getName());
     }
+
     public function testCreateHeaderQ()
     {
         $header = SortedHeaderValue::createHeader();
@@ -24,6 +27,7 @@ class WithParamsHeaderValueTest extends TestCase
         $this->assertInstanceOf(SortableHeader::class, $header);
         $this->assertSame(SortedHeaderValue::NAME, $header->getName());
     }
+
     public function testWithParamsImmutability()
     {
         $value = new WithParamsHeaderValue();
@@ -33,6 +37,7 @@ class WithParamsHeaderValueTest extends TestCase
         $this->assertSame(get_class($value), get_class($clone));
         $this->assertNotSame($value, $clone);
     }
+
     public function testBehaviorWithParams()
     {
         $params = ['q' => '0.4', 'param' => 'test', 'foo' => 'bar'];
@@ -44,6 +49,7 @@ class WithParamsHeaderValueTest extends TestCase
         $this->assertSame('1', $value->getQuality());
         $this->assertEquals($params, $value->getParams());
     }
+
     public function testBehaviorWithQualityParam()
     {
         $params = ['param' => 'test', 'foo' => 'bar', 'q' => '0.4'];

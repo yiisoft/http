@@ -16,6 +16,7 @@ final class Age extends BaseHeaderValue
 
     /**
      * @param int|string $value
+     *
      * @return BaseHeaderValue
      */
     public function withValue($value): BaseHeaderValue

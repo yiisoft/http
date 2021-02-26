@@ -22,9 +22,8 @@ final class ETag extends BaseHeaderValue
     {
         if ($this->toStringFromTag) {
             return ($this->weak ? 'W/' : '') . '"' . $this->tag . '"';
-        } else {
-            return $this->value;
         }
+        return $this->value;
     }
 
     public function getTag(): string

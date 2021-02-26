@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header;
 
 use InvalidArgumentException;
@@ -19,11 +21,13 @@ class AcceptHeaderTest extends TestCase
         $this->assertSame('Accept', $values->getName());
         $this->assertSame(Accept::class, $values->getValueClass());
     }
+
     public function testErrorWithHeaderClass()
     {
         $this->expectException(InvalidArgumentException::class);
         new AcceptHeader(SortedHeaderValue::class);
     }
+
     public function testCreateFromStringValues()
     {
         $header = (new AcceptHeader('Accept'))->withValue('*/*');
@@ -31,6 +35,7 @@ class AcceptHeaderTest extends TestCase
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(['*/*'], $header->getStrings());
     }
+
     public function testCreateFromFewStringValues()
     {
         $headers = [
@@ -53,6 +58,7 @@ class AcceptHeaderTest extends TestCase
             $header->getStrings()
         );
     }
+
     public function testParamsPrioritySortingWithSameQuality()
     {
         $headers = [
@@ -97,6 +103,7 @@ class AcceptHeaderTest extends TestCase
             $header->getStrings()
         );
     }
+
     public function testAcceptPrioritySortingOfIncorrectValuesDataWithoutParams()
     {
         $headers = 'foo/bar/*, foo/bar/baz, */bar, */*/*, foo/*/*, foo/*/baz, foo/bar';
@@ -117,6 +124,7 @@ class AcceptHeaderTest extends TestCase
             $header->getStrings()
         );
     }
+
     public function testAcceptCreateFromManyMixedStringValues()
     {
         $headers = [
@@ -166,6 +174,7 @@ class AcceptHeaderTest extends TestCase
             $header->getStrings()
         );
     }
+
     public function testAcceptCharsetSortingManyValues()
     {
         $headers = ['iso-8859-5, unicode-1-1;q=0.8, utf-8, undef/ned, *;q=0'];
@@ -202,6 +211,7 @@ class AcceptHeaderTest extends TestCase
             $header->getStrings()
         );
     }
+
     public function testAcceptEncodingSortingManyValues()
     {
         $headers = [
@@ -248,6 +258,7 @@ class AcceptHeaderTest extends TestCase
             $header->getStrings()
         );
     }
+
     public function testAcceptLanguageCreateFromManyMixedStringValues()
     {
         $headers = [

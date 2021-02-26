@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header\Internal;
 
 use PHPUnit\Framework\TestCase;
@@ -22,6 +24,7 @@ class BaseHeaderValueTest extends TestCase
         $this->assertSame(get_class($value), get_class($clone));
         $this->assertNotSame($value, $clone);
     }
+
     public function testWithErrorImmutability()
     {
         $value = new DummyHeaderValue();
@@ -31,6 +34,7 @@ class BaseHeaderValueTest extends TestCase
         $this->assertSame(get_class($value), get_class($clone));
         $this->assertNotSame($value, $clone);
     }
+
     public function testCreateHeader()
     {
         $header = DummyHeaderValue::createHeader();

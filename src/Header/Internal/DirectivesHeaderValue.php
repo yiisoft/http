@@ -54,6 +54,7 @@ abstract class DirectivesHeaderValue extends BaseHeaderValue
     {
         return $this->directive;
     }
+
     public function getValue(): string
     {
         return $this->getDirective();
@@ -63,10 +64,12 @@ abstract class DirectivesHeaderValue extends BaseHeaderValue
     {
         return $this->argument !== null;
     }
+
     public function getArgument(): ?string
     {
         return $this->argument;
     }
+
     public function getArgumentList(): array
     {
         return $this->argument === null ? [] : explode(',', $this->argument);
@@ -89,6 +92,7 @@ abstract class DirectivesHeaderValue extends BaseHeaderValue
     {
         $this->setDirective($value);
     }
+
     private function setDirective(string $value, string $argument = null, bool $trowError = false): bool
     {
         $name = strtolower($value);
@@ -111,12 +115,14 @@ abstract class DirectivesHeaderValue extends BaseHeaderValue
 
         if ($argument === null && ($argumentType & self::ARG_EMPTY) === self::ARG_EMPTY) {
             return $writeProperties();
-        } elseif ($argumentType === self::ARG_EMPTY) {
+        }
+        if ($argumentType === self::ARG_EMPTY) {
             if ($argument !== null) {
                 return $writeProperties(new InvalidArgumentException("{$name} directive should not have an argument"));
             }
             return $writeProperties();
-        } elseif (($argumentType & self::ARG_HEADERS_LIST) === self::ARG_HEADERS_LIST) {
+        }
+        if (($argumentType & self::ARG_HEADERS_LIST) === self::ARG_HEADERS_LIST) {
             // Validate headers list
             $argument = $argument === null ? null : trim($argument);
             if ($argument === null || preg_match('/^[\\w\\-]+(?:(?:\\s*,\\s*)[\\w\\-]+)*$/', $argument) !== 1) {
@@ -127,7 +133,8 @@ abstract class DirectivesHeaderValue extends BaseHeaderValue
                 );
             }
             return $writeProperties(null, $argument, self::ARG_HEADERS_LIST);
-        } elseif (($argumentType & self::ARG_DELTA_SECONDS) === self::ARG_DELTA_SECONDS) {
+        }
+        if (($argumentType & self::ARG_DELTA_SECONDS) === self::ARG_DELTA_SECONDS) {
             $this->argumentType = self::ARG_DELTA_SECONDS;
             // Validate number
             if ($argument === null || preg_match('/^\\d+$/', $argument) !== 1) {

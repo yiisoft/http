@@ -63,7 +63,7 @@ final class ValueFieldParser
                         $state->buffer = '';
                     } elseif ($sym === ',' && $params->valuesList) {
                         $state->value = trim($state->buffer);
-                        yield static::createHeaderValue($class, $params, $state);
+                        yield self::createHeaderValue($class, $params, $state);
                     } else {
                         $state->buffer .= $sym;
                     }
@@ -107,7 +107,7 @@ final class ValueFieldParser
                     } elseif ($sym === ',' && $params->valuesList) {
                         $state->part = self::READ_VALUE;
                         $state->addParamFromBuffer();
-                        yield static::createHeaderValue($class, $params, $state);
+                        yield self::createHeaderValue($class, $params, $state);
                     } else {
                         $state->buffer = '';
                         throw new ParsingException($body, $pos, 'Delimiter char in a unquoted param value');
@@ -136,7 +136,7 @@ final class ValueFieldParser
                         $state->part = self::READ_PARAM_NAME;
                     } elseif ($sym === ',' && $params->valuesList) {
                         $state->part = self::READ_VALUE;
-                        yield static::createHeaderValue($class, $params, $state);
+                        yield self::createHeaderValue($class, $params, $state);
                     } else {
                         throw new ParsingException($body, $pos, 'Expected Separator');
                     }
@@ -154,7 +154,7 @@ final class ValueFieldParser
                 $state->addParamFromBuffer();
             }
         }
-        yield static::createHeaderValue($class, $params, $state);
+        yield self::createHeaderValue($class, $params, $state);
     }
 
     /**
@@ -165,7 +165,7 @@ final class ValueFieldParser
         HeaderParsingParams $params,
         ValueFieldState $state
     ): BaseHeaderValue {
-        /** @var DirectivesHeaderValue|BaseHeaderValue $item */
+        /** @var BaseHeaderValue|DirectivesHeaderValue $item */
         $item = new $class($state->value);
         if ($params->directives && $item instanceof DirectivesHeaderValue) {
             if ($state->value === '' && count($state->params) > 0) {

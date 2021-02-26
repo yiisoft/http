@@ -16,13 +16,15 @@ class AgeTest extends TestCase
         $this->assertFalse($value->hasError());
         $this->assertSame('0', $value->getValue());
     }
+
     public function testWithValueMaxInteger()
     {
         $value = (new Age())->withValue(PHP_INT_MAX);
 
         $this->assertFalse($value->hasError());
-        $this->assertSame(strval(PHP_INT_MAX), $value->getValue());
+        $this->assertSame((string) PHP_INT_MAX, $value->getValue());
     }
+
     public function testWithValueMinInteger()
     {
         $value = (new Age())->withValue(PHP_INT_MIN);
@@ -39,6 +41,7 @@ class AgeTest extends TestCase
             ['123456'],
         ];
     }
+
     /**
      * @dataProvider withValueCorrectDataProvider
      */
@@ -66,6 +69,7 @@ class AgeTest extends TestCase
             'exp' => ['3e5'],
         ];
     }
+
     /**
      * @dataProvider withValueIncorrectDataProvider
      */

@@ -10,6 +10,7 @@ final class ParsingException extends \Exception
 {
     private string $value;
     private int $position;
+
     public function __construct(string $value, int $position, $message = '', $code = 0, Throwable $previous = null)
     {
         $this->value = $value;

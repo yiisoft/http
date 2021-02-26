@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header\Value\Stub;
 
 final class DirectivesHeaderValue extends \Yiisoft\Http\Header\Internal\DirectivesHeaderValue

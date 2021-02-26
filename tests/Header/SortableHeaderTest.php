@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header;
 
 use InvalidArgumentException;
@@ -16,11 +18,13 @@ class SortableHeaderTest extends TestCase
         $this->assertSame('Test-Quality', $values->getName());
         $this->assertSame(SortedHeaderValue::class, $values->getValueClass());
     }
+
     public function testErrorWithHeaderClass()
     {
         $this->expectException(InvalidArgumentException::class);
         new SortableHeader(DummyHeaderValue::class);
     }
+
     public function testCreateFromStringValues()
     {
         $header = (new SortableHeader('Accept'))->withValue('*/*');
@@ -28,6 +32,7 @@ class SortableHeaderTest extends TestCase
         $this->assertSame('Accept', $header->getName());
         $this->assertSame(['*/*'], $header->getStrings());
     }
+
     public function testCreateFromFewStringValues()
     {
         $headers = [
@@ -50,6 +55,7 @@ class SortableHeaderTest extends TestCase
             $header->getStrings()
         );
     }
+
     public function testCreateFromManyStringValues()
     {
         $headers = [

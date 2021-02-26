@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header;
 
 use InvalidArgumentException;
@@ -16,11 +18,13 @@ class DirectiveHeaderTest extends TestCase
         $this->assertSame('Test-Directives', $values->getName());
         $this->assertSame(DirectivesHeaderValue::class, $values->getValueClass());
     }
+
     public function testErrorWithHeaderClass()
     {
         $this->expectException(InvalidArgumentException::class);
         new DirectiveHeader(DummyHeaderValue::class);
     }
+
     public function testCreateFromStringValue()
     {
         $header = (new DirectiveHeader('Directive-Test'))->withValue('value');
@@ -28,6 +32,7 @@ class DirectiveHeaderTest extends TestCase
         $this->assertSame('Directive-Test', $header->getName());
         $this->assertSame(['value'], $header->getStrings());
     }
+
     public function testCreateFromStringValueWithArgument()
     {
         $header = (new DirectiveHeader('Directive-Test'))->withValue('value=tEst');
@@ -35,6 +40,7 @@ class DirectiveHeaderTest extends TestCase
         $this->assertSame('Directive-Test', $header->getName());
         $this->assertSame(['value=tEst'], $header->getStrings());
     }
+
     public function testCreateDirectivesFromFewStringValues()
     {
         $headers = [

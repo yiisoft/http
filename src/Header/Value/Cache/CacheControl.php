@@ -29,6 +29,7 @@ class CacheControl extends DirectivesHeaderValue
 
     /**
      * Request and Response Directives:
+     *
      * @link https://tools.ietf.org/html/rfc7234#section-5.2.1
      * @link https://tools.ietf.org/html/rfc7234#section-5.2.2
      */

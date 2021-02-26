@@ -33,6 +33,7 @@ final class DirectiveHeader extends Header
 
     /**
      * @param bool $ignoreIncorrect
+     *
      * @return null[][]|string[][] Returns array of array<directive name => directive value>
      * @psalm-return array<int, array<string, null|string>>|array<empty, empty>
      */

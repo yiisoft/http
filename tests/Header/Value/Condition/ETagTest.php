@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Http\Tests\Header\Value\Condition;
 
 use PHPUnit\Framework\TestCase;
@@ -23,6 +25,7 @@ class ETagTest extends TestCase
         $this->assertSame(get_class($origin), get_class($clone));
         $this->assertNotSame($origin, $clone);
     }
+
     public function testToStringFromTag()
     {
         $origin = (new ETag())->withValue('"origin-tag"');
@@ -31,6 +34,7 @@ class ETagTest extends TestCase
 
         $this->assertSame('W/"new-tag"', (string)$clone);
     }
+
     public function testToStringFromValue()
     {
         $origin = (new ETag())->withTag('origin-tag', false);
@@ -39,6 +43,7 @@ class ETagTest extends TestCase
 
         $this->assertSame('W/"new-tag"', (string)$clone);
     }
+
     public function testToStringFromIncorrectValue()
     {
         $origin = (new ETag())->withTag('origin-tag', false);
@@ -61,6 +66,7 @@ class ETagTest extends TestCase
             'hard-space' => ['"' . chr(127) . '"', true, true, ''],
         ];
     }
+
     /**
      * @dataProvider withValueDataProvider
      */

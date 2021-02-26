@@ -11,11 +11,13 @@ abstract class WithParamsHeaderValue extends BaseHeaderValue
 {
     /**
      * @see WithParams
+     *
      * @var array<string, string>
      */
     private array $params = [];
     /**
      * @link https://tools.ietf.org/html/rfc7231#section-5.3.1
+     *
      * @var string value between 0.000 and 1.000
      */
     private string $quality = '1';
@@ -48,6 +50,7 @@ abstract class WithParamsHeaderValue extends BaseHeaderValue
 
     /**
      * It makes sense to use only for HeaderValues that implement the WithParams interface
+     *
      * @param array<string, string> $params
      */
     public function withParams(array $params): self
@@ -87,7 +90,7 @@ abstract class WithParamsHeaderValue extends BaseHeaderValue
     {
         $this->params = [];
         foreach ($params as $key => $value) {
-            # todo decide: what about numeric keys?
+            // todo decide: what about numeric keys?
             $key = strtolower($key);
             if (!array_key_exists($key, $this->params)) {
                 $this->params[$key] = $value;

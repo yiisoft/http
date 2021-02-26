@@ -24,10 +24,12 @@ abstract class BaseHeaderValue
     {
         $this->setValue($value);
     }
+
     public function __toString(): string
     {
         return $this->value;
     }
+
     final public function inject(MessageInterface $message, bool $replace = true): MessageInterface
     {
         if (static::NAME === null) {
@@ -55,6 +57,7 @@ abstract class BaseHeaderValue
         $clone->setValue($value);
         return $clone;
     }
+
     public function getValue(): string
     {
         return $this->value;
@@ -69,10 +72,12 @@ abstract class BaseHeaderValue
         $clone->error = $error;
         return $clone;
     }
+
     final public function hasError(): bool
     {
         return $this->error !== null;
     }
+
     final public function getError(): ?Exception
     {
         return $this->error;
@@ -92,16 +97,18 @@ abstract class BaseHeaderValue
     {
         $this->value = $value;
     }
+
     final protected function encodeQuotedString(string $string): string
     {
         return preg_replace('/([\\\\"])/', '\\\\$1', $string);
     }
+
     final protected function validateDateTime(string $value): bool
     {
         return preg_match(
-                '/^\\w{3,}, [0-3]?\\d[ \\-]\\w{3}[ \\-]\\d+ [0-2]\\d:[0-5]\\d:[0-5]\\d \\w+|'
+            '/^\\w{3,}, [0-3]?\\d[ \\-]\\w{3}[ \\-]\\d+ [0-2]\\d:[0-5]\\d:[0-5]\\d \\w+|'
                 . '\\w{3} \\w{3} [0-3]?\\d [0-2]\\d:[0-5]\\d:[0-5]\\d \\d+$/i',
-                trim($value)
-            ) === 1;
+            trim($value)
+        ) === 1;
     }
 }

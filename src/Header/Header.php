@@ -69,6 +69,7 @@ class Header implements \IteratorAggregate, \Countable
 
     /**
      * @param bool $ignoreIncorrect
+     *
      * @return BaseHeaderValue[]
      */
     public function getValues(bool $ignoreIncorrect = true): array
@@ -85,6 +86,7 @@ class Header implements \IteratorAggregate, \Countable
 
     /**
      * @param bool $ignoreIncorrect
+     *
      * @return string[]
      */
     public function getStrings(bool $ignoreIncorrect = true): array
@@ -100,7 +102,7 @@ class Header implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param string[]|BaseHeaderValue[] $values
+     * @param BaseHeaderValue[]|string[] $values
      */
     final public function withValues(array $values): self
     {
@@ -112,7 +114,7 @@ class Header implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param string|BaseHeaderValue $value
+     * @param BaseHeaderValue|string $value
      */
     final public function withValue($value): self
     {
@@ -123,9 +125,11 @@ class Header implements \IteratorAggregate, \Countable
 
     /**
      * Export header values into HTTP message
+     *
      * @param MessageInterface $message Request or Response instance
      * @param bool $replace Replace existing headers
      * @param bool $ignoreIncorrect Don't export values that have error
+     *
      * @return MessageInterface
      */
     final public function inject(
@@ -147,6 +151,7 @@ class Header implements \IteratorAggregate, \Countable
 
     /**
      * Import header values from HTTP message
+     *
      * @param MessageInterface $message Request or Response instance
      */
     final public function extract(MessageInterface $message): self
@@ -155,7 +160,7 @@ class Header implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @param string|BaseHeaderValue $value
+     * @param BaseHeaderValue|string $value
      */
     protected function addValue($value): void
     {
@@ -186,6 +191,7 @@ class Header implements \IteratorAggregate, \Countable
     {
         /**
          * @var HeaderParsingParams $parsingParams
+         *
          * @see BaseHeaderValue::getParsingParams
          */
         $parsingParams = $this->headerClass::getParsingParams();
