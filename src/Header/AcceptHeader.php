@@ -18,7 +18,7 @@ final class AcceptHeader extends Header
         parent::__construct($nameOrClass);
         if (!is_a($this->headerClass, Accept::class, true)) {
             throw new InvalidArgumentException(
-                sprintf("%s class is not an instance of %s", $this->headerClass, Accept::class)
+                sprintf('%s class is not an instance of %s', $this->headerClass, Accept::class)
             );
         }
     }
@@ -37,7 +37,8 @@ final class AcceptHeader extends Header
             $result = (float)$item->getQuality() <=> (float)$value->getQuality();
             if ($result > 0) {
                 break;
-            } elseif ($result === 0) {
+            }
+            if ($result === 0) {
                 $separator = $this->headerClass::VALUE_SEPARATOR;
                 if ($separator !== '') {
                     $itemTypes = array_reverse(explode($separator, $item->getValue()));
@@ -49,15 +50,15 @@ final class AcceptHeader extends Header
                 $result = count($itemTypes) <=> count($valueTypes);
                 if ($result > 0) {
                     break;
-                } elseif ($result === 0) {
+                }
+                if ($result === 0) {
                     foreach ($itemTypes as $part => $itemType) {
                         if ($itemType === '*' xor $valueTypes[$part] === '*') {
                             if ($itemType !== '*') {
                                 break 2;
-                            } else {
-                                $this->collection[$pos + 1] = $item;
-                                continue 2;
                             }
+                            $this->collection[$pos + 1] = $item;
+                            continue 2;
                         }
                     }
                     if (count($item->getParams()) >= count($value->getParams())) {

@@ -17,17 +17,11 @@ final class DirectiveHeader extends Header
         parent::__construct($nameOrClass);
         if (!is_a($this->headerClass, DirectivesHeaderValue::class, true)) {
             throw new InvalidArgumentException(
-                sprintf("%s class is not an instance of %s", $this->headerClass, DirectivesHeaderValue::class)
+                sprintf('%s class is not an instance of %s', $this->headerClass, DirectivesHeaderValue::class)
             );
         }
     }
 
-    /**
-     * @param string $directive
-     * @param string|null $argument
-     *
-     * @throws InvalidArgumentException
-     */
     public function withDirective(string $directive, string $argument = null): self
     {
         $clone = clone $this;
@@ -39,7 +33,8 @@ final class DirectiveHeader extends Header
 
     /**
      * @param bool $ignoreIncorrect
-     * @return string[]|null[] Returns array where keys are directives and values are arguments
+     * @return null[][]|string[][] Returns array of array<directive name => directive value>
+     * @psalm-return array<int, array<string, null|string>>|array<empty, empty>
      */
     public function getDirectives(bool $ignoreIncorrect = true): array
     {

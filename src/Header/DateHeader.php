@@ -9,8 +9,8 @@ use Yiisoft\Http\Header\Internal\BaseHeaderValue;
 use Yiisoft\Http\Header\Value\Date;
 
 /**
- * @method $this withValue(string|DateTimeInterface|BaseHeaderValue $value)
- * @method $this withValues(string[]|DateTimeInterface[]|BaseHeaderValue[] $value)
+ * @method $this withValue(BaseHeaderValue|DateTimeInterface|string $value)
+ * @method $this withValues(BaseHeaderValue[]|DateTimeInterface[]|string[] $value)
  */
 final class DateHeader extends Header
 {

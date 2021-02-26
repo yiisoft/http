@@ -22,23 +22,25 @@ class Header implements \IteratorAggregate, \Countable
     protected const DEFAULT_VALUE_CLASS = SimpleValue::class;
 
     /**
-     * @param string $nameOrClass Header name or header value class
+     * @param string|class-string $nameOrClass Header name or header value class
      * @psalm-param class-string<BaseHeaderValue> $nameOrClass
      */
     public function __construct(string $nameOrClass)
     {
-        $this->headerClass = $nameOrClass;
         if (class_exists($nameOrClass)) {
             if (!is_subclass_of($nameOrClass, BaseHeaderValue::class, true)) {
                 throw new InvalidArgumentException("{$nameOrClass} is not a header.");
             }
+            /** @var class-string<BaseHeaderValue> $nameOrClass */
+            $this->headerClass = $nameOrClass;
             if (empty($nameOrClass::NAME)) {
                 throw new InvalidArgumentException("{$nameOrClass} has no header name.");
             }
             $this->headerName = $nameOrClass::NAME;
         } else {
+            /** @var string $nameOrClass */
             if ($nameOrClass === '') {
-                throw new InvalidArgumentException("Empty header name.");
+                throw new InvalidArgumentException('Empty header name.');
             }
             $this->headerName = $nameOrClass;
             $this->headerClass = static::DEFAULT_VALUE_CLASS;
@@ -160,7 +162,7 @@ class Header implements \IteratorAggregate, \Countable
         if ($value instanceof BaseHeaderValue) {
             if (get_class($value) !== $this->headerClass) {
                 throw new InvalidArgumentException(
-                    sprintf('The value must be an instance of %s, %s given', $this->headerClass, get_class($value))
+                    sprintf('The value must be an instance of %s, %s given.', $this->headerClass, get_class($value))
                 );
             }
             $this->collect($value);

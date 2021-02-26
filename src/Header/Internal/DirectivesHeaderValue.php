@@ -50,9 +50,6 @@ abstract class DirectivesHeaderValue extends BaseHeaderValue
         return new DirectiveHeader(static::class);
     }
 
-    /**
-     * @return string|null Returns null if the directive is not defined or cannot be parsed without error
-     */
     public function getDirective(): string
     {
         return $this->directive;
