@@ -19,6 +19,7 @@ The package provides:
 - Constants for HTTP protocol headers, methods and statuses. All along with short descriptions and RFC links. 
 - PSR-7, PSR-17 PhpStorm meta for HTTP protocol headers, methods and statuses.
 - `ContentDispositionHeader` that has static methods to generate `Content-Disposition` header name and value.
+- `HeaderValueHelper` that has static methods to parse the header value parameters.
 
 ## Method constants
 
@@ -67,16 +68,38 @@ Status::TEXTS[Status::NOT_FOUND];
 `ContentDispositionHeader` methods are static so usage is like the following:
 
 ```php
-$name = \Yiisoft\Http\ContentDispositionHeader::name();
+use Yiisoft\Http\ContentDispositionHeader;
 
-$value = \Yiisoft\Http\ContentDispositionHeader::value(
-    \Yiisoft\Http\ContentDispositionHeader::INLINE,
-     'avatar.png'
+$name = ContentDispositionHeader::name();
+
+$value = ContentDispositionHeader::value(
+    ContentDispositionHeader::INLINE,
+    'avatar.png',
 );
 
-$value = \Yiisoft\Http\ContentDispositionHeader::inline('document.pdf');
+$value = ContentDispositionHeader::inline('document.pdf');
 
-$value = \Yiisoft\Http\ContentDispositionHeader::attachment('document.pdf');
+$value = ContentDispositionHeader::attachment('document.pdf');
+```
+
+## `HeaderValueHelper` usage
+
+`HeaderValueHelper` provides the following static methods:
+
+```php
+use Yiisoft\Http\HeaderValueHelper;
+
+// Result: ['a' => '1', 'b' => '2']
+HeaderValueHelper::getParameters('a=1;b=2');
+
+// Result: ['value', 'a' => '1', 'b' => '2']
+HeaderValueHelper::getValueAndParameters('value;a=1;b=2'));
+
+// Result: [['value2', 'q' => 1.0], ['value1', 'q' => 0.2]]
+HeaderValueHelper::getSortedValueAndParameters('value1;q=0.2,value2'));
+
+// Result: ['text/xml', 'text/html']
+HeaderValueHelper::getSortedAcceptTypes('text/html;q=0.2,text/xml;q=0.4'));
 ```
 
 ## PSR-7 and PSR-17 PhpStorm meta

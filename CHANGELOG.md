@@ -1,10 +1,8 @@
 # Yii HTTP Change Log
 
+## 1.2.0 under development
 
-## 1.1.2 under development
-
-- no changes in this release.
-
+- New #26: Add `HeaderValueHelper` that has static methods to parse header value parameters (devanych)
 
 ## 1.1.1 February 10, 2021
 
