@@ -118,7 +118,8 @@ class StaticController
 
     public function actionIndex(): ResponseInterface
     {
-        return $this->responseFactory->createResponse()
+        return $this->responseFactory
+            ->createResponse()
             ->withStatus(Status::OK)
             ->withoutHeader(Header::ACCEPT);
     }
