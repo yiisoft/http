@@ -16,7 +16,7 @@
 
 The package provides:
 
-- Constants for HTTP protocol headers, methods and statuses. All along with short descriptions and RFC links. 
+- Constants for HTTP protocol headers, methods and statuses. All along with short descriptions and RFC links.
 - PSR-7, PSR-17 PhpStorm meta for HTTP protocol headers, methods and statuses.
 - `ContentDispositionHeader` that has static methods to generate `Content-Disposition` header name and value.
 - `HeaderValueHelper` that has static methods to parse the header value parameters.
