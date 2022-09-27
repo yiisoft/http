@@ -76,10 +76,6 @@ final class ContentDispositionHeaderTest extends TestCase
 
     /**
      * @dataProvider dataValue
-     *
-     * @param string $type
-     * @param string|null $fileName
-     * @param string $expected
      */
     public function testValue(string $type, ?string $fileName, string $expected): void
     {

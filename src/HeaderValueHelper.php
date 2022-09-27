@@ -23,8 +23,6 @@ use function preg_replace_callback;
 use function reset;
 use function rtrim;
 use function strtolower;
-use function strpos;
-use function substr;
 use function trim;
 use function usort;
 
@@ -171,7 +169,7 @@ final class HeaderValueHelper
      * @see getValueAndParameters
      */
     public static function getSortedValueAndParameters(
-        $values,
+        mixed $values,
         bool $lowerCaseValue = true,
         bool $lowerCaseParameter = true,
         bool $lowerCaseParameterValue = true
@@ -210,10 +208,7 @@ final class HeaderValueHelper
         usort($output, static function (array $a, array $b) {
             $a = $a['q'];
             $b = $b['q'];
-            if ($a === $b) {
-                return 0;
-            }
-            return $a > $b ? -1 : 1;
+            return $b <=> $a;
         });
 
         return $output;
@@ -230,7 +225,7 @@ final class HeaderValueHelper
      * @link https://tools.ietf.org/html/rfc7231#section-5.3.2
      * @link https://www.ietf.org/rfc/rfc2045.html#section-2
      */
-    public static function getSortedAcceptTypes($values): array
+    public static function getSortedAcceptTypes(string|array $values): array
     {
         $output = self::getSortedValueAndParameters($values);
 
@@ -243,19 +238,14 @@ final class HeaderValueHelper
             $typeA = reset($a);
             $typeB = reset($b);
 
-            if (strpos($typeA, '*') === false && strpos($typeB, '*') === false) {
+            if (!str_contains($typeA, '*') && !str_contains($typeB, '*')) {
                 $countA = count($a);
                 $countB = count($b);
-                if ($countA === $countB) {
-                    // They are equivalent for the same parameter number
-                    return 0;
-                }
-                // No wildcard character, higher parameter number wins
-                return $countA > $countB ? -1 : 1;
+                return $countB <=> $countA;
             }
 
-            $endWildcardA = substr($typeA, -1, 1) === '*';
-            $endWildcardB = substr($typeB, -1, 1) === '*';
+            $endWildcardA = str_ends_with($typeA, '*');
+            $endWildcardB = str_ends_with($typeB, '*');
 
             if (($endWildcardA && !$endWildcardB) || (!$endWildcardA && $endWildcardB)) {
                 // The wildcard ends is the loser.
@@ -263,14 +253,14 @@ final class HeaderValueHelper
             }
 
             // The wildcard starts is the loser.
-            return strpos($typeA, '*') === 0 ? 1 : -1;
+            return str_starts_with($typeA, '*') ? 1 : -1;
         });
 
         foreach ($output as $key => $value) {
             $type = array_shift($value);
             unset($value['q']);
 
-            if (count($value) === 0) {
+            if ((is_countable($value) ? count($value) : 0) === 0) {
                 $output[$key] = $type;
                 continue;
             }
