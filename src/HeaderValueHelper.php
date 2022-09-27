@@ -23,8 +23,6 @@ use function preg_replace_callback;
 use function reset;
 use function rtrim;
 use function strtolower;
-use function strpos;
-use function substr;
 use function trim;
 use function usort;
 
