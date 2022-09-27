@@ -49,8 +49,6 @@ final class ContentDispositionHeader
      * @param string|null $fileName The file name.
      *
      * @throws InvalidArgumentException if `$type` is incorrect.
-     *
-     * @return string
      */
     public static function value(string $type, ?string $fileName = null): string
     {
