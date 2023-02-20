@@ -92,9 +92,11 @@ final class ContentDispositionHeader
 
     /**
      * Returns Content-Disposition header with "inline" disposition.
+     *
      * @see value()
      *
      * @param string|null $fileName The file name.
+     *
      * @return string
      */
     public static function inline(?string $fileName = null): string
@@ -104,9 +106,11 @@ final class ContentDispositionHeader
 
     /**
      * Returns Content-Disposition header with "attachment" disposition.
+     *
      * @see value()
      *
      * @param string|null $fileName The file name.
+     *
      * @return string
      */
     public static function attachment(?string $fileName = null): string
