@@ -10,7 +10,7 @@ use Yiisoft\Strings\Inflector;
 use function in_array;
 
 /**
- * Helps to build Content-Disposition header that complies to RFC-6266 and works in the majority of modern browsers.
+ * Helps to build "Content-Disposition" header that complies to RFC-6266 and works in the majority of modern browsers.
  *
  * @see https://tools.ietf.org/html/rfc6266
  */
@@ -91,7 +91,7 @@ final class ContentDispositionHeader
     }
 
     /**
-     * Returns Content-Disposition header with "inline" disposition.
+     * Returns "Content-Disposition" header with "inline" disposition.
      *
      * @see value()
      *
@@ -105,7 +105,7 @@ final class ContentDispositionHeader
     }
 
     /**
-     * Returns Content-Disposition header with "attachment" disposition.
+     * Returns "Content-Disposition" header with "attachment" disposition.
      *
      * @see value()
      *
