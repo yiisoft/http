@@ -10,13 +10,20 @@ use Yiisoft\Strings\Inflector;
 use function in_array;
 
 /**
- * Helps building Content-Disposition header that complies to RFC-6266 and works in majority of modern browsers.
+ * Helps to build Content-Disposition header that complies to RFC-6266 and works in the majority of modern browsers.
  *
  * @see https://tools.ietf.org/html/rfc6266
  */
 final class ContentDispositionHeader
 {
+    /**
+     * Content sent with "attachment" disposition usually triggers download dialog.
+     */
     public const ATTACHMENT = 'attachment';
+
+    /**
+     * Content sent with "inline" disposition is usually displayed within the browser window.
+     */
     public const INLINE = 'inline';
 
     /**
@@ -83,11 +90,25 @@ final class ContentDispositionHeader
         return $header;
     }
 
+    /**
+     * Returns Content-Disposition header with "inline" disposition.
+     * @see value()
+     *
+     * @param string|null $fileName The file name.
+     * @return string
+     */
     public static function inline(?string $fileName = null): string
     {
         return self::value(self::INLINE, $fileName);
     }
 
+    /**
+     * Returns Content-Disposition header with "attachment" disposition.
+     * @see value()
+     *
+     * @param string|null $fileName The file name.
+     * @return string
+     */
     public static function attachment(?string $fileName = null): string
     {
         return self::value(self::ATTACHMENT, $fileName);
