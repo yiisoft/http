@@ -90,7 +90,7 @@ final class HeaderValueHelper
         if (count($parts) === 1) {
             return $output;
         }
-        /** @psalm-var list{string,string} $parts */
+        /** @psalm-var array{0:string,1:string} $parts */
 
         return $output + self::getParameters($parts[1], $lowerCaseParameter, $lowerCaseParameterValue);
     }
