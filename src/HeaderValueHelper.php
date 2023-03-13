@@ -90,6 +90,7 @@ final class HeaderValueHelper
         if (count($parts) === 1) {
             return $output;
         }
+        /** @psalm-var array{0:string,1:string} $parts */
 
         return $output + self::getParameters($parts[1], $lowerCaseParameter, $lowerCaseParameterValue);
     }
@@ -183,6 +184,7 @@ final class HeaderValueHelper
         $list = [];
 
         foreach ((array) $values as $headerValue) {
+            /** @psalm-suppress InvalidOperand Presume that `preg_split` never returns false here. */
             $list = [...$list, ...preg_split('/\s*,\s*/', trim($headerValue), -1, PREG_SPLIT_NO_EMPTY)];
         }
 
