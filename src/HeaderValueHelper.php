@@ -11,6 +11,7 @@ use function asort;
 use function count;
 use function explode;
 use function implode;
+use function is_array;
 use function is_string;
 use function mb_strtolower;
 use function mb_strpos;
@@ -185,13 +186,17 @@ final class HeaderValueHelper
         bool $lowerCaseParameter = true,
         bool $lowerCaseParameterValue = true
     ): array {
+        /** @var mixed $values Don't trust to annotations. */
+
+        if (!is_array($values) && !is_string($values)) {
+            throw new InvalidArgumentException('Values are neither array nor string.');
+        }
         $values = (array) $values;
 
         $list = [];
         foreach ($values as $headerValue) {
-            /** @psalm-suppress DocblockTypeContradiction Don't trust to annotations. */
             if (!is_string($headerValue)) {
-                throw new InvalidArgumentException('Values must be string or array of strings.');
+                throw new InvalidArgumentException('Values must be array of strings.');
             }
 
             /** @psalm-suppress InvalidOperand Presume that `preg_split` never returns false here. */

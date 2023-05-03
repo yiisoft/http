@@ -2,7 +2,7 @@
 
 ## 1.2.1 under development
 
-- Enh #45: Improve `HeaderValueHelper` methods annotations (@vjik)
+- Enh #45: Improve `HeaderValueHelper` methods' annotations (@vjik)
 
 ## 1.2.0 November 09, 2021
 
