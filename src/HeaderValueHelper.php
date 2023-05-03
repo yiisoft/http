@@ -191,10 +191,9 @@ final class HeaderValueHelper
         if (!is_array($values) && !is_string($values)) {
             throw new InvalidArgumentException('Values are neither array nor string.');
         }
-        $values = (array) $values;
 
         $list = [];
-        foreach ($values as $headerValue) {
+        foreach ((array) $values as $headerValue) {
             if (!is_string($headerValue)) {
                 throw new InvalidArgumentException('Values must be array of strings.');
             }
