@@ -29,7 +29,9 @@ use function trim;
 use function usort;
 
 /**
- * HeaderValueHelper parses the header value parameters.
+ * `HeaderValueHelper` parses the header value parameters.
+ *
+ * @psalm-type QFactorHeader = array{q: float}&non-empty-array<array-key, string>
  */
 final class HeaderValueHelper
 {
@@ -70,7 +72,7 @@ final class HeaderValueHelper
      * @param bool $lowerCaseParameter Whether should cast header parameter name to lowercase.
      * @param bool $lowerCaseParameterValue Whether should cast header parameter value to lowercase.
      *
-     * @return array First element is the value, and key-value are the parameters.
+     * @return string[] First element is the value, and key-value are the parameters.
      */
     public static function getValueAndParameters(
         string $headerValue,
@@ -104,7 +106,9 @@ final class HeaderValueHelper
      * @param bool $lowerCaseParameter Whether should cast header parameter name to lowercase.
      * @param bool $lowerCaseParameterValue Whether should cast header parameter value to lowercase.
      *
-     * @return array Key-value are the parameters.
+     * @return string[] Key-value are the parameters.
+     *
+     * @psalm-return array<string,string>
      */
     public static function getParameters(
         string $headerValueParameters,
@@ -142,6 +146,7 @@ final class HeaderValueHelper
                         return;
                     }
 
+                    /** @psalm-suppress MixedArrayAssignment False-positive error */
                     $output[$key] = $lowerCaseParameterValue ? mb_strtolower($value) : $value;
                 },
                 $headerValueParameters,
@@ -153,6 +158,7 @@ final class HeaderValueHelper
                 throw new InvalidArgumentException('Invalid input: ' . $headerValueParameters);
             }
         } while ($headerValueParameters !== '');
+        /** @var array<string,string> $output */
 
         return $output;
     }
@@ -160,16 +166,19 @@ final class HeaderValueHelper
     /**
      * Returns a header value as "q" factor sorted list.
      *
-     * @param mixed $values Header value as a comma-separated string or already exploded string array.
+     * @link https://developer.mozilla.org/en-US/docs/Glossary/Quality_values
+     * @link https://www.ietf.org/rfc/rfc2045.html#section-2
+     * @see getValueAndParameters
+     *
+     * @param string|string[] $values Header value as a comma-separated string or already exploded string array.
      * @param bool $lowerCaseValue Whether should cast header value to lowercase.
      * @param bool $lowerCaseParameter Whether should cast header parameter name to lowercase.
      * @param bool $lowerCaseParameterValue Whether should cast header parameter value to lowercase.
      *
-     * @return array The q factor sorted list.
+     * @return array[] The q factor sorted list.
      *
-     * @link https://developer.mozilla.org/en-US/docs/Glossary/Quality_values
-     * @link https://www.ietf.org/rfc/rfc2045.html#section-2
-     * @see getValueAndParameters
+     * @psalm-return list<QFactorHeader>
+     * @psalm-suppress MoreSpecificReturnType, LessSpecificReturnStatement Need for Psalm 4.30
      */
     public static function getSortedValueAndParameters(
         $values,
@@ -177,16 +186,23 @@ final class HeaderValueHelper
         bool $lowerCaseParameter = true,
         bool $lowerCaseParameterValue = true
     ): array {
+        /** @var mixed $values Don't trust to annotations. */
+
         if (!is_array($values) && !is_string($values)) {
             throw new InvalidArgumentException('Values are neither array nor string.');
         }
 
         $list = [];
-
         foreach ((array) $values as $headerValue) {
+            if (!is_string($headerValue)) {
+                throw new InvalidArgumentException('Values must be array of strings.');
+            }
+
             /** @psalm-suppress InvalidOperand Presume that `preg_split` never returns false here. */
             $list = [...$list, ...preg_split('/\s*,\s*/', trim($headerValue), -1, PREG_SPLIT_NO_EMPTY)];
         }
+
+        /** @var string[] $list */
 
         if (count($list) === 0) {
             return [];
@@ -195,7 +211,12 @@ final class HeaderValueHelper
         $output = [];
 
         foreach ($list as $value) {
-            $parse = self::getValueAndParameters($value, $lowerCaseValue, $lowerCaseParameter, $lowerCaseParameterValue);
+            $parse = self::getValueAndParameters(
+                $value,
+                $lowerCaseValue,
+                $lowerCaseParameter,
+                $lowerCaseParameterValue
+            );
             // case-insensitive "q" parameter
             $q = $parse['q'] ?? $parse['Q'] ?? 1.0;
 
@@ -237,12 +258,20 @@ final class HeaderValueHelper
         $output = self::getSortedValueAndParameters($values);
 
         usort($output, static function (array $a, array $b) {
+            /**
+             * @psalm-var QFactorHeader $a
+             * @psalm-var QFactorHeader $b
+             */
+
             if ($a['q'] !== $b['q']) {
                 // The higher q value wins
                 return $a['q'] > $b['q'] ? -1 : 1;
             }
 
+            /** @var string $typeA */
             $typeA = reset($a);
+
+            /** @var string $typeB */
             $typeB = reset($b);
 
             if (strpos($typeA, '*') === false && strpos($typeB, '*') === false) {
@@ -285,6 +314,7 @@ final class HeaderValueHelper
             asort($value, SORT_STRING);
             $output[$key] = $type . ';' . implode(';', $value);
         }
+        /** @var string[] $output */
 
         return $output;
     }

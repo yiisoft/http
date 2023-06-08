@@ -6,6 +6,7 @@ namespace Yiisoft\Http\Tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 use Yiisoft\Http\HeaderValueHelper;
 
 final class HeaderValueHelperTest extends TestCase
@@ -63,6 +64,29 @@ final class HeaderValueHelperTest extends TestCase
     public function testSortedValuesAndParameters($input, array $expected): void
     {
         $this->assertSame($expected, HeaderValueHelper::getSortedValueAndParameters($input));
+    }
+
+    public function dataSortedValuesAndParametersInvalidValue(): array
+    {
+        $notArrayAndNotString = 'Values are neither array nor string.';
+        $notArrayOfStrings = 'Values must be array of strings.';
+
+        return [
+            'object' => [new stdClass(), $notArrayAndNotString],
+            'int' => [7, $notArrayAndNotString],
+            'bool' => [true, $notArrayAndNotString],
+            'array-of-int' => [[1, 2, 3], $notArrayOfStrings],
+        ];
+    }
+
+    /**
+     * @dataProvider dataSortedValuesAndParametersInvalidValue
+     */
+    public function testSortedValuesAndParametersInvalidValue($value, string $message): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
+        HeaderValueHelper::getSortedValueAndParameters($value);
     }
 
     public function qFactorSortFailDataProvider(): array
