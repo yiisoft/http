@@ -21,6 +21,10 @@ The package provides:
 - `ContentDispositionHeader` that has static methods to generate `Content-Disposition` header name and value.
 - `HeaderValueHelper` that has static methods to parse the header value parameters.
 
+## Requirements
+
+- PHP 7.4 or higher.
+
 ## Method constants
 
 Individual HTTP methods could be referenced as
