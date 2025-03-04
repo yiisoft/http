@@ -35,6 +35,7 @@
         "yiisoft/strings": "^2.0"
     },
     "require-dev": {
+        "maglnet/composer-require-checker": "^3.8 || ^4.3",
         "phpunit/phpunit": "^9.5",
         "roave/infection-static-analysis-plugin": "^1.16",
         "spatie/phpunit-watcher": "^1.23",
