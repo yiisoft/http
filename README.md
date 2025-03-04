@@ -9,8 +9,7 @@
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/http/v)](https://packagist.org/packages/yiisoft/http)
 [![Total Downloads](https://poser.pugx.org/yiisoft/http/downloads)](https://packagist.org/packages/yiisoft/http)
 [![Build status](https://github.com/yiisoft/http/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/http/actions/workflows/build.yml)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/http/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/http/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/http/?branch=master)
+[![Code Coverage](https://codecov.io/gh/yiisoft/http/branch/master/graph/badge.svg)](https://codecov.io/gh/yiisoft/http)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fhttp%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/http/master)
 [![static analysis](https://github.com/yiisoft/http/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/http/actions?query=workflow%3A%22static+analysis%22)
 
