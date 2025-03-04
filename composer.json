@@ -32,6 +32,7 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "ext-mbstring": "*",
         "yiisoft/strings": "^2.0"
     },
     "require-dev": {
