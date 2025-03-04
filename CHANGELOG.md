@@ -3,6 +3,7 @@
 ## 1.2.1 under development
 
 - Enh #45: Improve `HeaderValueHelper` methods' annotations (@vjik)
+- Chg #56: Change PHP constraint in `composer.json` to `7.4.* || 8.0 - 8.4` (@vjik)
 
 ## 1.2.0 November 09, 2021
 
