@@ -23,6 +23,7 @@ The package provides:
 ## Requirements
 
 - PHP 7.4 or higher.
+- `mbstring` PHP extension.
 
 ## Installation
 

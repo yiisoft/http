@@ -32,9 +32,11 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
+        "ext-mbstring": "*",
         "yiisoft/strings": "^2.0"
     },
     "require-dev": {
+        "maglnet/composer-require-checker": "^3.8 || ^4.3",
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^2.0.10",
         "roave/infection-static-analysis-plugin": "^1.16",
