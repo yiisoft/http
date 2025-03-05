@@ -3,8 +3,10 @@
 ## 1.2.1 under development
 
 - Enh #45: Improve `HeaderValueHelper` methods' annotations (@vjik)
+- Chg #58: Change PHP constraint in `composer.json` to `7.4.* || 8.0 - 8.4` (@vjik)
 - Enh #57: Simplify code of `HeaderValueHelper::getSortedValueAndParameters()` (@vjik)
 - Bug #56: Add missed `ext-mbstring` dependency (@vjik)
+- Enh #58: Add return value to closure for `preg_replace_callback()` in `HeaderValueHelper::getParameters()` (@vjik)
 
 ## 1.2.0 November 09, 2021
 

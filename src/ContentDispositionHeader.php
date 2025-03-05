@@ -77,6 +77,9 @@ final class ContentDispositionHeader
 
         $fallbackName = (new Inflector())->toTransliterated($fileName, Inflector::TRANSLITERATE_LOOSE);
         $fallbackName = str_replace("\r\n", '_', $fallbackName);
+        /**
+         * @var string $fallbackName We use valid regular expression, so `preg_replace()` always returns string.
+         */
         $fallbackName = preg_replace('/[^\x20-\x7e]/u', '_', $fallbackName);
         $fallbackName = str_replace('"', '\\"', $fallbackName);
 
