@@ -128,14 +128,20 @@ final class HeaderValueHelper
         $output = [];
 
         do {
-            /** @psalm-suppress InvalidArgument */
+            /**
+             * @var string $headerValueParameters We use valid regular expression, so `preg_replace()` always returns string.
+             */
             $headerValueParameters = preg_replace_callback(
                 '/^[ \t]*(?<parameter>' . self::PATTERN_ATTRIBUTE . ')[ \t]*=[ \t]*(?<value>' . self::PATTERN_VALUE . ')[ \t]*(?:;|$)/u',
-                static function (array $matches) use (&$output, $lowerCaseParameter, $lowerCaseParameterValue) {
+                static function (array $matches) use (&$output, $lowerCaseParameter, $lowerCaseParameterValue): string {
                     $value = $matches['value'];
 
                     if (mb_strpos($matches['value'], '"') === 0) {
-                        // unescape + remove first and last quote
+                        /**
+                         * Unescape + Remove first and last quote
+                         *
+                         * @var string $value We use valid regular expression, so `preg_replace()` always returns string.
+                         */
                         $value = preg_replace('/\\\\(.)/u', '$1', mb_substr($value, 1, -1));
                     }
 
@@ -143,11 +149,13 @@ final class HeaderValueHelper
 
                     if (isset($output[$key])) {
                         // The first is the winner.
-                        return;
+                        return '';
                     }
 
                     /** @psalm-suppress MixedArrayAssignment False-positive error */
                     $output[$key] = $lowerCaseParameterValue ? mb_strtolower($value) : $value;
+
+                    return '';
                 },
                 $headerValueParameters,
                 1,
