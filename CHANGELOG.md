@@ -4,6 +4,8 @@
 
 - Enh #45: Improve `HeaderValueHelper` methods' annotations (@vjik)
 - Chg #56: Change PHP constraint in `composer.json` to `7.4.* || 8.0 - 8.4` (@vjik)
+- Enh #57: Simplify code of `HeaderValueHelper::getSortedValueAndParameters()` (@vjik)
+- Bug #56: Add missed `ext-mbstring` dependency (@vjik)
 
 ## 1.2.0 November 09, 2021
 
