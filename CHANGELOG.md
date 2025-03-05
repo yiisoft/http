@@ -3,6 +3,7 @@
 ## 1.2.1 under development
 
 - Enh #45: Improve `HeaderValueHelper` methods' annotations (@vjik)
+- Enh #57: Simplify code of `HeaderValueHelper::getSortedValueAndParameters()` (@vjik)
 - Bug #56: Add missed `ext-mbstring` dependency (@vjik)
 
 ## 1.2.0 November 09, 2021

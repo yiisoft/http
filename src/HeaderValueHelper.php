@@ -230,14 +230,12 @@ final class HeaderValueHelper
             $output[] = $parse;
         }
 
-        usort($output, static function (array $a, array $b) {
-            $a = $a['q'];
-            $b = $b['q'];
-            if ($a === $b) {
-                return 0;
+        usort(
+            $output,
+            static function (array $a, array $b) {
+                return $b['q'] <=> $a['q'];
             }
-            return $a > $b ? -1 : 1;
-        });
+        );
 
         return $output;
     }
