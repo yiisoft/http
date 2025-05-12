@@ -45,8 +45,7 @@ final class FallbackNameCreator
          * @var string $fallbackName We use valid regular expression, so `preg_replace()` always returns a string.
          */
         $fallbackName = preg_replace('/[^\x20-\x7e]/u', '_', $fallbackName);
-        $fallbackName = str_replace('"', '\\"', $fallbackName);
-        return $fallbackName;
+        return str_replace('"', '\\"', $fallbackName);
     }
 
     private static function transliterate(string $fileName): string
