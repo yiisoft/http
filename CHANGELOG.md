@@ -7,6 +7,7 @@
 - Enh #57: Simplify code of `HeaderValueHelper::getSortedValueAndParameters()` (@vjik)
 - Bug #56: Add missed `ext-mbstring` dependency (@vjik)
 - Enh #58: Add return value to closure for `preg_replace_callback()` in `HeaderValueHelper::getParameters()` (@vjik)
+- Enh #59: Implement file name transliteration and remove `yiisoft/strings` dependency (@vjik)
 
 ## 1.2.0 November 09, 2021
 
@@ -14,7 +15,7 @@
 
 ## 1.1.1 February 10, 2021
 
-- Chg: Update yiisoft/strings dependency (@samdark)
+- Chg: Update `yiisoft/strings` dependency (@samdark)
 
 ## 1.1.0 December 28, 2020
 
