@@ -1,5 +1,8 @@
 {
     "symbol-whitelist" : [
+        "null", "true", "false",
+        "static", "self", "parent",
+        "array", "string", "int", "float", "bool", "iterable", "callable", "void", "object", "mixed", "never",
         "transliterator_transliterate"
     ],
     "php-core-extensions" : [
@@ -11,7 +14,6 @@
         "Phar",
         "Reflection",
         "SPL",
-        "random",
         "standard"
     ],
     "scan-files" : []
