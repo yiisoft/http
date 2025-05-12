@@ -1,5 +1,7 @@
 {
-    "symbol-whitelist" : [],
+    "symbol-whitelist" : [
+        "transliterator_transliterate"
+    ],
     "php-core-extensions" : [
         "Core",
         "date",
@@ -10,8 +12,7 @@
         "Reflection",
         "SPL",
         "random",
-        "standard",
-        "intl"
+        "standard"
     ],
     "scan-files" : []
 }
