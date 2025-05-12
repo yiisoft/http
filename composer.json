@@ -35,12 +35,12 @@
         "ext-mbstring": "*"
     },
     "require-dev": {
-        "maglnet/composer-require-checker": "^3.8 || ^4.16.1",
-        "phpunit/phpunit": "^9.6.23",
-        "rector/rector": "^2.0.15",
-        "roave/infection-static-analysis-plugin": "^1.37",
-        "spatie/phpunit-watcher": "^1.24.0",
-        "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.10.3"
+        "maglnet/composer-require-checker": "^3.8 || ^4.3",
+        "phpunit/phpunit": "^9.6.22",
+        "rector/rector": "^2.0.10",
+        "roave/infection-static-analysis-plugin": "^1.18",
+        "spatie/phpunit-watcher": "^1.23.6",
+        "vimeo/psalm": "^4.30 || ^5.26.1 || ^6.8.8"
     },
     "autoload": {
         "psr-4": {
@@ -54,7 +54,6 @@
     },
     "config": {
         "sort-packages": true,
-        "bump-after-update": "dev",
         "allow-plugins": {
             "infection/extension-installer": true,
             "composer/package-versions-deprecated": true
