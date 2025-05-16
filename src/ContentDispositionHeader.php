@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Http;
 
 use InvalidArgumentException;
-use Yiisoft\Strings\Inflector;
 
 use function in_array;
 
@@ -74,15 +73,7 @@ final class ContentDispositionHeader
         }
 
         $fileName = str_replace(['%', '/', '\\'], '_', $fileName);
-
-        $fallbackName = (new Inflector())->toTransliterated($fileName, Inflector::TRANSLITERATE_LOOSE);
-        $fallbackName = str_replace("\r\n", '_', $fallbackName);
-        /**
-         * @var string $fallbackName We use valid regular expression, so `preg_replace()` always returns string.
-         */
-        $fallbackName = preg_replace('/[^\x20-\x7e]/u', '_', $fallbackName);
-        $fallbackName = str_replace('"', '\\"', $fallbackName);
-
+        $fallbackName = FallbackNameCreator::create($fileName);
         $utfName = rawurlencode($fileName);
 
         $header .= "; filename=\"{$fallbackName}\"";

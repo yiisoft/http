@@ -32,8 +32,7 @@
     ],
     "require": {
         "php": "7.4.* || 8.0 - 8.4",
-        "ext-mbstring": "*",
-        "yiisoft/strings": "^2.0"
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^3.8 || ^4.3",
@@ -55,7 +54,6 @@
     },
     "config": {
         "sort-packages": true,
-        "bump-after-update": "dev",
         "allow-plugins": {
             "infection/extension-installer": true,
             "composer/package-versions-deprecated": true
