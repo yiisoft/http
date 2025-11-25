@@ -1,13 +1,13 @@
 # Yii HTTP Change Log
 
-## 1.2.1 under development
+## 1.3.0 November 25, 2025
 
-- Enh #45: Improve `HeaderValueHelper` methods' annotations (@vjik)
 - Chg #58, #60: Change PHP constraint in `composer.json` to `7.4.* || 8.0 - 8.5` (@vjik)
+- Enh #45: Improve `HeaderValueHelper` methods' annotations (@vjik)
 - Enh #57: Simplify code of `HeaderValueHelper::getSortedValueAndParameters()` (@vjik)
-- Bug #56: Add missed `ext-mbstring` dependency (@vjik)
 - Enh #58: Add return value to closure for `preg_replace_callback()` in `HeaderValueHelper::getParameters()` (@vjik)
 - Enh #59: Implement file name transliteration and remove `yiisoft/strings` dependency (@vjik)
+- Bug #56: Add missed `ext-mbstring` dependency (@vjik)
 
 ## 1.2.0 November 09, 2021
 
