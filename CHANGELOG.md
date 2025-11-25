@@ -1,5 +1,9 @@
 # Yii HTTP Change Log
 
+## 1.3.1 under development
+
+- no changes in this release.
+
 ## 1.3.0 November 25, 2025
 
 - Chg #58, #60: Change PHP constraint in `composer.json` to `7.4.* || 8.0 - 8.5` (@vjik)
