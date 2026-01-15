@@ -28,6 +28,9 @@ use function substr;
 use function trim;
 use function usort;
 
+use const PREG_SPLIT_NO_EMPTY;
+use const SORT_STRING;
+
 /**
  * `HeaderValueHelper` parses the header value parameters.
  *
@@ -159,7 +162,7 @@ final class HeaderValueHelper
                 },
                 $headerValueParameters,
                 1,
-                $count
+                $count,
             );
 
             if ($count !== 1) {
@@ -223,7 +226,7 @@ final class HeaderValueHelper
                 $value,
                 $lowerCaseValue,
                 $lowerCaseParameter,
-                $lowerCaseParameterValue
+                $lowerCaseParameterValue,
             );
             // case-insensitive "q" parameter
             $q = $parse['q'] ?? $parse['Q'] ?? 1.0;
@@ -242,7 +245,7 @@ final class HeaderValueHelper
             $output,
             static function (array $a, array $b) {
                 return $b['q'] <=> $a['q'];
-            }
+            },
         );
 
         return $output;
