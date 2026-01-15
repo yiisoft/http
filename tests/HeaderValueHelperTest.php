@@ -225,7 +225,7 @@ final class HeaderValueHelperTest extends TestCase
         ?bool $lowerCaseParameter,
         ?bool $lowerCaseValue,
         ?array $expected,
-        ?string $expectedException = null,
+        ?string $expectedException = null
     ): void {
         if ($expectedException !== null) {
             $this->expectException($expectedException);

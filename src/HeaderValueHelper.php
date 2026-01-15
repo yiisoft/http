@@ -81,7 +81,7 @@ final class HeaderValueHelper
         string $headerValue,
         bool $lowerCaseValue = true,
         bool $lowerCaseParameter = true,
-        bool $lowerCaseParameterValue = true,
+        bool $lowerCaseParameterValue = true
     ): array {
         $headerValue = trim($headerValue);
 
@@ -116,7 +116,7 @@ final class HeaderValueHelper
     public static function getParameters(
         string $headerValueParameters,
         bool $lowerCaseParameter = true,
-        bool $lowerCaseParameterValue = true,
+        bool $lowerCaseParameterValue = true
     ): array {
         $headerValueParameters = trim($headerValueParameters);
 
@@ -195,7 +195,7 @@ final class HeaderValueHelper
         $values,
         bool $lowerCaseValue = true,
         bool $lowerCaseParameter = true,
-        bool $lowerCaseParameterValue = true,
+        bool $lowerCaseParameterValue = true
     ): array {
         /** @var mixed $values Don't trust to annotations. */
 
