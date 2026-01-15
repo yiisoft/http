@@ -62,7 +62,7 @@ final class ContentDispositionHeader
     {
         if (!in_array($type, [self::INLINE, self::ATTACHMENT])) {
             throw new InvalidArgumentException(
-                'Disposition type must be either "' . self::ATTACHMENT . '" or "' . self::INLINE . '".'
+                'Disposition type must be either "' . self::ATTACHMENT . '" or "' . self::INLINE . '".',
             );
         }
 

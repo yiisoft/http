@@ -28,6 +28,9 @@ use function substr;
 use function trim;
 use function usort;
 
+use const PREG_SPLIT_NO_EMPTY;
+use const SORT_STRING;
+
 /**
  * `HeaderValueHelper` parses the header value parameters.
  *
@@ -78,7 +81,7 @@ final class HeaderValueHelper
         string $headerValue,
         bool $lowerCaseValue = true,
         bool $lowerCaseParameter = true,
-        bool $lowerCaseParameterValue = true
+        bool $lowerCaseParameterValue = true,
     ): array {
         $headerValue = trim($headerValue);
 
@@ -113,7 +116,7 @@ final class HeaderValueHelper
     public static function getParameters(
         string $headerValueParameters,
         bool $lowerCaseParameter = true,
-        bool $lowerCaseParameterValue = true
+        bool $lowerCaseParameterValue = true,
     ): array {
         $headerValueParameters = trim($headerValueParameters);
 
@@ -159,7 +162,7 @@ final class HeaderValueHelper
                 },
                 $headerValueParameters,
                 1,
-                $count
+                $count,
             );
 
             if ($count !== 1) {
@@ -192,7 +195,7 @@ final class HeaderValueHelper
         $values,
         bool $lowerCaseValue = true,
         bool $lowerCaseParameter = true,
-        bool $lowerCaseParameterValue = true
+        bool $lowerCaseParameterValue = true,
     ): array {
         /** @var mixed $values Don't trust to annotations. */
 
@@ -223,7 +226,7 @@ final class HeaderValueHelper
                 $value,
                 $lowerCaseValue,
                 $lowerCaseParameter,
-                $lowerCaseParameterValue
+                $lowerCaseParameterValue,
             );
             // case-insensitive "q" parameter
             $q = $parse['q'] ?? $parse['Q'] ?? 1.0;
@@ -242,7 +245,7 @@ final class HeaderValueHelper
             $output,
             static function (array $a, array $b) {
                 return $b['q'] <=> $a['q'];
-            }
+            },
         );
 
         return $output;
