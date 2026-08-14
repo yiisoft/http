@@ -47,6 +47,7 @@ Method::DELETE;
 Method::PATCH;
 Method::HEAD;
 Method::OPTIONS;
+Method::QUERY;
 ```
 
 To have a list of these, use:
@@ -56,6 +57,9 @@ use Yiisoft\Http\Method;
 
 Method::ALL;
 ```
+
+Note that `Method::QUERY` is not included into `Method::ALL` since adding it would change the behavior of the
+packages using `Method::ALL` as a default set of allowed methods.
 
 ## HTTP status codes
 
