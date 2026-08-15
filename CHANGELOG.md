@@ -2,7 +2,7 @@
 
 ## 1.3.1 under development
 
-- New #71: Add `QUERY` method constant (RFC 10008) (@sanya-misharin)
+- New #71: Add `QUERY` method constant (@sanya-misharin)
 - Enh #62: Explicitly import constants in "use" section (@mspirkov)
 
 ## 1.3.0 November 25, 2025
