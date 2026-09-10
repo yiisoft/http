@@ -34,5 +34,6 @@ namespace PHPSTORM_META {
         \Yiisoft\Http\Method::PATCH,
         \Yiisoft\Http\Method::HEAD,
         \Yiisoft\Http\Method::OPTIONS,
+        \Yiisoft\Http\Method::QUERY,
     );
 }

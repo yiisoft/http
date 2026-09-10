@@ -92,6 +92,20 @@ final class Method
     public const OPTIONS = 'OPTIONS';
 
     /**
+     * The QUERY method is used to initiate a server-side query.  Unlike the
+     * GET method, which requests a representation of the resource
+     * identified by the target URI, the QUERY method is used to ask the
+     * target resource to perform a query operation within the scope of
+     * that target resource.  The content of the request and its media type
+     * define the query.  QUERY requests are safe and idempotent, so they
+     * can be automatically repeated or restarted without concern for
+     * partial state changes.
+     *
+     * @link https://tools.ietf.org/html/rfc10008#section-2
+     */
+    public const QUERY = 'QUERY';
+
+    /**
      * @deprecated Use {@see Method::ALL} instead.
      */
     public const ANY = self::ALL;
